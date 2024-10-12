@@ -13,7 +13,7 @@ $ cap update
 
 EOF
 else
-  git clone --recurse-submodules https://github.com/lasseignelab/lab-framework.git
+  git clone --recurse-submodules https://github.com/lasseignelab/capture.git
 
   # Check if $HOME/bin/capture is already in PATH
   if ! grep -q "\$HOME/bin/capture" ~/.bash_profile; then

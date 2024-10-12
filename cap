@@ -10,13 +10,13 @@ done
 
 # Check if a parameter was provided
 if [ "$#" -eq 0 ]; then
-    lab_help
+    cap_help
     exit 1
 fi
 
 # Retrieve the function name from the first parameter
 function_name="$1"
-namespaced_name="lab_$function_name"
+namespaced_name="cap_$function_name"
 
 # Check if the function exists
 if declare -f "$namespaced_name" > /dev/null; then

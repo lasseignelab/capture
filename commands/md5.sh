@@ -1,13 +1,13 @@
 #!/bin/bash
 
-lab_md5_description() {
+cap_md5_description() {
   cat <<EOF
   Calculates a combined MD5 checksum for one or more files.
 EOF
 }
 
-lab_md5_help() {
-  lab_md5_description
+cap_md5_help() {
+  cap_md5_description
   echo
 
   cat <<EOF
@@ -16,7 +16,7 @@ lab_md5_help() {
   result is as expected.
 
   Usage:
-    lab md5 [options] FILE...
+    cap md5 [options] FILE...
 
     FILE... can be one or more file and/or directory specifications.
 
@@ -34,27 +34,27 @@ lab_md5_help() {
             Runs the md5 command as a Slurm job. If the value is run then
             srun is used and the output stays connected to the current
             terminal session.  If the value is batch then sbatch is used and
-            the output is written to lab-md5-<job_id>.out
+            the output is written to cap-md5-<job_id>.out
 
   Example:
-    $ lab md5 *
+    $ cap md5 *
 
     Files included:
-    43bd364a97a38fb1da7c57e6381886c1  lab-cli/LICENSE
-    b794df25f796ac80680c0e4d27308bce  lab-cli/commands/md5.sh
-    0d9281c3586c420130bcb5d25c8a151a  lab-cli/lab
-    5e79c988140af1b7bd5735b0bf96306b  lab-cli/README.md
-    783a44ffae97afbce3f1649c5ff517a5  lab-cli/install.sh
+    43bd364a97a38fb1da7c57e6381886c1  capture/LICENSE
+    b794df25f796ac80680c0e4d27308bce  capture/commands/md5.sh
+    0d9281c3586c420130bcb5d25c8a151a  capture/lab
+    5e79c988140af1b7bd5735b0bf96306b  capture/README.md
+    783a44ffae97afbce3f1649c5ff517a5  capture/install.sh
 
     Combined MD5 checksum:
     a225199964b84bdeef33bafe3df7c10b
 EOF
 }
 
-lab_md5() {
+cap_md5() {
   # Define the named commandline options
   if ! OPTIONS=$(getopt -o no:s: --long dry-run,output:,slurm: -- "$@"); then
-    echo "Use the 'lab help md5' command for detailed help."
+    echo "Use the 'cap help md5' command for detailed help."
     return 1
   fi
   eval set -- "$OPTIONS"
@@ -85,7 +85,7 @@ lab_md5() {
   # Validate the slurm option value
   if [[ "$slurm" != "batch" && "$slurm" != "run" && "$slurm" != "" ]]; then
     echo "Error: invalid value for --slurm option"
-    echo "Use the 'lab help md5' command for detailed help."
+    echo "Use the 'cap help md5' command for detailed help."
     exit 1
   fi
 
@@ -99,13 +99,13 @@ lab_md5() {
     batch)
       current_path=$(pwd)
       if [[ "$output_file" == "" ]]; then
-        output_file='lab-md5-%j.out'
+        output_file='cap-md5-%j.out'
       fi
       sbatch <<EOF
 #!/bin/bash
 
 #################################### SLURM ####################################
-#SBATCH --job-name lab-md5
+#SBATCH --job-name cap-md5
 #SBATCH --output $output_file
 #SBATCH --error $output_file
 #SBATCH --ntasks=1
@@ -113,18 +113,18 @@ lab_md5() {
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-lab md5 ${@:1}
+cap md5 ${@:1}
 echo "Ran from: $current_path"
 EOF
       ;;
     run)
       srun \
-        --job-name=lab-md5 \
+        --job-name=cap-md5 \
         --ntasks=1 \
         --cpus-per-task=1 \
         --mem=32G \
         --output="${output_file:-/dev/stdout}" \
-        bash -c 'lab md5 "$@"' _ "${@}"
+        bash -c 'cap md5 "$@"' _ "${@}"
       ;;
     *)
       {
@@ -133,7 +133,7 @@ EOF
         else
           # Compute checksums for all files
           echo -e '\nFiles included:'
-          checksums=$(lab_md5_find "${@:1}")
+          checksums=$(cap_md5_find "${@:1}")
           echo "$checksums"
 
           # Compute single checksum based on the checksums of all files
@@ -151,14 +151,14 @@ EOF
 # Results are sorted by file path and name.
 #
 # Usage:
-# > lab_md5_find FILE...
+# > cap_md5_find FILE...
 #
 # Example:
-# > lab_md5_file ~/bin/lab-cli/commands
-# 91845ed3e6ed80b6c93ffa4bc0587c42  bin/lab-cli/commands/md5dir.sh
-# d2760f02c9d55fb4bf78d9ed0b398c4d  bin/lab-cli/commands/md5.sh
+# > cap_md5_file ~/bin/capture/commands
+# 91845ed3e6ed80b6c93ffa4bc0587c42  bin/capture/commands/md5dir.sh
+# d2760f02c9d55fb4bf78d9ed0b398c4d  bin/capture/commands/md5.sh
 #
 ###############################################################################
-lab_md5_find() {
+cap_md5_find() {
   find "${@:1}" -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
 }

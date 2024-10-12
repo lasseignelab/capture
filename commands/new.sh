@@ -91,7 +91,7 @@ cap_new() {
       rm logs/.gitignore
     else
       git init
-      lab_new_add_pipeline_config_file
+      cap_new_add_pipeline_config_file
       git add .
       git commit -m "Initial commit"
       git branch -m master main

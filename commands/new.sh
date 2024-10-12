@@ -62,10 +62,7 @@ EOF
 }
 
 cap_new() {
-  echo "Here"
-  echo "$@"
   cap_new_parse_commandline_parameters "$@"
-  echo "Here"
 
   # If the project directory exists then abort.
   if [ -d "$project_name" ]; then
@@ -180,7 +177,6 @@ EOF
 }
 
 cap_new_parse_commandline_parameters() {
-  echo "Inside"
   # Define the named commandline options
 
   if ! OPTIONS=$(getopt -o o: --long owner:,git-host:,skip-git -- "$@"); then

@@ -4,6 +4,7 @@ A framework and command line interface (CLI) for computational science.
 # Installation
 ```
 curl -sSL https://raw.githubusercontent.com/lasseignelab/capture/refs/heads/main/install.sh | bash
+source ~/.bash_profile
 ```
 # Update
 ```

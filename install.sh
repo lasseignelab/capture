@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cd ~/
+cd ~/ || exit
 mkdir -p bin
-cd bin
+cd bin || exit
 if [ -d capture ]; then
-  echo <<EOF
+  cat <<EOF
 
 The CAPTURE framework has already been installed. Execute the following
 command to upgrade to the newest version.
@@ -22,6 +22,4 @@ else
   else
     echo "$HOME/bin/capture is already in PATH"
   fi
-
-  source ~/.bash_profile
 fi

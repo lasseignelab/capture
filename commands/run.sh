@@ -99,7 +99,7 @@ cap_run_dry_run() {
   echo "Environment: $CAP_ENV"
   echo
   # Display the framework environment variables.
-  env | grep -E "^LAB"
+  env | grep -E "^CAP"
   echo
   echo "Job: $job_name"
   echo

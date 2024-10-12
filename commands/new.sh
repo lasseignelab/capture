@@ -1,13 +1,13 @@
 #!/bin/bash
 
-lab_new_description() {
+cap_new_description() {
   cat <<EOF
   Creates a new reproducible research project.
 EOF
 }
 
-lab_new_help() {
-  lab_new_description
+cap_new_help() {
+  cap_new_description
   echo
 
   cat <<EOF
@@ -16,7 +16,7 @@ lab_new_help() {
   include a directory structure, Github actions, and stubbed out files.
 
   Usage:
-    lab new [options] PROJECT_NAME
+    cap new [options] PROJECT_NAME
 
     PROJECT_NAME Name of the project which will be used for the directory name.
                  It should also match the git host repo name if one is used.
@@ -34,7 +34,7 @@ lab_new_help() {
                the use of other source control software.
 
   Example:
-    $ lab new --owner lasseignelab PKD_Research
+    $ cap new --owner lasseignelab PKD_Research
 
     Create an empty repository for 'PKD_Research' on GitHub by using the
     following link and settings:
@@ -61,10 +61,10 @@ lab_new_help() {
 EOF
 }
 
-lab_new() {
+cap_new() {
   echo "Here"
   echo "$@"
-  lab_new_parse_commandline_parameters "$@"
+  cap_new_parse_commandline_parameters "$@"
   echo "Here"
 
   # If the project directory exists then abort.
@@ -74,12 +74,12 @@ lab_new() {
   fi
 
   if [[ "$skip_git" != "true" && -n "$owner" ]]; then
-    lab_new_verify_git_ssh_configuration
-    lab_new_create_git_host_repository
+    cap_new_verify_git_ssh_configuration
+    cap_new_create_git_host_repository
   fi
 
-  # Find the lab framework installion directory.
-  installed_directory=$(dirname "$(command -v lab)")
+  # Find the CAPTURE framework installion directory.
+  installed_directory=$(dirname "$(command -v cap)")
 
   # Clone, configure, and push the project.
   echo
@@ -103,7 +103,7 @@ lab_new() {
       fi
     fi
 
-    lab_new_add_pipeline_config_file
+    cap_new_add_pipeline_config_file
 
     echo
     echo "Happy researching!!!"
@@ -111,7 +111,7 @@ lab_new() {
   fi
 }
 
-lab_new_add_pipeline_config_file() {
+cap_new_add_pipeline_config_file() {
   temporary_file=$(mktemp)
   random_seed="$RANDOM"
 
@@ -123,7 +123,7 @@ lab_new_add_pipeline_config_file() {
   mv "$temporary_file" config/pipeline.sh
 }
 
-lab_new_create_git_host_repository() {
+cap_new_create_git_host_repository() {
   # Prompt the researcher to create a repository on their git host
   case "$git_host" in
     "github.com")
@@ -180,12 +180,12 @@ EOF
   fi
 }
 
-lab_new_parse_commandline_parameters() {
+cap_new_parse_commandline_parameters() {
   echo "Inside"
   # Define the named commandline options
 
   if ! OPTIONS=$(getopt -o o: --long owner:,git-host:,skip-git -- "$@"); then
-    echo "Use the 'lab help new' command for detailed help."
+    echo "Use the 'cap help new' command for detailed help."
     exit 1
   fi
   eval set -- "$OPTIONS"
@@ -216,14 +216,14 @@ lab_new_parse_commandline_parameters() {
   # Check that the required project name parameter was provided
   if [ "$#" -ne 1 ]; then
     echo "Error: incorrect number of parameters"
-    echo "Usage: lab new [options] PROJECT_NAME"
-    echo "Use the 'lab help new' command for detailed help."
+    echo "Usage: cap new [options] PROJECT_NAME"
+    echo "Use the 'cap help new' command for detailed help."
     exit 1
   fi
   project_name=$1
 }
 
-lab_new_verify_git_ssh_configuration() {
+cap_new_verify_git_ssh_configuration() {
   # If Github SSH is not configured then abort.
   if ssh -T git@"$git_host" 2>&1 | grep -q 'Permission denied'; then
     case "$git_host" in

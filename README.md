@@ -192,7 +192,7 @@ Environment variables can be configured with the following configuration files.
 `       `-- <lab-name>.sh
 ```
 Configuration files are loaded in the following order:
-- **<project-path>/config/pipeline.sh**: Configuration to bootstrap the
+- **\<project-path\>/config/pipeline.sh**: Configuration to bootstrap the
 runtime environment. This file is configured by the `cap new` command with the
 `CAP_PROJECT_NAME` variable set to the name given as a parameter.
 - **defaults**: The defaults described in the environment variable section
@@ -200,8 +200,8 @@ are set at this point.
 - **/etc/caprc**: Configuration set by an organization.
 - **~/.caprc**: Configuration set for a specific user. This is a good place
 to `source` in lab specific configuration.
-- **<project-path>/.labrc**: Configuration specific to a project.
-- **<project-path>/config/environments/<CAP_ENV>.sh**: Configuration specific
+- **\<project-path\>/.labrc**: Configuration specific to a project.
+- **\<project-path\>/config/environments/<CAP_ENV>.sh**: Configuration specific
 to a project and the environment it is being executed in. The `default.sh`
 configuration should only contain reproducible configuration that will work in
 any Slurm environment. Other lab specific environment files can contain non-

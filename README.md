@@ -152,3 +152,60 @@ Example:
 $ cap run src/01_download.sh
 Submitted batch job 29818073
 ```
+Runtime environment:
+
+The runtime environment is configured with the following variables available
+to Slurm scripts.
+- **CAP_PROJECT_NAME**: The name of the project given with the `cap new`
+command.
+- **CAP_ENV**: The name of the current execution environment.  Defaults to
+the value "default".
+- **CAP_PROJECT_PATH**: Path to the root directory of the project.
+- **CAP_LOGS_PATH**: Path to where log files will be written.  Defaults to
+`<project-path>/logs`.
+- **CAP_DATA_PATH**: Path to where data files will be written.  Defaults to
+`<project-path>/data`.
+- **CAP_RESULTS_PATH**: Path to where analysis results will be written.
+Defaults to `<project-path>/results`.
+- **CAP_CONTAINER_PATH**: Path to where container files such as Docker will be
+maintained.  Defaults to `<project-path>/bin/docker`.
+- **CAP_CONDA_PATH**: Path to where conda files will be maintained.  Defaults
+to `<project-path>/bin/conda`.
+- **CAP_RANDOM_SEED**: A randomly generated seed to facilitate reproducible
+random number generation.
+
+Environment variables can be configured with the following configuration files.
+```
+/
+|-- etc/
+`   |-- caprc
+
+~/
+`-- .caprc
+
+<project-path>/
+|-- .caprc
+|-- config/
+|   |-- pipeline.sh
+|   `-- environment/
+|       |-- default.sh
+`       `-- <lab-name>.sh
+```
+Configuration files are loaded in the following order:
+- **<project-path>/config/pipeline.sh**: Configuration to bootstrap the
+runtime environment. This file is configured by the `cap new` command with the
+`CAP_PROJECT_NAME` variable set to the name given as a parameter.
+- **defaults**: The defaults described in the environment variable section
+are set at this point.
+- **/etc/caprc**: Configuration set by an organization.
+- **~/.caprc**: Configuration set for a specific user. This is a good place
+to `source` in lab specific configuration.
+- **<project-path>/.labrc**: Configuration specific to a project.
+- **<project-path>/config/environments/<CAP_ENV>.sh**: Configuration specific
+to a project and the environment it is being executed in. The `default.sh`
+configuration should only contain reproducible configuration that will work in
+any Slurm environment. Other lab specific environment files can contain non-
+reproducible configuration but job must also work in the default environment
+for reproducibility. An example would be creating symlinks in the data
+directory for sharing large datasets internal to a lab while also downloading
+the data when the symlink does not exist.

@@ -209,3 +209,45 @@ reproducible configuration but job must also work in the default environment
 for reproducibility. An example would be creating symlinks in the data
 directory for sharing large datasets internal to a lab while also downloading
 the data when the symlink does not exist.
+
+## update
+The `cap update` command will upgrade the CAPTURE framework to the latest
+version.
+
+Definition:
+```
+cap update
+```
+Example:
+```
+$ cap update
+
+Switched to branch 'main'
+From https://github.com/lasseignelab/capture
+ * branch            main       -> FETCH_HEAD
+Already up-to-date.
+
+Already on 'main'
+From https://github.com/lasseignelab/project-template
+ * branch            main       -> FETCH_HEAD
+Already up-to-date.
+
+CAPTURE updated to version v0.0.3
+```
+
+## version
+The `cap version` command will display the currently installed version
+of CAPTURE.
+
+Definition:
+```
+cap version
+```
+Example:
+```
+$ cap version
+
+v0.0.3
+
+```
+

@@ -21,16 +21,9 @@ cap_update_help() {
     $ cap update
 
     Switched to branch 'main'
-    From https://github.com/lasseignelab/capture
-     * branch            main       -> FETCH_HEAD
     Already up-to-date.
 
-    Already on 'main'
-    From https://github.com/lasseignelab/project-template
-     * branch            main       -> FETCH_HEAD
-    Already up-to-date.
-
-    CAPTURE updated to version v0.0.3.
+    CAPTURE updated to version v0.0.1.
 EOF
 }
 

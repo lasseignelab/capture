@@ -6,11 +6,9 @@ A framework and command line interface (CLI) for computational science.
 curl -sSL https://raw.githubusercontent.com/lasseignelab/capture/refs/heads/main/install.sh | bash
 source ~/.bash_profile
 ```
-# Update
+# Update to the current version
 ```
-cd ~/bin/capture
-git pull
-git submodule update --init --recursive
+cap update
 ```
 # Usage
 The `cap` CLI provides commands to help with reproducible research.
@@ -228,17 +226,11 @@ Example:
 ```
 $ cap update
 
+
 Switched to branch 'main'
-From https://github.com/lasseignelab/capture
- * branch            main       -> FETCH_HEAD
 Already up-to-date.
 
-Already on 'main'
-From https://github.com/lasseignelab/project-template
- * branch            main       -> FETCH_HEAD
-Already up-to-date.
-
-CAPTURE updated to version v0.0.3
+CAPTURE updated to version v0.0.1.
 ```
 
 ## version

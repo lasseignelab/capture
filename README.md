@@ -212,6 +212,6 @@ to a project and the environment it is being executed in. The `default.sh`
 configuration should only contain reproducible configuration that will work in
 any Slurm environment. Other lab specific environment files can contain non-
 reproducible configuration but the job must also work in the default environment
-for reproducibility. An example would be creating symlinks in the data
-directory for sharing large datasets internal to a lab while also downloading
-the data when the symlink does not exist.
+for reproducibility. An example of environment specific configuration would be
+creating symlinks in the data directory for sharing large datasets internal to
+a lab while also downloading the data when the symlink does not exist.

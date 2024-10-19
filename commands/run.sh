@@ -26,7 +26,11 @@ cap_run_help() {
                Specifies the environment to run jobs in.  Environments allow
                different setups for a pipeline.  For instance, a pipeline may
                use internal copies of data during development but download that
-               data when the pipeline is ran in a different environment.
+               data when the pipeline is ran in a different environment. A
+               project can provide environment specific configuration by
+               including a file named <environment>.rc in the
+               config/environments directory, e.g. lasseignelab.rc. See
+               CAPTURE runtime environment documentation.
     -n,--dry-run
                Displays the contents of the job to run along with the context
                it will run in.

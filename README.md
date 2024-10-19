@@ -159,7 +159,13 @@ to Slurm scripts.
 - **CAP_PROJECT_NAME**: The name of the project given with the `cap new`
 command.
 - **CAP_ENV**: The name of the current execution environment.  Defaults to
-the value "default".
+the value "default".  A shell script in `config/environments` with a name
+matching the environment name will be executed during the CAPTURE configuration
+process, e.g. `config/environments/default.sh`.  This variable will generally
+be set in the `~/.caprc` file.  It is possible to set it as a shell environment
+variable somewhere like `~/.bash_profile`.  Another option is to provide it
+before a command, e.g. `CAP_ENV=mylab cap run foo.sh`.  Finally, some commands
+provide an option for environment such as `cap run --environment=mylab foo.sh`.
 - **CAP_PROJECT_PATH**: Path to the root directory of the project.
 - **CAP_LOGS_PATH**: Path to where log files will be written.  Defaults to
 `<project-path>/logs`.
@@ -205,7 +211,7 @@ to `source` in lab specific configuration.
 to a project and the environment it is being executed in. The `default.sh`
 configuration should only contain reproducible configuration that will work in
 any Slurm environment. Other lab specific environment files can contain non-
-reproducible configuration but job must also work in the default environment
+reproducible configuration but the job must also work in the default environment
 for reproducibility. An example would be creating symlinks in the data
 directory for sharing large datasets internal to a lab while also downloading
 the data when the symlink does not exist.

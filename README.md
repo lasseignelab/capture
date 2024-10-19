@@ -1,44 +1,40 @@
-# lab-framework
-A framework and command line interface (CLI) for computational lab work.
+CAPTURE
+A framework and command line interface (CLI) for computational science.
 
 # Installation
 ```
-cd ~/
-mkdir -p bin
-cd bin
-git clone --recurse-submodules https://github.com/lasseignelab/lab-framework.git
-. lab-framework/install.sh
-. ~/.bash_profile
+curl -sSL https://raw.githubusercontent.com/lasseignelab/capture/refs/heads/main/install.sh | bash
+source ~/.bash_profile
 ```
 # Update
 ```
-cd ~/bin/lab-framework
+cd ~/bin/capture
 git pull
 git submodule update --init --recursive
 ```
 # Usage
-The `lab` CLI provides commands to help with reproducible research.
+The `cap` CLI provides commands to help with reproducible research.
 ```
-lab <command> params...
+cap <command> params...
 ```
 
 ## help
-Shows help for the lab command line tool.
+Shows help for the cap command line tool.
 
 Definition:
 ```
-lab help [COMMAND]
+cap help [COMMAND]
 ```
 Example:
 ```
-$ lab help
+$ cap help
 
   Commands:
 
-  help  Shows help for the lab command line tool.
+  help  Shows help for the cap command line tool.
   md5   Calculates a combined MD5 checksum for one or more files.
 
-$ lab help md5
+$ cap help md5
 
   Calculates a combined MD5 checksum for one or more files.
 
@@ -47,56 +43,56 @@ $ lab help md5
   result is as expected.
 
   Usage:
-    lab md5 FILE...
+    cap md5 FILE...
 
     FILE... can be one or more file and/or directory specifications.
 
   Example:
-    $ lab md5 *
+    $ cap md5 *
 
     Files included:
-    43bd364a97a38fb1da7c57e6381886c1  lab-framework/LICENSE
-    b794df25f796ac80680c0e4d27308bce  lab-framework/commands/md5.sh
-    0d9281c3586c420130bcb5d25c8a151a  lab-framework/lab
-    5e79c988140af1b7bd5735b0bf96306b  lab-framework/README.md
-    783a44ffae97afbce3f1649c5ff517a5  lab-framework/install.sh
+    43bd364a97a38fb1da7c57e6381886c1  capture/LICENSE
+    b794df25f796ac80680c0e4d27308bce  capture/commands/md5.sh
+    0d9281c3586c420130bcb5d25c8a151a  capture/lab
+    5e79c988140af1b7bd5735b0bf96306b  capture/README.md
+    783a44ffae97afbce3f1649c5ff517a5  capture/install.sh
 
     Combined MD5 checksum:
     a225199964b84bdeef33bafe3df7c10b
 ```
 
 ## md5
-The `lab md5` command will produce an md5sum for the file or files specified.
+The `cap md5` command will produce an md5sum for the file or files specified.
 This makes it easy to determine whether files are identical.
 
 Definition:
 ```
-lab md5 FILE...
+cap md5 FILE...
 ```
 Example:
 ```
-$ lab md5 *
+$ cap md5 *
 
 Files included:
-43bd364a97a38fb1da7c57e6381886c1  lab-framework/LICENSE
-b794df25f796ac80680c0e4d27308bce  lab-framework/commands/md5.sh
-0d9281c3586c420130bcb5d25c8a151a  lab-framework/lab
-5e79c988140af1b7bd5735b0bf96306b  lab-framework/README.md
-783a44ffae97afbce3f1649c5ff517a5  lab-framework/install.sh
+43bd364a97a38fb1da7c57e6381886c1  capture/LICENSE
+b794df25f796ac80680c0e4d27308bce  capture/commands/md5.sh
+0d9281c3586c420130bcb5d25c8a151a  capture/lab
+5e79c988140af1b7bd5735b0bf96306b  capture/README.md
+783a44ffae97afbce3f1649c5ff517a5  capture/install.sh
 
 Combined MD5 checksum:
 a225199964b84bdeef33bafe3df7c10b
 ```
 
 ## new
-The `lab new` command will create a new research project based on the
-project-template submodule in the lab-framework repository.  The project
+The `cap new` command will create a new research project based on the
+project-template submodule in the capture repository.  The project
 repository will be created with the origin remote pointed to a Github
 repository owner specified by the Github account and project name parameters.
 
 Definition:
 ```
-lab new GITHUB_OWNER PROJECT_NAME
+cap new GITHUB_OWNER PROJECT_NAME
 
 GITHUB_OWNER Github owner the project repo will be created under.  This may
              be a personal or organization account.
@@ -104,7 +100,7 @@ PROJECT_NAME Name of the project which will match the Github repo name.
 ```
 Example:
 ```
-$ lab new lasseignelab PKD_Research
+$ cap new lasseignelab PKD_Research
 
 Create an empty repository for 'PKD_Research' on GitHub by using the
 following link and settings:
@@ -129,3 +125,93 @@ done.
 
 Happy researching!!!
 ```
+## run
+The `cap run` command runs a CAPTURE framework job within the context of a
+reproducible research project.  It will configure the environment based
+on configuration defined by the current user.
+
+Definition:
+```
+cap run [options] FILE
+
+FILE  File name of the job to run.
+
+Options:
+
+-e,--environment
+           Specifies the environment to run jobs in.  Environments allow
+           different setups for a pipeline.  For instance, a pipeline may
+           use internal copies of data during development but download that
+           data when the pipeline is ran in a different environment.
+-n,--dry-run
+           Displays the contents of the job to run along with the context
+           it will run in.
+```
+Example:
+```
+$ cap run src/01_download.sh
+Submitted batch job 29818073
+```
+Runtime environment:
+
+The runtime environment is configured with the following variables available
+to Slurm scripts.
+- **CAP_PROJECT_NAME**: The name of the project given with the `cap new`
+command.
+- **CAP_ENV**: The name of the current execution environment.  Defaults to
+the value "default".  A shell script in `config/environments` with a name
+matching the environment name will be executed during the CAPTURE configuration
+process, e.g. `config/environments/default.sh`.  This variable will generally
+be set in the `~/.caprc` file.  It is possible to set it as a shell environment
+variable somewhere like `~/.bash_profile`.  Another option is to provide it
+before a command, e.g. `CAP_ENV=mylab cap run foo.sh`.  Finally, some commands
+provide an option for environment such as `cap run --environment=mylab foo.sh`.
+- **CAP_PROJECT_PATH**: Path to the root directory of the project.
+- **CAP_LOGS_PATH**: Path to where log files will be written.  Defaults to
+`<project-path>/logs`.
+- **CAP_DATA_PATH**: Path to where data files will be written.  Defaults to
+`<project-path>/data`.
+- **CAP_RESULTS_PATH**: Path to where analysis results will be written.
+Defaults to `<project-path>/results`.
+- **CAP_CONTAINER_PATH**: Path to where container files such as Docker will be
+maintained.  Defaults to `<project-path>/bin/docker`.
+- **CAP_CONDA_PATH**: Path to where conda files will be maintained.  Defaults
+to `<project-path>/bin/conda`.
+- **CAP_RANDOM_SEED**: A randomly generated seed to facilitate reproducible
+random number generation.
+
+Environment variables can be configured with the following configuration files.
+```
+/
+|-- etc/
+`   |-- caprc
+
+~/
+`-- .caprc
+
+<project-path>/
+|-- .caprc
+|-- config/
+|   |-- pipeline.sh
+|   `-- environment/
+|       |-- default.sh
+`       `-- <lab-name>.sh
+```
+Configuration files are loaded in the following order:
+- **\<project-path\>/config/pipeline.sh**: Configuration to bootstrap the
+runtime environment. This file is configured by the `cap new` command with the
+`CAP_PROJECT_NAME` variable set to the name given as a parameter.
+- **defaults**: The defaults described in the environment variable section
+are set at this point.
+- **/etc/caprc**: Configuration set by an organization.
+- **~/.caprc**: Configuration set for a specific user. This is a good place
+to `source` in lab specific configuration.
+- **\<project-path\>/.labrc**: Configuration specific to a project.
+- **\<project-path\>/config/environments/<CAP_ENV>.sh**: Configuration specific
+to a project and the environment it is being executed in. The `default.sh`
+configuration should only contain reproducible configuration that will work in
+any Slurm environment. Other lab specific environment files can contain non-
+reproducible configuration but the job must also work in the default environment
+for reproducibility. An example of environment specific configuration would be
+creating symlinks in the data directory for sharing large datasets internal to
+a lab while also downloading the data when the symlink does not exist.

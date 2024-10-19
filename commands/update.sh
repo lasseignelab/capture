@@ -42,20 +42,17 @@ cap_update() {
   echo
 
   # Retrieve the current version of the CAPTURE framework.
-  cd "$cap_install_dir"
+  if ! cd "$cap_install_dir"; then
+    echo "CAPTURE install directory is missing." >&2
+    exit 1
+  fi
   git checkout main
-  git pull origin main
-
-  # Retrieve the current project template for `cap new`.
-  echo
-  cd project-template
-  git checkout main
-  git pull origin main
+  git pull
+  git submodule update --init --recursive
 
   echo
 
   # Display the current version of CAPTURE.
-  cd ..
   if current_tag=$(git describe --tags --abbrev=0 2>/dev/null); then
     echo "CAPTURE updated to version $current_tag."
   else

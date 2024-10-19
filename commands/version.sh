@@ -30,7 +30,10 @@ cap_version() {
   echo
 
   # Display the current version of CAPTURE.
-  cd "$cap_install_dir"
+  if ! cd "$cap_install_dir"; then
+    echo "CAPTURE install directory is missing." >&2
+    exit 1
+  fi
   if current_tag=$(git describe --tags --abbrev=0 2>/dev/null); then
     echo "$current_tag"
   else

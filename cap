@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Resolve the directory of the script
-SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+# Location where the CAPTURE framework was installed.
+cap_install_fullpath=$(command -v cap)
+CAP_INSTALL_PATH=$(dirname "$cap_install_fullpath")
 
 # Load commands
-for file in "$SCRIPT_DIR"/commands/*.sh; do
+for file in "$CAP_INSTALL_PATH"/commands/*.sh; do
     source "$file"
 done
 

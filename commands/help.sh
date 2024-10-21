@@ -46,11 +46,11 @@ cap_help() {
 EOF
 
     # Directory containing the scripts
-    COMMANDS_DIR="$SCRIPT_DIR"/commands
+    CAP_COMMANDS_DIR="$CAP_INSTALL_PATH"/commands
 
     {
       # Loop through each script file in the directory
-      for script in "$COMMANDS_DIR"/*.sh; do
+      for script in "$CAP_COMMANDS_DIR"/*.sh; do
         # Get the base name of the script (e.g., md5 for md5.sh)
         script_name=$(basename "$script" .sh)
 

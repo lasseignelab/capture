@@ -35,7 +35,7 @@ EOF
 }
 
 cap_env() {
-  # Location where the CAPTURE framework was installed.
+  # Load the CAPTURE environment.
   source "$CAP_INSTALL_PATH/lib/environment.sh"
 
   # Display CAPTURE environment variables.

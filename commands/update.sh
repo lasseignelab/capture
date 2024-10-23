@@ -28,14 +28,10 @@ EOF
 }
 
 cap_update() {
-  # Location where the CAPTURE framework was installed.
-  cap_install_path=$(command -v cap)
-  cap_install_dir=$(dirname "$cap_install_path")
-
   echo
 
   # Retrieve the current version of the CAPTURE framework.
-  if ! cd "$cap_install_dir"; then
+  if ! cd "$CAP_INSTALL_PATH"; then
     echo "CAPTURE install directory is missing." >&2
     exit 1
   fi

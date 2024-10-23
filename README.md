@@ -48,10 +48,19 @@ Example:
 ```
 $ cap help
 
-  Commands:
+  Usage: cap COMMAND ...
 
-  help  Shows help for the cap command line tool.
-  md5   Calculates a combined MD5 checksum for one or more files.
+  Commands:
+    The following subcommands are available.
+
+  COMMAND
+    env        Displays CAPTURE environment variables.
+    help       Shows help for the cap command line tool.
+    md5        Calculates a combined MD5 checksum for one or more files.
+    new        Creates a new reproducible research project.
+    run        Runs a CAPTURE framework job.
+    update     Updates the CAPTURE framework to the latest version.
+    version    Displays the currently installed version of CAPTURE.
 
 $ cap help md5
 
@@ -111,11 +120,23 @@ repository owner specified by the Github account and project name parameters.
 
 Definition:
 ```
-cap new GITHUB_OWNER PROJECT_NAME
+cap new [options] PROJECT_NAME
 
-GITHUB_OWNER Github owner the project repo will be created under.  This may
-             be a personal or organization account.
-PROJECT_NAME Name of the project which will match the Github repo name.
+PROJECT_NAME Name of the project which will be used for the directory name.
+			 It should also match the git host repo name if one is used.
+
+Options:
+
+--git-host=<host-domain-name>
+		   Git host for the repository used for creating git remotes.  The
+		   default is "github.com".
+-o,--owner=<owner-id>
+		   Git host owner the project repo will be created under.  This may
+		   be a personal or organization account.
+--skip-git
+		   Skip making the project a git repository in order to allow
+		   the use of other source control software.
+
 ```
 Example:
 ```

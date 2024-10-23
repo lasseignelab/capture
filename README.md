@@ -15,6 +15,27 @@ The `cap` CLI provides commands to help with reproducible research.
 ```
 cap <command> params...
 ```
+## env
+Displays CAPTURE environment variables.
+
+Definition:
+```
+cap env
+```
+Example:
+```
+$ cap env
+
+CAP_CONDA_PATH=/data/user/acrumley/3xtg-repurposing/bin/conda
+CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/docker
+CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
+CAP_ENV=default
+CAP_LOGS_PATH=/data/user/acrumley/3xtg-repurposing/logs
+CAP_PROJECT_NAME=3xtg-repurposing
+CAP_PROJECT_PATH=/data/user/acrumley/3xtg-repurposing
+CAP_RANDOM_SEED=16600
+CAP_RESULTS_PATH=/data/user/acrumley/3xtg-repurposing/results
+```
 
 ## help
 Shows help for the cap command line tool.

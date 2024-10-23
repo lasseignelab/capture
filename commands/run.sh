@@ -54,15 +54,11 @@ cap_run() {
   slurm_header=$(grep "#SBATCH" "$job_file")
   slurm_code=$(grep -v -E "(^#\!)|(#SBATCH)" "$job_file")
 
-  # Location where the CAPTURE framework was installed.
-  cap_install_path=$(command -v cap)
-  cap_install_dir=$(dirname "$cap_install_path")
-
   # Put job back together with the framework function included.
   slurm_job=$(cat <<EOF
 $slurm_shebang
 $slurm_header
-source $cap_install_dir/lib/functions.sh
+source $CAP_INSTALL_PATH/lib/functions.sh
 $slurm_code
 EOF
 )
@@ -71,7 +67,7 @@ EOF
   if [ -n "$environment_override" ]; then
     CAP_ENV="$environment_override"
   fi
-  source "$cap_install_dir/lib/environment.sh"
+  source "$CAP_INSTALL_PATH/lib/environment.sh"
 
 
   # Specify the log file names with their full path. Log file names will
@@ -103,7 +99,7 @@ cap_run_dry_run() {
   echo "Environment: $CAP_ENV"
   echo
   # Display the framework environment variables.
-  env | grep -E "^CAP"
+  env | grep -E "^CAP" | sort
   echo
   echo "Job: $job_name"
   echo

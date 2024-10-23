@@ -256,6 +256,14 @@ for reproducibility. An example of environment specific configuration would be
 creating symlinks in the data directory for sharing large datasets internal to
 a lab while also downloading the data when the symlink does not exist.
 
+Environment set up functions for environment files, e.g. config/environments/*:
+- cap_data_link <FILE>|<DIR>: Creates a symbolic link in the CAP_DATA_PATH
+directory to a file or directory.  The symbolic link will have the same name
+as the specified file or directory. The following example will create the link
+`$CAP_DATA_PATH/mouse`:
+```
+cap_data_link "$MY_LAB/genome/mouse"
+```
 ## update
 The `cap update` command will upgrade the CAPTURE framework to the latest
 version.

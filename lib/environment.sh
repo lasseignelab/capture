@@ -68,6 +68,7 @@ if [ -f "$CAP_PROJECT_PATH/.caprc" ]; then
   source "$CAP_PROJECT_PATH/.caprc"
 fi
 if [ -f "$CAP_PROJECT_PATH/config/environments/$CAP_ENV.sh" ]; then
+  source "$CAP_INSTALL_PATH/lib/environment_functions.sh"
   # shellcheck disable=SC1090
   source "$CAP_PROJECT_PATH/config/environments/$CAP_ENV.sh"
 fi

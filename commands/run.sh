@@ -64,10 +64,10 @@ EOF
 )
 
   # Setup the runtime environment for the job.
+  source "$CAP_INSTALL_PATH/lib/environment.sh"
   if [ -n "$environment_override" ]; then
     CAP_ENV="$environment_override"
   fi
-  source "$CAP_INSTALL_PATH/lib/environment.sh"
 
 
   # Specify the log file names with their full path. Log file names will

@@ -64,6 +64,9 @@ EOF
 )
 
   # Setup the runtime environment for the job.
+  if [ -n "$environment_override" ]; then
+    CAP_ENV="$environment_override"
+  fi
   source "$CAP_INSTALL_PATH/lib/environment.sh"
   if [ -n "$environment_override" ]; then
     CAP_ENV="$environment_override"
@@ -85,7 +88,7 @@ EOF
     cap_run_dry_run
   else
     sbatch -D "$job_directory" \
-      --job-name="$CAP_PROJECT_NAME\_${job_name%.*}" \
+      --job-name="$CAP_PROJECT_NAME-${job_name%.*}" \
       --output "$log_full_path/$log_file_name.out" \
       --error "$log_full_path/$log_file_name.err" \
       <<EOF

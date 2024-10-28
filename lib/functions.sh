@@ -11,7 +11,7 @@ cap_data_download() {
   local file_name
   file_name=$(basename "$cap_data_download_url")
   local output_name
-  output_name=$(echo "$file_name" | sed 's|\.tar.*||')
+  output_name=$(echo "${file_name//\.tar.*/}")
 
   # Download data if the final output does not exist.
   if [ -e "$CAP_DATA_PATH/$output_name" ]; then

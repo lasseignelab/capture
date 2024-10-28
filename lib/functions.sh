@@ -8,8 +8,10 @@ cap_data_download() {
   # the name of the output. This assumption will probably need
   # to be removed but we will wait until we have a real example
   # before we try to change this.
-  local file_name=$(basename "$cap_data_download_url")
-  local output_name=$(echo "$file_name" | sed 's|\.tar.*||')
+  local file_name
+  file_name=$(basename "$cap_data_download_url")
+  local output_name
+  output_name=$(echo "$file_name" | sed 's|\.tar.*||')
 
   # Download data if the final output does not exist.
   if [ -e "$CAP_DATA_PATH/$output_name" ]; then

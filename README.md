@@ -307,7 +307,7 @@ file is a TAR file then it will be unarchived into the data directory.  The
 data directory is specified by `CAP_DATA_PATH` which defaults to
 `CAP_PROJECT_PATH/data`.
 
-The following example and download and unarchive a directory into
+The following example will download and unarchive a directory into
 `CAP_DATA_PATH/refdata-gex-GRCm39-2024-A`.
 ```
 cap_data_download \

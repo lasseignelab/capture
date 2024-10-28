@@ -312,7 +312,7 @@ The following example will download and unarchive a directory into
 ```
 cap_data_download \
   --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
-    "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
+  "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
 ```
 ## cap_data_link
 Creates a symbolic link in the data directory.

@@ -10,7 +10,7 @@ source ~/.bash_profile
 ```
 cap update
 ```
-# Usage
+# CLI Usage
 The `cap` CLI provides commands to help with reproducible research.
 ```
 cap <command> params...
@@ -254,16 +254,9 @@ any Slurm environment. Other lab specific environment files can contain non-
 reproducible configuration but the job must also work in the default environment
 for reproducibility. An example of environment specific configuration would be
 creating symlinks in the data directory for sharing large datasets internal to
-a lab while also downloading the data when the symlink does not exist.
+a lab while also downloading the data when the symlink does not exist. See
+[cap_data_link](#cap_data_link).
 
-Environment set up functions for environment files, e.g. config/environments/*:
-- `cap_data_link <FILE>|<DIR>`: Creates a symbolic link in the CAP_DATA_PATH
-directory to a file or directory.  The symbolic link will have the same name
-as the specified file or directory. The following example will create the link
-`$CAP_DATA_PATH/mouse`:
-```
-cap_data_link "$MY_LAB/genome/mouse"
-```
 ## update
 The `cap update` command will upgrade the CAPTURE framework to the latest
 version.
@@ -298,4 +291,41 @@ $ cap version
 v0.0.3
 
 ```
+# Helper Functions
+## cap_data_download
+Downloads data into the data directory.
+```
+cap_data_download [options] URL
+```
+`URL` The URL of the file to download.
 
+Options
+- `--md5sum` The md5sum to check against the file being downloaded.
+
+The file will be downloaded with the same name as specified by the URL.  If the
+file is a TAR file then it will be unarchived into the data directory.  The
+data directory is specified by `CAP_DATA_PATH` which defaults to
+`CAP_PROJECT_PATH/data`.
+
+The following example and download and unarchive a directory into
+`CAP_DATA_PATH/refdata-gex-GRCm39-2024-A`.
+```
+cap_data_download \
+  --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
+    "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
+```
+## cap_data_link
+Creates a symbolic link in the data directory.
+```
+cap_data_link <FILE>|<DIR>
+```
+`<FILE>|<DIR>` The full path to a file or directory.
+
+The symbolic link will have the same name as the specified file or directory
+and will be created in the directory specified by `CAP_DATA_PATH` which
+defaults to `CAP_PROJECT_PATH/data`.
+
+The following example will create the symbolic link `$CAP_DATA_PATH/mouse`.
+```
+cap_data_link "$MY_LAB/genome/mouse"
+```

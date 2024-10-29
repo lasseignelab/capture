@@ -12,6 +12,7 @@ cap_data_download() {
   file_name=$(basename "$cap_data_download_url")
   local output_name
   output_name="${file_name//\.tar.*/}"
+  output_name="${output_name//\.gz/}"
 
   # Download data if the final output does not exist.
   if [ -e "$CAP_DATA_PATH/$output_name" ]; then
@@ -32,11 +33,22 @@ cap_data_download() {
       fi
     fi
 
-    # Untar and remove downloads that are tar archives.
     if file "$download_file" | grep -q -E '(tar archive)|(gzip compressed data)'; then
-      if tar -xf "$download_file" -C "$CAP_DATA_PATH"; then
-        rm "$download_file"
-      fi
+      case "$file_name" in
+        # Untar and remove downloads that are tar archives.
+        *.tar|*.tar.gz)
+          if tar -xf "$download_file" -C "$CAP_DATA_PATH"; then
+            rm "$download_file"
+          fi
+          ;;
+        # Unzip and remove downloads that are compressed files.
+        *.gz)
+          (
+            cd "$CAP_DATA_PATH"
+            gunzip "$file_name"
+          )
+          ;;
+      esac
     fi
   fi
 }

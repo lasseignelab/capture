@@ -44,7 +44,7 @@ cap_data_download() {
         # Unzip and remove downloads that are compressed files.
         *.gz)
           (
-            cd "$CAP_DATA_PATH"
+            cd "$CAP_DATA_PATH" || exit
             gunzip "$file_name"
           )
           ;;

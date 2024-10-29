@@ -88,7 +88,7 @@ EOF
     cap_run_dry_run
   else
     sbatch -D "$job_directory" \
-      --job-name="$CAP_PROJECT_NAME-${job_name%.*}" \
+      --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
       --output "$log_full_path/$log_file_name.out" \
       --error "$log_full_path/$log_file_name.err" \
       <<EOF

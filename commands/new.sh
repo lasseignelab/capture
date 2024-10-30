@@ -178,7 +178,6 @@ EOF
 
 cap_new_parse_commandline_parameters() {
   # Define the named commandline options
-
   if ! OPTIONS=$(getopt -o o: --long owner:,git-host:,skip-git -- "$@"); then
     echo "Use the 'cap help new' command for detailed help."
     exit 1

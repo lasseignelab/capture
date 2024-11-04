@@ -292,12 +292,27 @@ v0.0.3
 
 ```
 # Helper Functions
+## cap_array_value
+Retrieves a value from an array file based on a zero based index.
+```
+cap_arrary_value FILE [INDEX]
+```
+- `FILE` The file containing an array value on each line.
+- `INDEX` The optional zero based index for the value of the array. If a value
+    is not provided then SLURM_ARRAY_TASK_ID environment variable will be used
+    as the default.
+
+The folowing example will retrieve an array value based on the Slurm environment
+variable default index.
+```
+sample=$(cap_array_value "$CAP_DATA_PATH/sample_list.array")
+```
 ## cap_data_download
 Downloads data into the data directory.
 ```
 cap_data_download [options] URL
 ```
-`URL` The URL of the file to download.
+- `URL` The URL of the file to download.
 
 Options
 - `--md5sum` The md5sum to check against the file being downloaded.
@@ -319,7 +334,7 @@ Creates a symbolic link in the data directory.
 ```
 cap_data_link <FILE>|<DIR>
 ```
-`<FILE>|<DIR>` The full path to a file or directory.
+- `<FILE>|<DIR>` The full path to a file or directory.
 
 The symbolic link will have the same name as the specified file or directory
 and will be created in the directory specified by `CAP_DATA_PATH` which

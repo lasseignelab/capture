@@ -3,6 +3,6 @@
     "bats": "^1.11.0"
   },
   "scripts": {
-    "test": "bats -r test"
+    "test": "bats -r tests"
   }
 }

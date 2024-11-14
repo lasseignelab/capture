@@ -5,6 +5,10 @@ cap_array_value() {
   if [ "$#" -lt 1 ]; then
     echo "Error: incorrect number of parameters" >&2
     echo "Usage: cap_array_value FILE [INDEX]" >&2
+    echo "" >&2
+    echo "The FILE parameter is required and should be a text file with one" >&2
+    echo "value per line." >&2
+    echo "" >&2
     echo "See CAPTURE documentation for detailed help." >&2
     exit 1
   fi

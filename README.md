@@ -298,15 +298,22 @@ Retrieves a value from an array file based on a zero based index.
 cap_arrary_value FILE [INDEX]
 ```
 - `FILE` The file containing an array value on each line.
-- `INDEX` The optional zero based index for the value of the array. If a value
-    is not provided then SLURM_ARRAY_TASK_ID environment variable will be used
-    as the default.
+- `INDEX` The optional zero based index for the value of the array. If a value is not provided then SLURM_ARRAY_TASK_ID environment variable will be used as the default.
 
-The folowing example will retrieve an array value based on the Slurm environment
+Example that retrieves array values based on the Slurm environment
 variable default index.
 ```
 sample=$(cap_array_value "$CAP_DATA_PATH/sample_list.array")
 ```
+
+Example with a `for` loop:
+```
+for index in {1..10}; do
+  sample=$(cap_array_value "$CAP_DATA_PATH/sample_list.array" index)
+  # Do something with each sample value.
+done
+```
+
 ## cap_data_download
 Downloads data into the data directory.
 ```

@@ -190,6 +190,10 @@ Options:
 Example:
 ```
 $ cap run src/01_download.sh
+
+View job output with the following command:
+cat logs/01_down_20241118_090854_tcrumley*
+
 Submitted batch job 29818073
 ```
 Runtime environment:

@@ -28,7 +28,11 @@ cap_data_download() {
       if echo "$cap_data_download_md5sum  $download_file" | md5sum -c -; then
         echo "File download checksum verified!"
       else
-        echo "File download checksum verification failed!" >&2
+        echo >&2
+        echo "File $file_name checksum verification failed!" >&2
+        echo "The file was left in place for debugging purposes.  It will" >&2
+        echo "need to be deleted before attempting another download." >&2
+        echo >&2
         exit 1
       fi
     fi

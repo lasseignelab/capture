@@ -36,7 +36,11 @@ cap_run_help() {
                it will run in.
 
   Example:
-    $ cap run src/data_download.sh
+    $ cap run src/01_download.sh
+
+    View job output with the following command:
+    cat logs/01_down_20241118_090854_tcrumley*
+
     Submitted batch job 29818073
 EOF
 }
@@ -76,8 +80,18 @@ EOF
   # Specify the log file names with their full path. Log file names will
   # begin with <job name>-<date>-<time>-<username>. If the job is an array
   # job then the job array id and task id will be appended.
+  current_user=$(whoami)
   log_full_path=$(realpath "$CAP_LOGS_PATH")
-  log_file_name="${job_name%.*}_$(date "+%Y%m%d_%H%M%S")_%u"
+  log_file_name="${job_name%.*}_$(date "+%Y%m%d_%H%M%S")_$current_user"
+  # Inform the user how to check job output. The path will be relative
+  # unless CAP_LOGS_PATH is outside the project.
+  cat <<EOF
+
+View job output with the following command:
+cat ${log_full_path#"$(pwd)"/}/$log_file_name*
+
+EOF
+  # Add array values to log file name if it's an array job.
   if grep -q -E "^#SBATCH +--array=" "$job_file"; then
     log_file_name="$log_file_name-%A-%a"
   fi
@@ -94,6 +108,7 @@ EOF
       <<EOF
 $slurm_job
 EOF
+    echo
   fi
 }
 

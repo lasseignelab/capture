@@ -88,7 +88,7 @@ EOF
   cat <<EOF
 
 View job output with the following command:
-cat ${log_full_path#$(pwd)/}/$log_file_name*
+cat ${log_full_path#"$(pwd)"/}/$log_file_name*
 
 EOF
   # Add array values to log file name if it's an array job.

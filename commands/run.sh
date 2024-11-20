@@ -83,11 +83,12 @@ EOF
   current_user=$(whoami)
   log_full_path=$(realpath "$CAP_LOGS_PATH")
   log_file_name="${job_name%.*}_$(date "+%Y%m%d_%H%M%S")_$current_user"
-  # Inform the user how to check job output.
+  # Inform the user how to check job output. The path will be relative
+  # unless CAP_LOGS_PATH is outside the project.
   cat <<EOF
 
 View job output with the following command:
-cat $log_full_path/$log_file_name*
+cat ${log_full_path#$(pwd)/}/$log_file_name*
 
 EOF
   # Add array values to log file name if it's an array job.

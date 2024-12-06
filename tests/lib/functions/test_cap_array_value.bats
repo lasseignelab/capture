@@ -1,3 +1,5 @@
+#!/usr/bin/env bats
+
 source "lib/functions/cap_array_value.sh"
 
 setup() {

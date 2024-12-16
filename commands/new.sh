@@ -92,6 +92,7 @@ cap_new() {
     else
       git init
       cap_new_add_pipeline_config_file
+      cap_new_add_dockerfile_file
       git add .
       git commit -m "Initial commit"
       git branch -m master main
@@ -105,6 +106,26 @@ cap_new() {
     echo "Happy researching!!!"
     echo
   fi
+}
+
+cap_new_add_dockerfile_file() {
+  # Retrieve the current Bioconductor version from the list of Docker version
+  # tags. The response is a JSON object containing all the Bioconductor tags.
+  latest_release=$(
+    curl -s https://hub.docker.com/v2/repositories/bioconductor/bioconductor_docker/tags | \
+      jq -r '.results[].name' | \
+      grep -E '^RELEASE_' | \
+      sort | \
+      tail -n 1
+  )
+
+  # Substitute the lastest released version of Bioconductor for the
+  # `bioconductor_version` tag in the template Dockerfile.
+  temporary_file=$(mktemp)
+  sed \
+    -e "s/{{bioconductor_version}}/${latest_release}/g" \
+    bin/docker/Dockerfile > "$temporary_file"
+  mv "$temporary_file" bin/docker/Dockerfile
 }
 
 cap_new_add_pipeline_config_file() {

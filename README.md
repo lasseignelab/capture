@@ -95,7 +95,33 @@ This makes it easy to determine whether files are identical.
 
 Definition:
 ```
-cap md5 FILE...
+cap md5 [options] FILE...
+
+FILE... can be one or more file and/or directory specifications.
+
+Options:
+
+-n,--dry-run
+        Lists the files that will have md5sums calculated in order to
+        verify the expected files are included.  This is helpful when
+        the files are large and take a long time to process.
+
+--name=FILE
+        Specify a file name to filter files by. The name can have wildcards
+        and the default is `*`.
+
+-o,--output=FILE
+        Specify an output file name to write the results to.
+
+--path=FILE
+        Specify a file path to filter files by. The name can have wildcards
+        and the default is `*`.
+
+--slurm=[batch|run]
+        Runs the md5 command as a Slurm job. If the value is run then
+        srun is used and the output stays connected to the current
+        terminal session.  If the value is batch then sbatch is used and
+        the output is written to cap-md5-<job_id>.out
 ```
 Example:
 ```

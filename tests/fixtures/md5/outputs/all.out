@@ -1,0 +1,10 @@
+
+Files included:
+b3ac2b8b9998bf504ef708ec837a4cce  tests/fixtures/md5/files/one.bin
+8d62064673ecb2a440b8802a2f752e8a  tests/fixtures/md5/files/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  tests/fixtures/md5/files/outs/three.bin
+009c79f013fe8d4d97c95bf5ceea68ed  tests/fixtures/md5/files/two.bin
+
+Combined MD5 checksum:
+1060bcc0958e5cc774f84ccd24a3b010
+

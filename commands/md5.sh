@@ -27,8 +27,16 @@ cap_md5_help() {
             verify the expected files are included.  This is helpful when
             the files are large and take a long time to process.
 
+    --name=FILE
+            Specify a file name to filter files by. The name can have wildcards
+            and the default is `*`.
+
     -o,--output=FILE
             Specify an output file name to write the results to.
+
+    --path=FILE
+            Specify a file path to filter files by. The name can have wildcards
+            and the default is `*`.
 
     --slurm=[batch|run]
             Runs the md5 command as a Slurm job. If the value is run then
@@ -53,7 +61,7 @@ EOF
 
 cap_md5() {
   # Define the named commandline options
-  if ! OPTIONS=$(getopt -o no:s: --long dry-run,output:,slurm: -- "$@"); then
+  if ! OPTIONS=$(getopt -o no:s: --long dry-run,name:,output:,path:,slurm: -- "$@"); then
     echo "Use the 'cap help md5' command for detailed help."
     return 1
   fi
@@ -61,6 +69,8 @@ cap_md5() {
 
   # Set default values for the named parameters
   dry_run=false
+  name_filter="*"
+  path_filter="*"
   output_file=""
   slurm=""
 
@@ -70,8 +80,14 @@ cap_md5() {
       -n|--dry-run)
         dry_run=true
         shift 1 ;;
+      --name)
+        name_filter="$2"
+        shift 2 ;;
       -o|--output)
         output_file="$2"
+        shift 2 ;;
+      --path)
+        path_filter="$2"
         shift 2 ;;
       -s|--slurm)
         slurm="$2"
@@ -101,6 +117,7 @@ cap_md5() {
       if [[ "$output_file" == "" ]]; then
         output_file='cap-md5-%j.out'
       fi
+
       sbatch <<EOF
 #!/bin/bash
 
@@ -113,7 +130,7 @@ cap_md5() {
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 ${@:1}
+cap md5 --name "$name_filter" --path "$path_filter" ${@:1}
 echo "Ran from: $current_path"
 EOF
       ;;
@@ -129,7 +146,7 @@ EOF
     *)
       {
         if [[ "$dry_run" == "true" ]]; then
-          find "${@:1}" -type f ! -path '*/\.*' | sort
+          find "${@:1}" -name "$name_filter" -path "$path_filter" -type f ! -path '*/\.*' | sort
         else
           # Compute checksums for all files
           echo -e '\nFiles included:'
@@ -160,5 +177,5 @@ EOF
 #
 ###############################################################################
 cap_md5_find() {
-  find "${@:1}" -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
+  find "${@:1}" -name "$name_filter" -path "$path_filter" -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
 }

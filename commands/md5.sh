@@ -29,14 +29,14 @@ cap_md5_help() {
 
     --name=FILE
             Specify a file name to filter files by. The name can have wildcards
-            and the default is `*`.
+            and the default is "*".
 
     -o,--output=FILE
             Specify an output file name to write the results to.
 
     --path=FILE
             Specify a file path to filter files by. The name can have wildcards
-            and the default is `*`.
+            and the default is "*".
 
     --slurm=[batch|run]
             Runs the md5 command as a Slurm job. If the value is run then

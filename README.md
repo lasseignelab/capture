@@ -1,6 +1,8 @@
 CAPTURE
 A framework and command line interface (CLI) for computational science.
 
+* [Table of Contents](#table-of-contents)
+
 # Installation
 ```
 curl -sSL https://raw.githubusercontent.com/lasseignelab/capture/refs/heads/main/install.sh | bash
@@ -196,7 +198,7 @@ cat logs/01_down_20241118_090854_tcrumley*
 
 Submitted batch job 29818073
 ```
-Runtime environment:
+### Runtime environment
 
 The runtime environment is configured with the following variables available
 to Slurm scripts.
@@ -295,7 +297,7 @@ $ cap version
 v0.0.3
 
 ```
-# Helper Functions
+# Job Helper Functions
 ## cap_array_value
 Retrieves a value from an array file based on a zero based index.
 ```
@@ -333,6 +335,10 @@ file is a TAR file then it will be unarchived into the data directory.  The
 data directory is specified by `CAP_DATA_PATH` which defaults to
 `CAP_PROJECT_PATH/data`.
 
+If the file or directory already exists in the `data` directory then it will
+not be downloaded again. This is also true when the file or directory has
+been symlinked into the `data` directory by [cap_data_link].
+
 The following example will download and unarchive a directory into
 `CAP_DATA_PATH/refdata-gex-GRCm39-2024-A`.
 ```
@@ -340,8 +346,18 @@ cap_data_download \
   --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
   "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
 ```
+# Environment Helper Functions
+Functions to facilitate setting up environments for CAPTURE to operate in.
+Environments help create reproducible pipelines by allowing authors to
+work in their unique development setup, which may only work for them, and
+reviewers to run pipelines in a default environment that should work anywhere.
+Environment files are stored in the `config/environments` directory.
+
 ## cap_data_link
-Creates a symbolic link in the data directory.
+Creates a symbolic link in the data directory. A common use is to prevent
+duplicate storage of large datasets in the author's compute environment. By
+linking to a shared copy, multiple authors won't create multiple copies. This
+function is often used in conjunction with [cap_data_download].
 ```
 cap_data_link <FILE>|<DIR>
 ```
@@ -351,7 +367,15 @@ The symbolic link will have the same name as the specified file or directory
 and will be created in the directory specified by `CAP_DATA_PATH` which
 defaults to `CAP_PROJECT_PATH/data`.
 
-The following example will create the symbolic link `$CAP_DATA_PATH/mouse`.
+The following example will create a symbolic link at `$CAP_DATA_PATH/mouse`
+and should be included in an environment file in `config/environments`, e.g
+`config/environments/my_lab.sh`. The `$MY_LAB` environment variable should
+be created in a `.caprc` file (See [Runtime environment]).
 ```
 cap_data_link "$MY_LAB/genome/mouse"
+```
+To use the `my_lab` environment when running a job, use the `cap run` command
+with the -e/--environment option like in the following example.
+```
+cap run -e my_lab src/01_download.sh
 ```

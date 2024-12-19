@@ -390,7 +390,7 @@ defaults to `CAP_PROJECT_PATH/data`.
 The following example will create a symbolic link at `$CAP_DATA_PATH/mouse`
 and should be included in an environment file in `config/environments`, e.g
 `config/environments/my_lab.sh`. The `$MY_LAB` environment variable should
-be created in a `.caprc` file (See [Runtime environment](#runtime-environment).
+be created in a `.caprc` file (See [Runtime environment](#runtime-environment)).
 ```
 cap_data_link "$MY_LAB/genome/mouse"
 ```

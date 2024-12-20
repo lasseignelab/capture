@@ -377,7 +377,10 @@ Creates a symbolic link in the data directory. A common use is to prevent
 duplicate storage of large datasets in the author's compute environment. By
 linking to a shared copy, multiple authors won't create multiple copies. This
 function is often used in conjunction with
-[cap_data_download](#cap_data_download).
+[cap_data_download](#cap_data_download), where cap_data_link prevents
+cap_data_download from downloading a new version of previously downloaded data
+while ensuring the data will be downloaded in other environments such as the
+default environment.
 ```
 cap_data_link <FILE>|<DIR>
 ```

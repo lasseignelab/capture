@@ -316,7 +316,7 @@ v0.0.3
 ## cap_array_value
 Retrieves a value from an array file based on a zero based index.
 ```
-cap_arrary_value FILE [INDEX]
+cap_array_value FILE [INDEX]
 ```
 - `FILE` The file containing an array value on each line.
 - `INDEX` The optional zero based index for the value of the array.

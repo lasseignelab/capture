@@ -11,6 +11,8 @@ load ../../node_modules/bats-mock/stub
         cap new test
     )
 
+    unstub curl
+
     # Check that the version was updated.
     run grep -o "RELEASE_3_20-CAPTURE" $BATS_TMPDIR/test/bin/docker/Dockerfile
 

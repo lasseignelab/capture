@@ -22,21 +22,27 @@ cap_md5_help() {
 
     Options:
 
+    --ignore=PATTERN
+            Exclude files matching the file PATTERN based on the full relative
+            path. If the option is specified multiple times, all files matching
+            any of the patterns will be EXCLUDED (logical OR). The selector will
+            generally have wildcards. Ensure patterns are quoted ("*pattern*")
+            to prevent unintended shell expansion.
+
     -n,--dry-run
             Lists the files that will have md5sums calculated in order to
             verify the expected files are included.  This is helpful when
             the files are large and take a long time to process.
 
-    --name=FILE
-            Specify a file name to filter files by. The name can have wildcards
-            and the default is "*".
-
     -o,--output=FILE
             Specify an output file name to write the results to.
 
-    --path=FILE
-            Specify a file path to filter files by. The name can have wildcards
-            and the default is "*".
+    --select=PATTERN
+            Include only files matching the file PATTERN based on the full
+            relative path. If the option is specified multiple times, all files
+            matching any of the patterns will be INCLUDED (logical OR). The
+            selector will generally have wildcards. Ensure patterns are quoted
+            ("*pattern*") to prevent unintended shell expansion.
 
     --slurm=[batch|run]
             Runs the md5 command as a Slurm job. If the value is run then
@@ -44,81 +50,52 @@ cap_md5_help() {
             terminal session.  If the value is batch then sbatch is used and
             the output is written to cap-md5-<job_id>.out
 
-  Example:
-    $ cap md5 *
+  Examples:
+    $ cap md5 files/*
 
     Files included:
-    43bd364a97a38fb1da7c57e6381886c1  capture/LICENSE
-    b794df25f796ac80680c0e4d27308bce  capture/commands/md5.sh
-    0d9281c3586c420130bcb5d25c8a151a  capture/lab
-    5e79c988140af1b7bd5735b0bf96306b  capture/README.md
-    783a44ffae97afbce3f1649c5ff517a5  capture/install.sh
+    b3ac2b8b9998bf504ef708ec837a4cce  files/one.bin
+    8d62064673ecb2a440b8802a2f752e8a  files/outs/four.bin
+    74a08ee2de381ec8e19da52ad36bb5ae  files/outs/three.bin
+    009c79f013fe8d4d97c95bf5ceea68ed  files/two.bin
 
     Combined MD5 checksum:
-    a225199964b84bdeef33bafe3df7c10b
+    1060bcc0958e5cc774f84ccd24a3b010
+
+    $ cap md5 --select "*/outs/*" files/*
+
+    Files included:
+    8d62064673ecb2a440b8802a2f752e8a  files/outs/four.bin
+    74a08ee2de381ec8e19da52ad36bb5ae  files/outs/three.bin
+
+    Combined MD5 checksum:
+    feaaf18494b99f6570ab6e4730f9e4af
+
+    $ cap md5 --ignore "*/outs/*" files/*
+
+    Files included:
+    b3ac2b8b9998bf504ef708ec837a4cce  files/one.bin
+    009c79f013fe8d4d97c95bf5ceea68ed  files/two.bin
+
+    Combined MD5 checksum:
+    c6f882353ed4c63582276bdd49974a86
 EOF
 }
 
 cap_md5() {
-  # Define the named commandline options
-  if ! OPTIONS=$(getopt -o no:s: --long dry-run,name:,output:,path:,slurm: -- "$@"); then
-    echo "Use the 'cap help md5' command for detailed help."
-    return 1
-  fi
-  eval set -- "$OPTIONS"
-
-  # Set default values for the named parameters
-  dry_run=false
-  name_filter="*"
-  path_filter="*"
-  output_file=""
-  slurm=""
-
-  # Parse the optional named command line options
-  while true; do
-    case "$1" in
-      -n|--dry-run)
-        dry_run=true
-        shift 1 ;;
-      --name)
-        name_filter="$2"
-        shift 2 ;;
-      -o|--output)
-        output_file="$2"
-        shift 2 ;;
-      --path)
-        path_filter="$2"
-        shift 2 ;;
-      -s|--slurm)
-        slurm="$2"
-        shift 2 ;;
-      --)
-        shift
-        break;;
-    esac
-  done
-
-  # Validate the slurm option value
-  if [[ "$slurm" != "batch" && "$slurm" != "run" && "$slurm" != "" ]]; then
-    echo "Error: invalid value for --slurm option"
-    echo "Use the 'cap help md5' command for detailed help."
-    exit 1
-  fi
-
-  # Dry runs do not run as Slurm jobs
-  if [[ "$dry_run" == "true" ]]; then
-    slurm=""
-  fi
+  cap_md5_parse_commandline_parameters "$@"
 
   # Submit to slurm or run immediately
   case "$slurm" in
     batch)
+      # Create a temporary script and run it as a Slurm batch job.
       current_path=$(pwd)
       if [[ "$output_file" == "" ]]; then
         output_file='cap-md5-%j.out'
       fi
 
-      sbatch <<EOF
+      temp_batch_script=$(mktemp)
+      cat <<EOF > $temp_batch_script
 #!/bin/bash
 
 #################################### SLURM ####################################
@@ -130,27 +107,38 @@ cap_md5() {
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 --name "$name_filter" --path "$path_filter" ${@:1}
+cap md5 $slurm_args ${md5_files}
 echo "Ran from: $current_path"
 EOF
+      sbatch "$temp_batch_script"
+
       ;;
     run)
+      # Prepare file paths for passing to slurm, otherwise it just passes
+      # the first file path.
+      file_paths=()
+      for pattern in "$md5_files"; do
+        for file_path in $pattern; do
+          file_paths+=("$file_path")
+        done
+      done
+
       srun \
         --job-name=cap-md5 \
         --ntasks=1 \
         --cpus-per-task=1 \
         --mem=32G \
         --output="${output_file:-/dev/stdout}" \
-        bash -c 'cap md5 "$@"' _ "${@}"
+        bash -c "cap md5 $slurm_args ${file_paths[@]}"
       ;;
     *)
       {
         if [[ "$dry_run" == "true" ]]; then
-          find "${@:1}" -name "$name_filter" -path "$path_filter" -type f ! -path '*/\.*' | sort
+          find "${md5_files}" "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
         else
           # Compute checksums for all files
           echo -e '\nFiles included:'
-          checksums=$(cap_md5_find "${@:1}")
+          checksums=$(cap_md5_find "${md5_files}")
           echo "$checksums"
 
           # Compute single checksum based on the checksums of all files
@@ -177,5 +165,88 @@ EOF
 #
 ###############################################################################
 cap_md5_find() {
-  find "${@:1}" -name "$name_filter" -path "$path_filter" -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
+  find "${@}" "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
+}
+
+cap_md5_parse_commandline_parameters() {
+  # Define the named commandline options
+  if ! OPTIONS=$(getopt -o no:s: --long dry-run,ignore:,output:,select:,slurm: -- "$@"); then
+    echo "Use the 'cap help md5' command for detailed help."
+    return 1
+  fi
+  eval set -- "$OPTIONS"
+
+  # Set default values for the named parameters
+  dry_run=false
+  ignore_values=()
+  select_values=()
+  output_file=""
+  slurm=""
+
+  # Save the original args for use with Slurm.
+  slurm_args=""
+
+  # Parse the optional named command line options
+  while true; do
+    case "$1" in
+      -n|--dry-run)
+        dry_run=true
+        slurm_args+="$1 "
+        shift 1 ;;
+      --ignore)
+        ignore_values+=("$2")
+        slurm_args+="$1 \"$2\" "
+        shift 2 ;;
+      -o|--output)
+        output_file="$2"
+        slurm_args+="$1 \"$2\" "
+        shift 2 ;;
+      --select)
+        select_values+=("$2")
+        slurm_args+="$1 \"$2\" "
+        shift 2 ;;
+      -s|--slurm)
+        slurm="$2"
+        shift 2 ;;
+      --)
+        shift
+        break;;
+    esac
+  done
+
+  # Transform the --ignore values into filter options
+  ignore_filter=()
+  for ignore_value in "${ignore_values[@]}"; do
+    ignore_filter+=(! -path "$ignore_value")
+  done
+
+  # Transform the --select values into filter options
+  if [ -z "$select_values" ]; then
+    select_filter=(-path "*")
+  else
+    select_filter=()
+  fi
+
+  for select_value in "${select_values[@]}"; do
+    if [ -z "$select_filter" ]; then
+      select_filter=(-path "$select_value")
+    else
+      select_filter+=(-o -path "$select_value")
+    fi
+  done
+
+  # Validate the slurm option value
+  if [[ "$slurm" != "batch" && "$slurm" != "run" && "$slurm" != "" ]]; then
+    echo "Error: invalid value for --slurm option"
+    echo "Use the 'cap help md5' command for detailed help."
+    exit 1
+  fi
+
+  # Dry runs do not run as Slurm jobs
+  if [[ "$dry_run" == "true" ]]; then
+    slurm=""
+  fi
+
+  # Files and/or directories to compute md5 sums on.
+  md5_files="$@"
 }

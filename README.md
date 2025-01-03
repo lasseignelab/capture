@@ -107,14 +107,17 @@ $ cap help md5
 ```
 
 ## md5
-The `cap md5` command will produce an md5sum for the file or files specified.
-This makes it easy to determine whether reproduced files are identical.
+The `md5` command produces a combined MD5 checksum for all the files specified.
+It will show a list of all files included to ensure that the result is as
+expected. The purpose of this command is to determine whether files downloaded
+or created are complete and accurate.
 
 Definition:
 ```
 cap md5 [options] FILE...
 
-FILE... One or more file and/or directory names or patterns.
+FILE... One or more file and/or directory names or patterns. For directories,
+        all files in the directory and its subdirectories will be included.
 
 Options:
 

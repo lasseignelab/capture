@@ -116,15 +116,6 @@ EOF
 
       ;;
     run)
-      # Prepare file paths for passing to slurm, otherwise it just passes
-      # the first file path.
-      file_paths=()
-      for pattern in "$md5_files"; do
-        for file_path in $pattern; do
-          file_paths+=("$file_path")
-        done
-      done
-
       # Prepare a temporary script for running the command in Slurm.
       # The temporary file was introduced to make the code testable by BATS.
       temp_run_script=$(mktemp)

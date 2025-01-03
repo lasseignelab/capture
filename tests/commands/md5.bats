@@ -115,6 +115,35 @@ EOF
     [ "$output" == "sbatch called correctly" ]
 }
 
+@test "cap md5 --slurm batch: Two specific files" {
+
+    temp_script=$(mktemp -p "$BATS_TEMPDIR")
+    stub mktemp " : echo '$temp_script'"
+    stub sbatch "$temp_script : echo 'sbatch called correctly'"
+    run cap md5 --slurm batch -o "test/output.txt" $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
+    unstub mktemp
+    unstub sbatch
+
+    diff <(cat <<EOF
+#!/bin/bash
+
+#################################### SLURM ####################################
+#SBATCH --job-name cap-md5
+#SBATCH --output test/output.txt
+#SBATCH --error test/output.txt
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=32G
+#SBATCH --partition=short
+
+cap md5 -o "test/output.txt"  $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
+echo "Ran from: $(pwd)"
+EOF
+) "$temp_script"
+
+    [ "$output" == "sbatch called correctly" ]
+}
+
 @test "cap md5 --slurm batch: --select a directory in subdirectories" {
 
     temp_script=$(mktemp -p "$BATS_TEMPDIR")
@@ -184,6 +213,24 @@ EOF
     diff <(cat <<EOF
 #!/bin/bash
 cap md5  $FIXTURE_PATH/files
+EOF
+) "$temp_script"
+
+    echo "DEBUG: $output"
+    [ "$output" == "srun called correctly" ]
+}
+
+@test "cap md5 --slurm run: Two specific files" {
+    temp_script=$(mktemp -p "$BATS_TEMPDIR")
+    stub mktemp " : echo '$temp_script'"
+    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script bash : echo 'srun called correctly'"
+    run cap md5 --slurm "run" $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
+    unstub mktemp
+    unstub srun
+
+    diff <(cat <<EOF
+#!/bin/bash
+cap md5  $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
 EOF
 ) "$temp_script"
 

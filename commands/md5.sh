@@ -109,7 +109,7 @@ cap_md5() {
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 $slurm_args ${md5_files}
+cap md5 $slurm_args ${md5_files[@]}
 echo "Ran from: $current_path"
 EOF
       sbatch "$temp_batch_script"
@@ -121,7 +121,7 @@ EOF
       temp_run_script=$(mktemp)
       cat <<EOF > "$temp_run_script"
 #!/bin/bash
-cap md5 $slurm_args ${md5_files}
+cap md5 $slurm_args ${md5_files[@]}
 EOF
 
       srun \
@@ -252,5 +252,5 @@ cap_md5_parse_commandline_parameters() {
   fi
 
   # Files and/or directories to compute md5 sums on.
-  md5_files=$@
+  md5_files=( "$@" )
 }

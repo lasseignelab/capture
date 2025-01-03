@@ -114,7 +114,7 @@ Definition:
 ```
 cap md5 [options] FILE...
 
-FILE... can be one or more file and/or directory specifications.
+FILE... One or more file and/or directory names or patterns.
 
 Options:
 

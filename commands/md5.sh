@@ -18,7 +18,7 @@ cap_md5_help() {
   Usage:
     cap md5 [options] FILE...
 
-    FILE... can be one or more file and/or directory specifications.
+    FILE... One or more file and/or directory names or patterns.
 
     Options:
 
@@ -94,6 +94,8 @@ cap_md5() {
         output_file='cap-md5-%j.out'
       fi
 
+      # Prepare a temporary script for running the command in Slurm.
+      # The temporary file was introduced to make the code testable by BATS.
       temp_batch_script=$(mktemp)
       cat <<EOF > $temp_batch_script
 #!/bin/bash
@@ -123,22 +125,31 @@ EOF
         done
       done
 
+      # Prepare a temporary script for running the command in Slurm.
+      # The temporary file was introduced to make the code testable by BATS.
+      temp_run_script=$(mktemp)
+      cat <<EOF > $temp_run_script
+#!/bin/bash
+cap md5 $slurm_args ${md5_files}
+EOF
+
       srun \
         --job-name=cap-md5 \
         --ntasks=1 \
         --cpus-per-task=1 \
         --mem=32G \
         --output="${output_file:-/dev/stdout}" \
-        bash -c "cap md5 $slurm_args ${file_paths[@]}"
+        --input="$temp_run_script" \
+        bash
       ;;
     *)
       {
         if [[ "$dry_run" == "true" ]]; then
-          find "${md5_files}" "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
+          find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
         else
           # Compute checksums for all files
           echo -e '\nFiles included:'
-          checksums=$(cap_md5_find "${md5_files}")
+          checksums=$(cap_md5_find)
           echo "$checksums"
 
           # Compute single checksum based on the checksums of all files
@@ -165,7 +176,7 @@ EOF
 #
 ###############################################################################
 cap_md5_find() {
-  find "${@}" "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
+  find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
 }
 
 cap_md5_parse_commandline_parameters() {

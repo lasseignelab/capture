@@ -26,7 +26,7 @@ FIXTURE_PATH="tests/fixtures/md5"
 @test "cap md5: Two specific files" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 -o $temp_output $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
-    run diff $temp_output $FIXTURE_PATH/outputs/ignore_path.out
+    run diff $temp_output $FIXTURE_PATH/outputs/one_two.out
 
     echo "$output"
     [ "$status" -eq 0 ]
@@ -35,7 +35,7 @@ FIXTURE_PATH="tests/fixtures/md5"
 @test "cap md5: --select a file in subdirectories" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 --select "*/three.bin" -o $temp_output $FIXTURE_PATH/files
-    run diff $temp_output $FIXTURE_PATH/outputs/name.out
+    run diff $temp_output $FIXTURE_PATH/outputs/three.out
 
     echo "$output"
     [ "$status" -eq 0 ]
@@ -44,7 +44,7 @@ FIXTURE_PATH="tests/fixtures/md5"
 @test "cap md5: --select a directory in subdirectories" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 --select "*/outs/*" -o $temp_output $FIXTURE_PATH/files
-    run diff $temp_output $FIXTURE_PATH/outputs/outs.out
+    run diff $temp_output $FIXTURE_PATH/outputs/three_four.out
 
     echo "$output"
     [ "$status" -eq 0 ]
@@ -53,7 +53,7 @@ FIXTURE_PATH="tests/fixtures/md5"
 @test "cap md5: --select two files in subdirectories" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 --select "*/three.bin" --select "*/four.bin" -o $temp_output $FIXTURE_PATH/files
-    run diff $temp_output $FIXTURE_PATH/outputs/outs.out
+    run diff $temp_output $FIXTURE_PATH/outputs/three_four.out
 
     echo "$output"
     [ "$status" -eq 0 ]
@@ -62,7 +62,7 @@ FIXTURE_PATH="tests/fixtures/md5"
 @test "cap md5: --ignore a file in subdirectories" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 --ignore "*/three.bin" -o $temp_output $FIXTURE_PATH/files
-    run diff $temp_output $FIXTURE_PATH/outputs/ignore_file.out
+    run diff $temp_output $FIXTURE_PATH/outputs/one_two_four.out
 
     echo "$output"
     [ "$status" -eq 0 ]
@@ -71,7 +71,7 @@ FIXTURE_PATH="tests/fixtures/md5"
 @test "cap md5: --ignore a directory in subdirectories" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 --ignore "*/outs/*" -o $temp_output $FIXTURE_PATH/files
-    run diff $temp_output $FIXTURE_PATH/outputs/ignore_path.out
+    run diff $temp_output $FIXTURE_PATH/outputs/one_two.out
 
     echo "$output"
     [ "$status" -eq 0 ]
@@ -80,7 +80,7 @@ FIXTURE_PATH="tests/fixtures/md5"
 @test "cap md5: --ignore two files in subdirectories" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 --ignore "*/one.bin" --ignore "*/two.bin" -o $temp_output $FIXTURE_PATH/files
-    run diff $temp_output $FIXTURE_PATH/outputs/outs.out
+    run diff $temp_output $FIXTURE_PATH/outputs/three_four.out
 
     echo "$output"
     [ "$status" -eq 0 ]

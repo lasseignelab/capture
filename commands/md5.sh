@@ -97,7 +97,7 @@ cap_md5() {
       # Prepare a temporary script for running the command in Slurm.
       # The temporary file was introduced to make the code testable by BATS.
       temp_batch_script=$(mktemp)
-      cat <<EOF > $temp_batch_script
+      cat <<EOF > "$temp_batch_script"
 #!/bin/bash
 
 #################################### SLURM ####################################
@@ -128,7 +128,7 @@ EOF
       # Prepare a temporary script for running the command in Slurm.
       # The temporary file was introduced to make the code testable by BATS.
       temp_run_script=$(mktemp)
-      cat <<EOF > $temp_run_script
+      cat <<EOF > "$temp_run_script"
 #!/bin/bash
 cap md5 $slurm_args ${md5_files}
 EOF
@@ -145,6 +145,7 @@ EOF
     *)
       {
         if [[ "$dry_run" == "true" ]]; then
+          # shellcheck disable=SC2068
           find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
         else
           # Compute checksums for all files
@@ -176,6 +177,7 @@ EOF
 #
 ###############################################################################
 cap_md5_find() {
+  # shellcheck disable=SC2068
   find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
 }
 
@@ -232,14 +234,14 @@ cap_md5_parse_commandline_parameters() {
   done
 
   # Transform the --select values into filter options
-  if [ -z "$select_values" ]; then
+  if [ ${#select_values[@]} -eq 0 ]; then
     select_filter=(-path "*")
   else
     select_filter=()
   fi
 
   for select_value in "${select_values[@]}"; do
-    if [ -z "$select_filter" ]; then
+    if [ ${#select_filter[@]} -eq 0 ]; then
       select_filter=(-path "$select_value")
     else
       select_filter+=(-o -path "$select_value")
@@ -259,5 +261,5 @@ cap_md5_parse_commandline_parameters() {
   fi
 
   # Files and/or directories to compute md5 sums on.
-  md5_files="$@"
+  md5_files=$@
 }

@@ -23,6 +23,15 @@ FIXTURE_PATH="tests/fixtures/md5"
     [ "$status" -eq 0 ]
 }
 
+@test "cap md5: Two specific files" {
+    temp_output=$(mktemp -p "$BATS_TEMPDIR")
+    cap md5 -o $temp_output $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
+    run diff $temp_output $FIXTURE_PATH/outputs/ignore_path.out
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+
 @test "cap md5: --select a file in subdirectories" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 --select "*/three.bin" -o $temp_output $FIXTURE_PATH/files

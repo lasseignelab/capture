@@ -205,13 +205,12 @@ EOF
 @test "cap md5 --slurm run: All files in a folder" {
     temp_script=$(mktemp -p "$BATS_TEMPDIR")
     stub mktemp " : echo '$temp_script'"
-    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script bash : echo 'srun called correctly'"
+    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script --export=ALL bash : echo 'srun called correctly'"
     run cap md5 --slurm "run" $FIXTURE_PATH/files
     unstub mktemp
     unstub srun
 
     diff <(cat <<EOF
-#!/bin/bash
 cap md5  $FIXTURE_PATH/files
 EOF
 ) "$temp_script"
@@ -223,13 +222,12 @@ EOF
 @test "cap md5 --slurm run: Two specific files" {
     temp_script=$(mktemp -p "$BATS_TEMPDIR")
     stub mktemp " : echo '$temp_script'"
-    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script bash : echo 'srun called correctly'"
+    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script --export=ALL bash : echo 'srun called correctly'"
     run cap md5 --slurm "run" $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
     unstub mktemp
     unstub srun
 
     diff <(cat <<EOF
-#!/bin/bash
 cap md5  $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
 EOF
 ) "$temp_script"
@@ -241,13 +239,12 @@ EOF
 @test "cap md5 --slurm run: --select a directory in subdirectories" {
     temp_script=$(mktemp -p "$BATS_TEMPDIR")
     stub mktemp " : echo '$temp_script'"
-    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script bash : echo 'srun called correctly'"
+    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script --export=ALL bash : echo 'srun called correctly'"
     run cap md5 --select "*/outs/*" --slurm "run" $FIXTURE_PATH/files
     unstub mktemp
     unstub srun
 
     diff <(cat <<EOF
-#!/bin/bash
 cap md5 --select "*/outs/*"  $FIXTURE_PATH/files
 EOF
 ) "$temp_script"
@@ -259,13 +256,12 @@ EOF
 @test "cap md5 --slurm run: --ignore a directory in subdirectories" {
     temp_script=$(mktemp -p "$BATS_TEMPDIR")
     stub mktemp " : echo '$temp_script'"
-    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script bash : echo 'srun called correctly'"
+    stub srun "--job-name=cap-md5 --ntasks=1 --cpus-per-task=1 --mem=32G --output=/dev/stdout --input=$temp_script --export=ALL bash : echo 'srun called correctly'"
     run cap md5 --ignore "*/outs/*" --slurm "run" $FIXTURE_PATH/files
     unstub mktemp
     unstub srun
 
     diff <(cat <<EOF
-#!/bin/bash
 cap md5 --ignore "*/outs/*"  $FIXTURE_PATH/files
 EOF
 ) "$temp_script"

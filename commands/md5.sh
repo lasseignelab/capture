@@ -123,7 +123,6 @@ EOF
       # The temporary file was introduced to make the code testable by BATS.
       temp_run_script=$(mktemp)
       cat <<EOF > "$temp_run_script"
-#!/bin/bash
 cap md5 $slurm_args ${md5_files[@]}
 EOF
 
@@ -134,6 +133,7 @@ EOF
         --mem=32G \
         --output="${output_file:-/dev/stdout}" \
         --input="$temp_run_script" \
+        --export=ALL \
         bash
       ;;
     *)

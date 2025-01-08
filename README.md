@@ -147,7 +147,8 @@ Options:
         Runs the md5 command as a Slurm job. If the value is run then
         srun is used and the output stays connected to the current
         terminal session.  If the value is batch then sbatch is used and
-        the output is written to cap-md5-<job_id>.out
+        the output is written to cap-md5-<job_id>.out unless the -o or --output
+        option is specified.
 ```
 Examples:
 

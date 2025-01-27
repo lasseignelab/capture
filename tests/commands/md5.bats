@@ -270,3 +270,21 @@ EOF
     [ "$output" == "srun called correctly" ]
 }
 
+@test "cap md5 --normalize: All files in a folder" {
+    temp_output=$(mktemp -p "$BATS_TEMPDIR")
+    cap md5 --normalize -o $temp_output $FIXTURE_PATH/files
+    run diff $temp_output $FIXTURE_PATH/outputs/all_normalized.out
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+
+@test "cap md5 --normalize: Only one file" {
+    temp_output=$(mktemp -p "$BATS_TEMPDIR")
+    cap md5 --normalize --select "*one.bin" -o $temp_output $FIXTURE_PATH/files
+    run diff $temp_output $FIXTURE_PATH/outputs/one_normalized.out
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+

@@ -48,11 +48,13 @@ if [ -f "$CAP_PROJECT_PATH/config/pipeline.sh" ]; then
 fi
 
 # Set all the default paths.
-CAP_LOGS_PATH=$(realpath "logs")
-CAP_DATA_PATH=$(realpath "data")
-CAP_RESULTS_PATH=$(realpath "results")
 CAP_CONTAINER_PATH=$(realpath "bin/docker")
 CAP_CONDA_PATH=$(realpath "bin/conda")
+CAP_DATA_PATH=$(realpath "data")
+CAP_LOGS_PATH=$(realpath "logs")
+CAP_RESULTS_PATH=$(realpath "results")
+CAP_REVIEW_PATH=$(realpath "review")
+CAP_VERIFICATIONS_PATH=(realpath "verifications")
 
 # Load the configuration files.
 if [ -f /etc/caprc ]; then
@@ -77,30 +79,39 @@ if [ -f "$CAP_PROJECT_PATH/config/environments/$CAP_ENV.sh" ]; then
 fi
 
 # Make sure all the configured paths exist.
-if [ ! -d "$CAP_LOGS_PATH" ]; then
-  mkdir -p "$CAP_LOGS_PATH"
-fi
-if [ ! -d "$CAP_DATA_PATH" ]; then
-  mkdir -p "$CAP_DATA_PATH"
-fi
-if [ ! -d "$CAP_RESULTS_PATH" ]; then
-  mkdir -p "$CAP_RESULTS_PATH"
+if [ ! -d "$CAP_CONDA_PATH" ]; then
+  mkdir -p "$CAP_CONDA_PATH"
 fi
 if [ ! -d "$CAP_CONTAINER_PATH" ]; then
   mkdir -p "$CAP_CONTAINER_PATH"
 fi
-if [ ! -d "$CAP_CONDA_PATH" ]; then
-  mkdir -p "$CAP_CONDA_PATH"
+if [ ! -d "$CAP_DATA_PATH" ]; then
+  mkdir -p "$CAP_DATA_PATH"
+fi
+if [ ! -d "$CAP_LOGS_PATH" ]; then
+  mkdir -p "$CAP_LOGS_PATH"
+fi
+if [ ! -d "$CAP_RESULTS_PATH" ]; then
+  mkdir -p "$CAP_RESULTS_PATH"
+fi
+if [ ! -d "$CAP_REVIEW_PATH" ]; then
+  mkdir -p "$CAP_REVIEW_PATH"
+  mkdir -p "$CAP_REVIEW_PATH/verifications"
+fi
+if [ ! -d "$CAP_VERIFICATIONS_PATH" ]; then
+  mkdir -p "$CAP_VERIFICATIONS_PATH"
 fi
 
 # Make all the variables visible in the runtime environment
+export CAP_CONDA_PATH
+export CAP_CONTAINER_PATH
+export CAP_DATA_PATH
 export CAP_ENV
+export CAP_LOGS_PATH
 export CAP_PROJECT_NAME
 export CAP_PROJECT_PATH
-export CAP_LOGS_PATH
-export CAP_DATA_PATH
-export CAP_RESULTS_PATH
-export CAP_CONTAINER_PATH
-export CAP_CONDA_PATH
 export CAP_RANDOM_SEED
+export CAP_RESULTS_PATH
+export CAP_REVIEW_PATH
+export CAP_VERIFICATIONS_PATH
 

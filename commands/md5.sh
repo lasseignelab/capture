@@ -37,6 +37,10 @@ cap_md5_help() {
             verify the expected files are included.  This is helpful when
             the files are large and take a long time to process.
 
+    --normalize
+            Normalizes the output file paths so that files in different root
+            directories can be easily compared.
+
     -o,--output=FILE
             Specify an output file name to write the results to.
 
@@ -137,6 +141,8 @@ EOF
         bash
       ;;
     *)
+      local temp_output_file
+      temp_output_file=$(mktemp)
       {
         if [[ "$dry_run" == "true" ]]; then
           # shellcheck disable=SC2068
@@ -152,7 +158,11 @@ EOF
           echo "$checksums" | cut -d ' ' -f1 | md5sum | cut -d ' ' -f1
           echo
         fi
-      } > "${output_file:-/dev/stdout}"
+      } > "$temp_output_file"
+      if [[ "$normalize" == "true" ]]; then
+        cap_md5_normalize "$temp_output_file"
+      fi
+      cat "$temp_output_file" > "${output_file:-/dev/stdout}"
       ;;
   esac
 }
@@ -175,9 +185,38 @@ cap_md5_find() {
   find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
 }
 
+cap_md5_normalize() {
+  # Define the file containing the list of file paths
+  local file_name
+	file_name="$1"
+  local temp_file
+	temp_file=$(mktemp)
+	grep -E "[a-f0-9]{32} +" "$file_name" | cut -f 3 -d " " > "$temp_file"
+
+	# Read the first line as the initial common prefix
+	read -r common_prefix < "$temp_file"
+  common_prefix=$(dirname "$common_prefix")/
+
+	# Iterate over each line in the file
+	while read -r line; do
+		# Find the longest common prefix between the current common_prefix and the current line
+    line=$(dirname "$line")/
+		while [[ "${line#"$common_prefix"}" == "$line" ]]; do
+			# Shorten the common_prefix by removing the last character until it matches
+			common_prefix="${common_prefix%?}"
+		done
+	done < "$temp_file"
+
+  # Clean up the temp file.
+	rm "$temp_file"
+
+  # Normalize the input file by replacing the path prefixes.
+  sed -i "s|$common_prefix||" "$file_name"
+}
+
 cap_md5_parse_commandline_parameters() {
   # Define the named commandline options
-  if ! OPTIONS=$(getopt -o no:s: --long dry-run,ignore:,output:,select:,slurm: -- "$@"); then
+  if ! OPTIONS=$(getopt -o no:s: --long dry-run,ignore:,normalize,output:,select:,slurm: -- "$@"); then
     echo "Use the 'cap help md5' command for detailed help."
     return 1
   fi
@@ -185,6 +224,7 @@ cap_md5_parse_commandline_parameters() {
 
   # Set default values for the named parameters
   dry_run=false
+  normalize=false
   ignore_values=()
   select_values=()
   output_file=""
@@ -204,6 +244,10 @@ cap_md5_parse_commandline_parameters() {
         ignore_values+=("$2")
         slurm_args+="$1 \"$2\" "
         shift 2 ;;
+      --normalize)
+        normalize=true
+        slurm_args+="$1 "
+        shift 1 ;;
       -o|--output)
         output_file="$2"
         slurm_args+="$1 \"$2\" "

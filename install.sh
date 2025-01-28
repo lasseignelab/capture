@@ -14,6 +14,6 @@ $ cap update
 EOF
 else
   git clone --recurse-submodules https://github.com/lasseignelab/capture.git
-  cd capture
+  cd capture || exit
   . configure.sh
 fi

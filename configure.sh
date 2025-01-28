@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Check if $HOME/bin/capture is already in PATH
 if ! grep -q "\$HOME/bin/capture" ~/.bash_profile; then
 	echo "Adding $HOME/bin/capture to PATH in .bash_profile"

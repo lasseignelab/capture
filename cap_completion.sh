@@ -3,7 +3,7 @@ _cap_completion() {
 	local currrent subcommand subcommands
 	current="${COMP_WORDS[COMP_CWORD]}"
 	subcommand="${COMP_WORDS[1]}"
-	subcommands="env help md5 new run update verify version"
+	subcommands="env help md5 new run update version"
 
   if [[ "${COMP_CWORD}" -eq 1 ]]; then
 		# Show the cap subcommand list.
@@ -16,7 +16,7 @@ _cap_completion() {
 					COMPREPLY=( $(compgen -W "${subcommands}" -- "${current}") )
 				fi
 				;;
-			"md5"|"run"|"verify")
+			"md5"|"run")
 				# Tab compete with file and directory names.
 				compopt -o default -o plusdirs
 				;;

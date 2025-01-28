@@ -38,6 +38,7 @@ cap_update() {
   git checkout main
   git pull
   git submodule update --init --recursive
+  . "$CAP_INSTALL_PATH/configure.sh"
 
   echo
 

@@ -55,6 +55,10 @@ cap_data_download() {
             gunzip "$file_name"
           )
           ;;
+        *)
+          echo "Error: Unsupported file extension '$file_name'" >&2
+          exit 1
+          ;;
       esac
     fi
   fi

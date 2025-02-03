@@ -4,7 +4,7 @@ load ../../../node_modules/bats-mock/stub
 source "lib/functions/cap_data_download.sh"
 
 setup() {
-  CAP_DATA_PATH=$(mktemp -d -p "$BATS_TEMPDIR")
+  CAP_DATA_PATH=$(mktemp -d -p "$BATS_TMPDIR")
   DOWNLOAD_FIXTURE_PATH="tests/fixtures/lib/functions/cap_data_download"
 }
 
@@ -12,12 +12,21 @@ teardown() {
   rm -rf ${CAP_DATA_PATH}
 }
 
+@test "cap_data_download: URL not found" {
+  stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/missing.txt https://non.existant.url/missing.txt : exit 8"
+
+  run cap_data_download "https://non.existant.url/missing.txt"
+
+  unstub wget
+
+  [ "$status" -eq 1 ]
+  [ "$output" == "Error: URL not found" ]
+}
+
 @test "cap_data_download: check zipped file existance" {
   cp $DOWNLOAD_FIXTURE_PATH/file.txt.tar.gz $CAP_DATA_PATH/file.txt.tar.gz
 
   run cap_data_download "https://some.url/file.txt.tar.gz"
-  echo "DEBUG: $output"
-  echo "DEBUG: $status"
 
   [ "$status" -eq 0 ]
   [ "$output" == "file.txt.tar.gz has already been downloaded" ]
@@ -27,8 +36,6 @@ teardown() {
   cp $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/file.txt
 
   run cap_data_download "https://some.url/file.txt"
-  echo "DEBUG: $output"
-  echo "DEBUG: $status"
 
   [ "$status" -eq 0 ]
   [ "$output" == "file.txt has already been downloaded" ]
@@ -97,6 +104,17 @@ diff $DOWNLOAD_FIXTURE_PATH/file.txt.gz $CAP_DATA_PATH/file.txt.gz
 
   [ "$status" -eq 0 ]
   [ "$output" == "" ]
+}
+
+@test "cap_data_download: download and unzip a file with an invalid file extension" {
+  stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/file.zip https://some.url/file.zip : cp $DOWNLOAD_FIXTURE_PATH/file.zip $CAP_DATA_PATH/file.zip"
+
+  run cap_data_download --unzip "https://some.url/file.zip"
+  
+  unstub wget
+  
+  [ "$status" -eq 1 ]
+  [ "$output" == "Error: Unsupported file extension 'file.zip'" ]
 }
 
 @test "cap_data_download md5sum: download a file with valid md5sum" {

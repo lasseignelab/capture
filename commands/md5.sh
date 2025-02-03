@@ -188,27 +188,27 @@ cap_md5_find() {
 cap_md5_normalize() {
   # Define the file containing the list of file paths
   local file_name
-	file_name="$1"
+  file_name="$1"
   local temp_file
-	temp_file=$(mktemp)
-	grep -E "[a-f0-9]{32} +" "$file_name" | cut -f 3 -d " " > "$temp_file"
+  temp_file=$(mktemp)
+  grep -E "[a-f0-9]{32} +" "$file_name" | cut -f 3 -d " " > "$temp_file"
 
-	# Read the first line as the initial common prefix
-	read -r common_prefix < "$temp_file"
+  # Read the first line as the initial common prefix
+  read -r common_prefix < "$temp_file"
   common_prefix=$(dirname "$common_prefix")/
 
-	# Iterate over each line in the file
-	while read -r line; do
-		# Find the longest common prefix between the current common_prefix and the current line
+  # Iterate over each line in the file
+  while read -r line; do
+    # Find the longest common prefix between the current common_prefix and the current line
     line=$(dirname "$line")/
-		while [[ "${line#"$common_prefix"}" == "$line" ]]; do
-			# Shorten the common_prefix by removing the last character until it matches
-			common_prefix="${common_prefix%?}"
-		done
-	done < "$temp_file"
+    while [[ "${line#"$common_prefix"}" == "$line" ]]; do
+      # Shorten the common_prefix by removing the last character until it matches
+      common_prefix="${common_prefix%?}"
+    done
+  done < "$temp_file"
 
   # Clean up the temp file.
-	rm "$temp_file"
+  rm "$temp_file"
 
   # Normalize the input file by replacing the path prefixes.
   sed -i "s|$common_prefix||" "$file_name"

@@ -55,16 +55,16 @@ teardown() {
 }
 
 @test "cap_data_download: download a zipped file" {
-stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/file.txt.gz https://some.url/file.txt.gz : cp $DOWNLOAD_FIXTURE_PATH/file.txt.gz $CAP_DATA_PATH/file.txt.gz"
+  stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/file.txt.gz https://some.url/file.txt.gz : cp $DOWNLOAD_FIXTURE_PATH/file.txt.gz $CAP_DATA_PATH/file.txt.gz"
 
-run cap_data_download  "https://some.url/file.txt.gz"
+  run cap_data_download  "https://some.url/file.txt.gz"
 
-unstub wget
+  unstub wget
 
-diff $DOWNLOAD_FIXTURE_PATH/file.txt.gz $CAP_DATA_PATH/file.txt.gz
+  diff $DOWNLOAD_FIXTURE_PATH/file.txt.gz $CAP_DATA_PATH/file.txt.gz
 
-[ "$status" -eq 0 ]
-[ "$output" == "" ]
+  [ "$status" -eq 0 ]
+  [ "$output" == "" ]
 }
 
 @test "cap_data_download: download a zipped file and unzip it" {

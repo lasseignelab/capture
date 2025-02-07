@@ -14,11 +14,19 @@ cap_data_download() {
   output_name="${file_name//\.tar.*/}"
   output_name="${output_name//\.gz/}"
 
+  local download_path="$CAP_DATA_PATH"
+  if [ -n "$cap_data_download_subdirectory" ]; then
+    download_path="$CAP_DATA_PATH/$cap_data_download_subdirectory"
+    mkdir -p "$download_path"
+  fi
+
   # Download data if the final output does not exist.
-  if [ -e "$CAP_DATA_PATH/$output_name" ] || [ -e "$CAP_DATA_PATH/$file_name" ]; then
+  if [ -e "$download_path/$output_name" ] || [ -e "$download_path/$file_name" ]; then
     echo "$file_name has already been downloaded"
   else
-    local download_file="$CAP_DATA_PATH/$file_name"
+
+    local download_file
+    download_file="${download_path}/${file_name}"
 
     # Download the file.
     if ! wget -nv --retry-connrefused -O "$download_file" "$cap_data_download_url"; then
@@ -44,36 +52,37 @@ cap_data_download() {
       case "$file_name" in
         # Untar and remove downloads that are tar archives.
         *.tar|*.tar.gz)
-          if tar -xf "$download_file" -C "$CAP_DATA_PATH"; then
-            rm "$download_file"
-          fi
-          ;;
+        if tar -xf "$download_file" -C "$CAP_DATA_PATH"; then
+          rm "$download_file"
+        fi
+        ;;
         # Unzip and remove downloads that are compressed files.
         *.gz)
-          (
-            cd "$CAP_DATA_PATH" || exit
-            gunzip "$file_name"
-          )
-          ;;
-        *)
-          echo "Error: Unsupported file extension '$file_name'" >&2
-          exit 1
-          ;;
-      esac
+        (
+        cd "$CAP_DATA_PATH" || exit
+        gunzip "$file_name"
+      )
+      ;;
+    *)
+      echo "Error: Unsupported file extension '$file_name'" >&2
+      exit 1
+      ;;
+  esac
     fi
-  fi
-}
+    fi
+  }
 
-cap_data_download_parse_commandline_parameters() {
-  # Define the named commandline options
-  if ! OPTIONS=$(getopt -o "" --long md5sum:,unzip -- "$@"); then
-    echo "See CAPTURE help for cap_data_download." >&2
-    exit 1
-  fi
-  eval set -- "$OPTIONS"
+  cap_data_download_parse_commandline_parameters() {
+    # Define the named commandline options
+    if ! OPTIONS=$(getopt -o "" --long md5sum:,unzip,subdirectory: -- "$@"); then
+      echo "See CAPTURE help for cap_data_download." >&2
+      exit 1
+    fi
+    eval set -- "$OPTIONS"
 
   # Set default values for the named parameters
   cap_data_download_md5sum=""
+  cap_data_download_subdirectory=""
   cap_data_download_unzip=false
 
   # Parse the optional named command line options
@@ -81,6 +90,9 @@ cap_data_download_parse_commandline_parameters() {
     case "$1" in
       --md5sum)
         cap_data_download_md5sum="$2"
+        shift 2 ;;
+      --subdirectory)
+        cap_data_download_subdirectory="$2"
         shift 2 ;;
       --unzip)
         cap_data_download_unzip=true

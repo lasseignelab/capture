@@ -52,14 +52,14 @@ cap_data_download() {
       case "$file_name" in
         # Untar and remove downloads that are tar archives.
         *.tar|*.tar.gz)
-        if tar -xf "$download_file" -C "$CAP_DATA_PATH"; then
+        if tar -xf "$download_file" -C "$download_path"; then
           rm "$download_file"
         fi
         ;;
         # Unzip and remove downloads that are compressed files.
         *.gz)
         (
-        cd "$CAP_DATA_PATH" || exit
+        cd "$download_path" || exit
         gunzip "$file_name"
       )
       ;;

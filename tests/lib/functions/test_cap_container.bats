@@ -12,12 +12,12 @@ teardown() {
   rm -rf "${CAP_CONTAINER_PATH}"
 }
 
-@test "cap_container: setting --container-type to singularity" {
+@test "cap_container: setting -c to singularity" {
 CAP_CONTAINER_TYPE="singularity"
 
 stub singularity "pull docker://base/image:tag : cp ${CONTAINER_FIXTURE_PATH}/image_tag.sif ${CAP_CONTAINER_PATH}/image_tag.sif"
 
-run cap_container --container-type "singularity" "base/image:tag"
+run cap_container -c "singularity" "base/image:tag"
 
 unstub singularity
 
@@ -32,7 +32,7 @@ diff "${CONTAINER_FIXTURE_PATH}/image_tag.sif" "${CAP_CONTAINER_PATH}/image_tag.
 
   cp "${CONTAINER_FIXTURE_PATH}/image_tag.sif" "${CAP_CONTAINER_PATH}/image_tag.sif"
 
-  run cap_container --container-type "singularity" "base/image:tag"
+  run cap_container -c "singularity" "base/image:tag"
 
   [ "$status" -eq "1" ]
   [ "$output" == "The image_tag.sif is already available" ]

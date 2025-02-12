@@ -38,6 +38,7 @@ fi
 
 cap_container_parse_commandline_parameters() {
   # Set default values for the named parameters
+  # shellcheck disable=SC2153
   cap_container_type="${CAP_CONTAINER_TYPE}"
 
   # Parse the optional named command-line options

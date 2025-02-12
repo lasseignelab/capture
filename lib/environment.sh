@@ -54,6 +54,9 @@ CAP_RESULTS_PATH=$(realpath "results")
 CAP_CONTAINER_PATH=$(realpath "bin/docker")
 CAP_CONDA_PATH=$(realpath "bin/conda")
 
+# Set all default values
+CAP_CONTAINER_TYPE="docker"
+
 # Load the configuration files.
 if [ -f /etc/caprc ]; then
   # shellcheck disable=SC1091
@@ -103,4 +106,4 @@ export CAP_RESULTS_PATH
 export CAP_CONTAINER_PATH
 export CAP_CONDA_PATH
 export CAP_RANDOM_SEED
-
+export CAP_CONTAINER_TYPE

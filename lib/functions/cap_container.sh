@@ -37,36 +37,31 @@ fi
   }
 
 cap_container_parse_commandline_parameters() {
-  # Define the named commandline options
-  if ! OPTIONS=$(getopt -o "" --long container-type: -- "$@"); then
-    echo "See CAPTURE help for cap_container." >&2
-    exit 1
-  fi
-  eval set -- "$OPTIONS"
-
   # Set default values for the named parameters
-  # shellcheck disable=SC2153
   cap_container_type="${CAP_CONTAINER_TYPE}"
 
-  # Parse the optional named command line options
-  while true; do
-    case "$1" in
-      --container-type)
-        cap_container_type="$2"
-        shift 2 ;;
-      --)
-        shift
-        break;;
+  # Parse the optional named command-line options
+  while getopts "c:" opt; do
+    case "$opt" in
+      c)
+        cap_container_type="$OPTARG"
+        ;;
+      *)
+        echo "Usage: cap_container [options] reference" >&2
+        echo "See CAPTURE help for cap_container" >&2
+        exit 1
+        ;;
     esac
   done
+  shift $((OPTIND - 1))
 
-  # Check that the required file url parameter was provided
+  # Check that the required reference parameter was provided
   if [ "$#" -ne 1 ]; then
     echo "Error: incorrect number of parameters" >&2
     echo "Usage: cap_container [options] reference" >&2
     echo "See CAPTURE help for cap_container" >&2
     exit 1
   fi
+
   cap_container_reference=$1
 }
-

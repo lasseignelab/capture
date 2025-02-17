@@ -14,7 +14,7 @@ if [[ -f "$CAP_CONTAINER_PATH/$sif_file" ]]; then
 else
   (
   cd "${CAP_CONTAINER_PATH}" || {
-    "Error: Unable to CD to $CAP_CONTAINER_PATH"
+    echo "Error: Unable to CD to $CAP_CONTAINER_PATH"
     exit 1
   }
 

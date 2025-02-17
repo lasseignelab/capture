@@ -146,7 +146,7 @@ EOF
       {
         if [[ "$dry_run" == "true" ]]; then
           # shellcheck disable=SC2068
-          find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
+          find -H -L ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
         else
           # Compute checksums for all files
           echo -e '\nFiles included:'
@@ -182,7 +182,7 @@ EOF
 ###############################################################################
 cap_md5_find() {
   # shellcheck disable=SC2068
-  find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
+  find -H -L ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
 }
 
 cap_md5_normalize() {

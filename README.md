@@ -416,9 +416,10 @@ cap_data_download [options] URL
 
 Options
 - `--md5sum` The md5sum to check against the file being downloaded.
+- `--unzip`  Unzips and/or unarchives downloaded files.
 
 The file will be downloaded with the same name as specified by the URL.  If the
-file is a TAR file then it will be unarchived into the data directory.  The
+`--unzip` option is provided then it will be unarchived into the data directory.  The
 data directory is specified by `CAP_DATA_PATH` which defaults to
 `CAP_PROJECT_PATH/data`.
 
@@ -430,6 +431,7 @@ The following example will download and unarchive a directory into
 `CAP_DATA_PATH/refdata-gex-GRCm39-2024-A`.
 ```
 cap_data_download \
+  --unzip \
   --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
   "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
 ```

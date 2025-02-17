@@ -210,6 +210,9 @@ cap_md5_normalize() {
   # Clean up the temp file.
   rm "$temp_file"
 
+  # Make sure the common prefix ends with a directory
+  common_prefix="${common_prefix%/*}/"
+
   # Normalize the input file by replacing the path prefixes.
   sed -i "s|$common_prefix||" "$file_name"
 }

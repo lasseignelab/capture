@@ -215,6 +215,9 @@ cap_md5_normalize() {
 
   # Normalize the input file by replacing the path prefixes.
   sed -i "s|$common_prefix||" "$file_name"
+
+  # Record the normalized path that was removed.
+  echo "Normalized path: ${common_prefix}" >> "${file_name}"
 }
 
 cap_md5_parse_commandline_parameters() {

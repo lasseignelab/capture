@@ -159,7 +159,7 @@ EOF
           echo
         fi
       } > "$temp_output_file"
-      if [[ "$normalize" == "true" ]]; then
+      if [[ "$normalize" == "true" && "$dry_run" == "false" ]]; then
         cap_md5_normalize "$temp_output_file"
       fi
       cat "$temp_output_file" > "${output_file:-/dev/stdout}"

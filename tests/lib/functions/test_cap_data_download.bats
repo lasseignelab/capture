@@ -9,7 +9,7 @@ setup() {
 }
 
 teardown() {
-  rm -rf ${CAP_DATA_PATH}
+  rm -rf "${CAP_DATA_PATH}"
 }
 
 @test "cap_data_download: URL not found" {
@@ -24,7 +24,7 @@ teardown() {
 }
 
 @test "cap_data_download: check zipped file existance" {
-  cp $DOWNLOAD_FIXTURE_PATH/file.txt.tar.gz $CAP_DATA_PATH/file.txt.tar.gz
+  cp "$DOWNLOAD_FIXTURE_PATH/file.txt.tar.gz" "$CAP_DATA_PATH/file.txt.tar.gz"
 
   run cap_data_download "https://some.url/file.txt.tar.gz"
 
@@ -33,9 +33,31 @@ teardown() {
 }
 
 @test "cap_data_download: check unzipped file existance" {
-  cp $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/file.txt
+  cp "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/file.txt"
 
   run cap_data_download "https://some.url/file.txt"
+
+  [ "$status" -eq 0 ]
+  [ "$output" == "file.txt has already been downloaded" ]
+}
+
+@test "cap_data_download: check zipped file existance in subdir" {
+  mkdir "$CAP_DATA_PATH/subdir/"
+
+  cp "$DOWNLOAD_FIXTURE_PATH/file.txt.tar.gz" "$CAP_DATA_PATH/subdir/file.txt.tar.gz"
+
+  run cap_data_download --subdirectory "subdir" "https://some.url/file.txt.tar.gz"
+
+  [ "$status" -eq 0 ]
+  [ "$output" == "file.txt.tar.gz has already been downloaded" ]
+}
+
+@test "cap_data_download: check unzipped file existance in subdir" {
+  mkdir "$CAP_DATA_PATH/subdir/"
+
+  cp "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/subdir/file.txt"
+
+  run cap_data_download --subdirectory "subdir" "https://some.url/file.txt"
 
   [ "$status" -eq 0 ]
   [ "$output" == "file.txt has already been downloaded" ]
@@ -48,7 +70,7 @@ teardown() {
 
   unstub wget
 
-  diff $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/file.txt
+  diff "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/file.txt"
 
   [ "$status" -eq 0 ]
   [ "$output" == "" ]
@@ -61,7 +83,7 @@ teardown() {
 
   unstub wget
 
-  diff $DOWNLOAD_FIXTURE_PATH/file.txt.gz $CAP_DATA_PATH/file.txt.gz
+  diff "$DOWNLOAD_FIXTURE_PATH/file.txt.gz" "$CAP_DATA_PATH/file.txt.gz"
 
   [ "$status" -eq 0 ]
   [ "$output" == "" ]
@@ -74,7 +96,7 @@ teardown() {
 
   unstub wget
 
-  diff $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/file.txt
+  diff "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/file.txt"
 
   [ "$status" -eq 0 ]
   [ "$output" == "" ]
@@ -87,7 +109,7 @@ teardown() {
 
   unstub wget
 
-  diff $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/file.txt
+  diff "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/file.txt"
 
   [ "$status" -eq 0 ]
   [ "$output" == "" ]
@@ -100,7 +122,7 @@ teardown() {
 
   unstub wget
 
-  diff $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/file.txt
+  diff "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/file.txt"
 
   [ "$status" -eq 0 ]
   [ "$output" == "" ]
@@ -125,7 +147,7 @@ $CAP_DATA_PATH/file.txt: OK
 File download checksum verified!
 EOF
 )
-echo $expected
+echo "$expected"
   [ "$status" -eq 0 ]
   [ "$output" == "$expected" ]
 }
@@ -142,7 +164,20 @@ The file was left in place for debugging purposes.  It will
 need to be deleted before attempting another download.
 EOF
 )
-echo $expected
+echo "$expected"
   [ "$status" -eq 1 ]
   [ "$output" == "$expected" ]
+}
+
+@test "cap_data_download subdirectory: download file to subdirectory" {
+  stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/subdirectory/file.txt https://some.url/file.txt : cp $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/subdirectory/file.txt"
+
+  run cap_data_download --subdirectory "subdirectory" "https://some.url/file.txt"
+  
+  unstub wget
+
+  diff "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/subdirectory/file.txt"
+
+  [ "$status" -eq 0 ]
+  [ "$output" == "" ]
 }

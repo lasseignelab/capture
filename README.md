@@ -136,6 +136,10 @@ Options:
 -o,--output=FILE
         Specify an output file name to write the results to.
 
+--normalize
+        Normalizes the output file paths so that files in different root
+        directories can be easily compared.
+
 --select=PATTERN
         Include only files matching the file PATTERN based on the full relative
         path. If the option is specified multiple times, all files matching

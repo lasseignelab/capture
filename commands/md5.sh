@@ -11,10 +11,11 @@ cap_md5_help() {
   echo
 
   cat <<EOF
-  The "md5" command produces a combined MD5 checksum for all the files
-  specified. It will show a list of all files included to ensure that the
-  result is as expected. The purpose of this command is to determine whether
-  files downloaded or created are complete and accurate.
+  The `md5` command produces an MD5 checksum for each file specified and a
+  combined MD5 checksum for all the files. The purpose of this command is to
+  determine whether files downloaded or created are complete and accurate. If
+  the MD5 checksums from two sets of files match then the files are all the
+  same.
 
   Usage:
     cap md5 [options] FILE...
@@ -42,7 +43,8 @@ cap_md5_help() {
             directories can be easily compared.
 
     -o,--output=FILE
-            Specify an output file name to write the results to.
+            Specify an output file name to write the results to. See examples
+            for the output format.
 
     --select=PATTERN
             Include only files matching the file PATTERN based on the full

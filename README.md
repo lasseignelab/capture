@@ -107,10 +107,10 @@ $ cap help md5
 ```
 
 ## md5
-The `md5` command produces a combined MD5 checksum for all the files specified.
-It will show a list of all files included to ensure that the result is as
-expected. The purpose of this command is to determine whether files downloaded
-or created are complete and accurate.
+The `md5` command produces an MD5 checksum for each file specified and a
+combined MD5 checksum for all the files. The purpose of this command is to
+determine whether files downloaded or created are complete and accurate. If
+the MD5 checksums from two sets of files match then the files are all the same.
 
 Definition:
 ```
@@ -134,7 +134,8 @@ Options:
         prevent unintended shell expansion.
 
 -o,--output=FILE
-        Specify an output file name to write the results to.
+        Specify an output file name to write the results to. See examples for
+        the output format.
 
 --normalize
         Normalizes the output file paths so that files in different root
@@ -205,19 +206,21 @@ Definition:
 cap new [options] PROJECT_NAME
 
 PROJECT_NAME Name of the project which will be used for the directory name.
-			 It should also match the git host repo name if one is used.
+       It should also match the git host repo name if one is used.
 
 Options:
 
 --git-host=<host-domain-name>
-		   Git host for the repository used for creating git remotes.  The
-		   default is "github.com".
+       Git host for the repository used for creating git remotes.  The
+       default is "github.com".
+
 -o,--owner=<owner-id>
-		   Git host owner the project repo will be created under.  This may
-		   be a personal or organization account.
+       Git host owner the project repo will be created under.  This may
+       be a personal or organization account.
+
 --skip-git
-		   Skip making the project a git repository in order to allow
-		   the use of other source control software.
+       Skip making the project a git repository in order to allow
+       the use of other source control software.
 
 ```
 Example:

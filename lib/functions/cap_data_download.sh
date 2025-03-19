@@ -52,39 +52,37 @@ cap_data_download() {
       case "$file_name" in
         # Untar and remove downloads that are tar archives.
         *.tar|*.tar.gz)
-        if tar -xf "$download_file" -C "$download_path"; then
-          rm "$download_file"
-        fi
-        ;;
+          if tar -xf "$download_file" -C "$download_path"; then
+            rm "$download_file"
+          fi
+          ;;
         # Unzip and remove downloads that are compressed files.
         *.gz)
-        (
-        cd "$download_path" || exit
-        gunzip "$file_name"
-      )
-      ;;
-    *)
-      echo "Error: Unsupported file extension '$file_name'" >&2
-      exit 1
-      ;;
-  esac
+          cd "$download_path" || exit
+          gunzip "$file_name"
+          ;;
+        *)
+          echo "Error: Unsupported file extension '$file_name'" >&2
+          exit 1
+          ;;
+      esac
     fi
-    fi
-  }
+  fi
+}
 
-  cap_data_download_parse_commandline_parameters() {
-    # Define the named commandline options
-    if ! OPTIONS=$(getopt -o "" --long md5sum:,unzip,subdirectory: -- "$@"); then
-      echo "See CAPTURE help for cap_data_download." >&2
-      exit 1
-    fi
-    eval set -- "$OPTIONS"
+cap_data_download_parse_commandline_parameters() {
+  # Define the named commandline options
+  if ! OPTIONS=$(getopt -o "" --long md5sum:,unzip,subdirectory: -- "$@"); then
+    echo "See CAPTURE help for cap_data_download." >&2
+    exit 1
+  fi
+  eval set -- "$OPTIONS"
 
   # Set default values for the named parameters
   cap_data_download_md5sum=""
   cap_data_download_subdirectory=""
   cap_data_download_unzip=false
-
+  
   # Parse the optional named command line options
   while true; do
     case "$1" in
@@ -102,7 +100,7 @@ cap_data_download() {
         break;;
     esac
   done
-
+  
   # Check that the required file url parameter was provided
   if [ "$#" -ne 1 ]; then
     echo "Error: incorrect number of parameters" >&2

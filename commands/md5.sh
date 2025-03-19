@@ -11,7 +11,7 @@ cap_md5_help() {
   echo
 
   cat <<EOF
-  The `md5` command produces an MD5 checksum for each file specified and a
+  The "md5" command produces an MD5 checksum for each file specified and a
   combined MD5 checksum for all the files. The purpose of this command is to
   determine whether files downloaded or created are complete and accurate. If
   the MD5 checksums from two sets of files match then the files are all the

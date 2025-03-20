@@ -1,3 +1,7 @@
+## CAPTURE 0.6.0 (March 20, 2024) ##
+
+* Add `--normalize` option to `cap md5`
+
 ## CAPTURE 0.5.2 (February 7, 2025) ##
 
 * Fix `cap md5` not working with symlinks

@@ -474,7 +474,8 @@ Singularity .sif file - ollama_0.5.8.sif.
 cap_container \
   -c singularity \
   "ollama/ollama:0.5.8"
-=======
+```
+
 The following example will download and unarchive a directory into
 `CAP_DATA_PATH/reference/refdata-gex-GRCm39-2024-A`.
 ```

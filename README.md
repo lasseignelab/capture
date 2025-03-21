@@ -438,22 +438,30 @@ Downloads the proper docker or singularity container.
 ```
 cap_container [options] REFERENCE
 ```
-- `REFERENCE` The Docker image reference found on DockerHub.
+- `REFERENCE` The Docker image reference found on DockerHub. The format of the reference
+is <owner>/<repository name>:[tag]. If a tag is not provided, if will use the latest release
+and append `_latest`. The following example will result in the creating of ollama_latest.sif.
+```
+cap_container \
+  -c singularity \
+  "ollama/ollama"
+```
 
 Options
-- `--singularity`  If specified, cap_container will use `singularity pull` instead of `docker pull`.
+- `-c singularity`  If specified, cap_container will use `singularity pull` instead of `docker pull`.
 
 `cap_container` first checks whether the Docker image or Singularity .sif file
 already exists in `CAP_CONTAINER_PATH`. If the image is not found, it is downloaded
 from DockerHub. By default, `cap_container` uses Docker, but specifying the
-`--singularity` option directs it to generate a Singularity .sif file in the
+`-c singularity` option directs it to generate a Singularity .sif file in the
 `CAP_CONTAINER_PATH` directory instead.
 
 The following example checks for the corresponding .sif file in `CAP_CONTAINER_PATH`.
-If the file is not found, it downloads and converts the Docker image into a Singularity .sif file.
+If the file is not found, it downloads and converts the Docker image into the 
+Singularity .sif file - ollama_0.5.8.sif.
 ```
 cap_container \
-  --singularity \
+  -c singularity \
   "ollama/ollama:0.5.8"
 ```
 

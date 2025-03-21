@@ -8,33 +8,33 @@ cap_container() {
   sif_file="${sif_file/:/_}.sif"
 
   # Check if the file exists in CAP_CONTAINER_PATH
-if [[ -f "$CAP_CONTAINER_PATH/$sif_file" ]]; then
+  if [[ -f "$CAP_CONTAINER_PATH/$sif_file" ]]; then
     echo "The $sif_file is already available"
     exit 1
-else
-  (
-  cd "${CAP_CONTAINER_PATH}" || {
-    echo "Error: Unable to CD to $CAP_CONTAINER_PATH"
-    exit 1
-  }
+  else
+    (
+    cd "${CAP_CONTAINER_PATH}" || {
+      echo "Error: Unable to CD to $CAP_CONTAINER_PATH"
+          exit 1
+        }
 
-  case "$cap_container_type" in
-    docker)
-      echo "Pulling Docker image: $cap_container_reference"
-      docker pull "$cap_container_reference"
-      ;;
-    singularity)
-      echo "Pulling Singularity image: $cap_container_reference"
-      singularity pull docker://"$cap_container_reference"
-      ;;
-    *)
-      echo "Error: Invalid cap_container_type '$cap_container_type'. Use 'docker' or 'singularity'."
-      exit 1
-      ;;
-  esac
-  )
-fi
-  }
+        case "$cap_container_type" in
+          docker)
+            echo "Pulling Docker image: $cap_container_reference"
+            docker pull "$cap_container_reference"
+            ;;
+          singularity)
+            echo "Pulling Singularity image: $cap_container_reference"
+            singularity pull docker://"$cap_container_reference"
+            ;;
+          *)
+            echo "Error: Invalid cap_container_type '$cap_container_type'. Use 'docker' or 'singularity'."
+            exit 1
+            ;;
+        esac
+      )
+  fi
+}
 
 cap_container_parse_commandline_parameters() {
   # Set default values for the named parameters

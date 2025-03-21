@@ -58,8 +58,10 @@ cap_data_download() {
           ;;
         # Unzip and remove downloads that are compressed files.
         *.gz)
-          cd "$download_path" || exit
-          gunzip "$file_name"
+          (
+            cd "$download_path" || exit
+            gunzip "$file_name"
+          )
           ;;
         *)
           echo "Error: Unsupported file extension '$file_name'" >&2

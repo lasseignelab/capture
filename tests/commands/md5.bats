@@ -3,6 +3,14 @@ load ../../node_modules/bats-mock/stub
 
 FIXTURE_PATH="tests/fixtures/md5"
 
+setup() {
+  CAP_DATA_PATH=$(mktemp -d -p "$BATS_TMPDIR")
+}
+
+teardown() {
+  rm -rf ${CAP_DATA_PATH}
+}
+
 # TODO: Test the dry run option.
 
 @test "cap md5: All files in a folder" {
@@ -268,5 +276,48 @@ EOF
 
     echo "DEBUG: $output"
     [ "$output" == "srun called correctly" ]
+}
+
+@test "cap md5: Process symlink subdirectories" {
+    temp_output=$(mktemp -p "$BATS_TEMPDIR")
+    mkdir "$CAP_DATA_PATH/output"
+    ln -s $(realpath $FIXTURE_PATH/files) $CAP_DATA_PATH/output/files
+    cap md5 -o $temp_output $CAP_DATA_PATH/output
+    run diff -u \
+        <(sed "s|$CAP_DATA_PATH/output||g" $temp_output) \
+        <(sed "s|$FIXTURE_PATH||g" $FIXTURE_PATH/outputs/all.out)
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+
+@test "cap md5: Process symlink command line arguments" {
+    temp_output=$(mktemp -p "$BATS_TEMPDIR")
+    ln -s $(realpath $FIXTURE_PATH/files) $CAP_DATA_PATH/files
+    cap md5 -o $temp_output $CAP_DATA_PATH/files
+    run diff -u \
+        <(sed "s|$CAP_DATA_PATH||g" $temp_output) \
+        <(sed "s|$FIXTURE_PATH||g" $FIXTURE_PATH/outputs/all.out)
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+
+@test "cap md5 --normalize: All files in a folder" {
+    temp_output=$(mktemp -p "$BATS_TEMPDIR")
+    cap md5 --normalize -o $temp_output $FIXTURE_PATH/files
+    run diff $temp_output $FIXTURE_PATH/outputs/all_normalized.out
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+
+@test "cap md5 --normalize: Only one file" {
+    temp_output=$(mktemp -p "$BATS_TEMPDIR")
+    cap md5 --normalize --select "*one.bin" -o $temp_output $FIXTURE_PATH/files
+    run diff $temp_output $FIXTURE_PATH/outputs/one_normalized.out
+
+    echo "$output"
+    [ "$status" -eq 0 ]
 }
 

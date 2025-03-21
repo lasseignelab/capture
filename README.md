@@ -108,10 +108,10 @@ $ cap help md5
 ```
 
 ## md5
-The `md5` command produces a combined MD5 checksum for all the files specified.
-It will show a list of all files included to ensure that the result is as
-expected. The purpose of this command is to determine whether files downloaded
-or created are complete and accurate.
+The `md5` command produces an MD5 checksum for each file specified and a
+combined MD5 checksum for all the files. The purpose of this command is to
+determine whether files downloaded or created are complete and accurate. If
+the MD5 checksums from two sets of files match then the files are all the same.
 
 Definition:
 ```
@@ -135,7 +135,12 @@ Options:
         prevent unintended shell expansion.
 
 -o,--output=FILE
-        Specify an output file name to write the results to.
+        Specify an output file name to write the results to. See examples for
+        the output format.
+
+--normalize
+        Normalizes the output file paths so that files in different root
+        directories can be easily compared.
 
 --select=PATTERN
         Include only files matching the file PATTERN based on the full relative
@@ -202,19 +207,21 @@ Definition:
 cap new [options] PROJECT_NAME
 
 PROJECT_NAME Name of the project which will be used for the directory name.
-			 It should also match the git host repo name if one is used.
+       It should also match the git host repo name if one is used.
 
 Options:
 
 --git-host=<host-domain-name>
-		   Git host for the repository used for creating git remotes.  The
-		   default is "github.com".
+       Git host for the repository used for creating git remotes.  The
+       default is "github.com".
+
 -o,--owner=<owner-id>
-		   Git host owner the project repo will be created under.  This may
-		   be a personal or organization account.
+       Git host owner the project repo will be created under.  This may
+       be a personal or organization account.
+
 --skip-git
-		   Skip making the project a git repository in order to allow
-		   the use of other source control software.
+       Skip making the project a git repository in order to allow
+       the use of other source control software.
 
 ```
 Example:
@@ -414,15 +421,19 @@ cap_data_download [options] URL
 Options
 - `--md5sum` The md5sum to check against the file being downloaded.
 - `--unzip`  Unzips and/or unarchives downloaded files.
+- `--subdirectory`  Specifies a subdirectory within the data directory where the
+downloaded file will be stored. If the subdirectory does not exist, it will be created.
 
 The file will be downloaded with the same name as specified by the URL.  If the
 `--unzip` option is provided then it will be unarchived into the data directory.  The
 data directory is specified by `CAP_DATA_PATH` which defaults to
-`CAP_PROJECT_PATH/data`.
+`CAP_PROJECT_PATH/data`. If the `--subdirectory` option is provided, the downloaded
+file will be saved in `CAP_PROJECT_PATH/data/subdirectory`.
 
-If the file or directory already exists in the `data` directory then it will
-not be downloaded again. This is also true when the file or directory has
-been symlinked into the `data` directory by [cap_data_link](#cap_data_link).
+If the file or directory already exists in the `data` directory (or subdirectory
+if `--subdirectory` is provided) then it will not be downloaded again. This is 
+also true when the file or directory has been symlinked into the `data` directory
+by [cap_data_link](#cap_data_link).
 
 The following example will download and unarchive a directory into
 `CAP_DATA_PATH/refdata-gex-GRCm39-2024-A`.
@@ -463,6 +474,15 @@ Singularity .sif file - ollama_0.5.8.sif.
 cap_container \
   -c singularity \
   "ollama/ollama:0.5.8"
+=======
+The following example will download and unarchive a directory into
+`CAP_DATA_PATH/reference/refdata-gex-GRCm39-2024-A`.
+```
+cap_data_download \
+  --unzip \
+  --subdirectory "reference" \
+  --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
+  "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
 ```
 
 # Environment helper functions

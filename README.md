@@ -420,21 +420,35 @@ cap_data_download [options] URL
 Options
 - `--md5sum` The md5sum to check against the file being downloaded.
 - `--unzip`  Unzips and/or unarchives downloaded files.
+- `--subdirectory`  Specifies a subdirectory within the data directory where the
+downloaded file will be stored. If the subdirectory does not exist, it will be created.
 
 The file will be downloaded with the same name as specified by the URL.  If the
 `--unzip` option is provided then it will be unarchived into the data directory.  The
 data directory is specified by `CAP_DATA_PATH` which defaults to
-`CAP_PROJECT_PATH/data`.
+`CAP_PROJECT_PATH/data`. If the `--subdirectory` option is provided, the downloaded
+file will be saved in `CAP_PROJECT_PATH/data/subdirectory`.
 
-If the file or directory already exists in the `data` directory then it will
-not be downloaded again. This is also true when the file or directory has
-been symlinked into the `data` directory by [cap_data_link](#cap_data_link).
+If the file or directory already exists in the `data` directory (or subdirectory
+if `--subdirectory` is provided) then it will not be downloaded again. This is 
+also true when the file or directory has been symlinked into the `data` directory
+by [cap_data_link](#cap_data_link).
 
 The following example will download and unarchive a directory into
 `CAP_DATA_PATH/refdata-gex-GRCm39-2024-A`.
 ```
 cap_data_download \
   --unzip \
+  --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
+  "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
+```
+
+The following example will download and unarchive a directory into
+`CAP_DATA_PATH/reference/refdata-gex-GRCm39-2024-A`.
+```
+cap_data_download \
+  --unzip \
+  --subdirectory "reference" \
   --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
   "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
 ```

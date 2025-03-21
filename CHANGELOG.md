@@ -1,3 +1,7 @@
+## CAPTURE 0.6.1 (March 21, 2024) ##
+
+* Add `--subdirectory` option to `cap_data_download`
+
 ## CAPTURE 0.6.0 (March 20, 2024) ##
 
 * Add `--normalize` option to `cap md5`

@@ -1,3 +1,7 @@
+## CAPTURE 0.7.0 (March 21, 2024) ##
+
+* Add the `cap_container` job helper function.
+
 ## CAPTURE 0.6.1 (March 21, 2024) ##
 
 * Add `--subdirectory` option to `cap_data_download`

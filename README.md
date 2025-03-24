@@ -15,6 +15,7 @@ Table of Contents
 - [Job helper functions](#job-helper-functions)
   - [cap_array_value](#cap_array_value)
   - [cap_data_download](#cap_data_download)
+  - [cap_container](#cap_container)
 - [Environment helper functions](#environment-helper-functions)
   - [cap_data_link](#cap_data_link)
 
@@ -441,6 +442,38 @@ cap_data_download \
   --unzip \
   --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
   "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
+```
+
+## cap_container
+Downloads the proper docker or singularity container.
+```
+cap_container [options] REFERENCE
+```
+- `REFERENCE` The Docker image reference found on DockerHub. The format of the reference
+is <owner>/<repository_name>:[tag]. If a tag is not provided, it will use the latest release
+and append `_latest`. The following example will result in the creating of ollama_latest.sif.
+```
+cap_container \
+  -c singularity \
+  "ollama/ollama"
+```
+
+Options
+- `-c singularity`  If specified, cap_container will use `singularity pull` instead of `docker pull`.
+
+`cap_container` first checks whether the Docker image or Singularity .sif file
+already exists in `CAP_CONTAINER_PATH`. If the image is not found, it is downloaded
+from DockerHub. By default, `cap_container` uses Docker, but specifying the
+`-c singularity` option directs it to generate a Singularity .sif file in the
+`CAP_CONTAINER_PATH` directory instead.
+
+The following example checks for the corresponding .sif file in `CAP_CONTAINER_PATH`.
+If the file is not found, it downloads and converts the Docker image into the 
+Singularity .sif file - ollama_0.5.8.sif.
+```
+cap_container \
+  -c singularity \
+  "ollama/ollama:0.5.8"
 ```
 
 The following example will download and unarchive a directory into

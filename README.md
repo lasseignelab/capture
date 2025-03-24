@@ -450,7 +450,7 @@ Downloads the proper docker or singularity container.
 cap_container [options] REFERENCE
 ```
 - `REFERENCE` The Docker image reference found on DockerHub. The format of the reference
-is <owner>/<repository_name>:[tag]. If a tag is not provided, if will use the latest release
+is <owner>/<repository_name>:[tag]. If a tag is not provided, it will use the latest release
 and append `_latest`. The following example will result in the creating of ollama_latest.sif.
 ```
 cap_container \

@@ -1,3 +1,7 @@
+## CAPTURE 0.7.1 (March 25, 2024) ##
+
+* Renamed bin/docker to bin/container
+
 ## CAPTURE 0.7.0 (March 21, 2024) ##
 
 * Add the `cap_container` job helper function.

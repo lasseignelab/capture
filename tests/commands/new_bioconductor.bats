@@ -14,7 +14,7 @@ load ../../node_modules/bats-mock/stub
     unstub curl
 
     # Check that the version was updated.
-    run grep -o "RELEASE_3_20-CAPTURE" $BATS_TMPDIR/test/bin/docker/Dockerfile
+    run grep -o "RELEASE_3_20-CAPTURE" $BATS_TMPDIR/test/bin/container/Dockerfile
 
     # Clean up the test project.
     rm -rf $BATS_TMPDIR/test

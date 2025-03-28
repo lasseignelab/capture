@@ -1,16 +1,16 @@
-## CAPTURE 0.7.1 (March 25, 2024) ##
+## CAPTURE 0.7.1 (March 25, 2025) ##
 
 * Renamed bin/docker to bin/container
 
-## CAPTURE 0.7.0 (March 21, 2024) ##
+## CAPTURE 0.7.0 (March 21, 2025) ##
 
 * Add the `cap_container` job helper function.
 
-## CAPTURE 0.6.1 (March 21, 2024) ##
+## CAPTURE 0.6.1 (March 21, 2025) ##
 
 * Add `--subdirectory` option to `cap_data_download`
 
-## CAPTURE 0.6.0 (March 20, 2024) ##
+## CAPTURE 0.6.0 (March 20, 2025) ##
 
 * Add `--normalize` option to `cap md5`
 

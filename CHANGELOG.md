@@ -1,6 +1,8 @@
-## CAPTURE 0.7.1 (March 25, 2025) ##
-
-* Renamed bin/docker to bin/container
+## CAPTURE 0.8.0 (March 25, 2025) ##
+:warning: **WARNING** This is a breaking change!
+* Rename bin/docker to bin/container. `CAP_CONTAINER_PATH` now references
+`CAP_PROJECT_PATH/bin/container` so files previously saved in bin/docker will
+need to be moved to bin/container
 
 ## CAPTURE 0.7.0 (March 21, 2025) ##
 

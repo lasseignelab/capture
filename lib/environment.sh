@@ -51,7 +51,7 @@ fi
 CAP_LOGS_PATH=$(realpath "logs")
 CAP_DATA_PATH=$(realpath "data")
 CAP_RESULTS_PATH=$(realpath "results")
-CAP_CONTAINER_PATH=$(realpath "bin/docker")
+CAP_CONTAINER_PATH=$(realpath "bin/container")
 CAP_CONDA_PATH=$(realpath "bin/conda")
 
 # Set all default values

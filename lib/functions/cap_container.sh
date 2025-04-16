@@ -10,7 +10,6 @@ cap_container() {
   # Check if the file exists in CAP_CONTAINER_PATH
   if [[ -f "$CAP_CONTAINER_PATH/$sif_file" ]]; then
     echo "The $sif_file is already available"
-    exit 1
   else
     (
     cd "${CAP_CONTAINER_PATH}" || {

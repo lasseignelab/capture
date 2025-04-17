@@ -45,7 +45,7 @@ Example:
 $ cap env
 
 CAP_CONDA_PATH=/data/user/acrumley/3xtg-repurposing/bin/conda
-CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/docker
+CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
 CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
 CAP_ENV=default
 CAP_LOGS_PATH=/data/user/acrumley/3xtg-repurposing/logs
@@ -304,7 +304,7 @@ provide an option for environment such as `cap run --environment=mylab foo.sh`.
 - **CAP_RESULTS_PATH**: Path to where analysis results will be written.
 Defaults to `<project-path>/results`.
 - **CAP_CONTAINER_PATH**: Path to where container files such as Docker will be
-maintained.  Defaults to `<project-path>/bin/docker`.
+maintained.  Defaults to `<project-path>/bin/container`.
 - **CAP_CONDA_PATH**: Path to where conda files will be maintained.  Defaults
 to `<project-path>/bin/conda`.
 - **CAP_RANDOM_SEED**: A randomly generated seed to facilitate reproducible

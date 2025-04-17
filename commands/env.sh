@@ -22,7 +22,7 @@ cap_env_help() {
     $ cap env
 
     CAP_CONDA_PATH=/data/user/acrumley/3xtg-repurposing/bin/conda
-    CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/docker
+    CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
     CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
     CAP_ENV=default
     CAP_LOGS_PATH=/data/user/acrumley/3xtg-repurposing/logs

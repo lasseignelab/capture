@@ -1,3 +1,7 @@
+## CAPTURE 0.8.1 (April 18, 2025) ##
+
+* Prevent script exist whan a `cap_container` container exists
+
 ## CAPTURE 0.8.0 (March 25, 2025) ##
 :warning: **WARNING** This is a breaking change!
 * Rename bin/docker to bin/container. `CAP_CONTAINER_PATH` now references

@@ -1,12 +1,18 @@
-## CAPTURE 0.7.0 (March 21, 2024) ##
+## CAPTURE 0.8.0 (March 25, 2025) ##
+:warning: **WARNING** This is a breaking change!
+* Rename bin/docker to bin/container. `CAP_CONTAINER_PATH` now references
+`CAP_PROJECT_PATH/bin/container` so files previously saved in bin/docker will
+need to be moved to bin/container
+
+## CAPTURE 0.7.0 (March 21, 2025) ##
 
 * Add the `cap_container` job helper function.
 
-## CAPTURE 0.6.1 (March 21, 2024) ##
+## CAPTURE 0.6.1 (March 21, 2025) ##
 
 * Add `--subdirectory` option to `cap_data_download`
 
-## CAPTURE 0.6.0 (March 20, 2024) ##
+## CAPTURE 0.6.0 (March 20, 2025) ##
 
 * Add `--normalize` option to `cap md5`
 

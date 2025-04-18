@@ -124,8 +124,8 @@ cap_new_add_dockerfile_file() {
   temporary_file=$(mktemp)
   sed \
     -e "s/{{bioconductor_version}}/${latest_release}/g" \
-    bin/docker/Dockerfile > "$temporary_file"
-  mv "$temporary_file" bin/docker/Dockerfile
+    bin/container/Dockerfile > "$temporary_file"
+  mv "$temporary_file" bin/container/Dockerfile
 }
 
 cap_new_add_pipeline_config_file() {

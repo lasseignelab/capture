@@ -11,8 +11,6 @@ teardown() {
   rm -rf ${CAP_DATA_PATH}
 }
 
-# TODO: Test the dry run option.
-
 @test "cap md5: All files in a folder" {
     temp_output=$(mktemp -p "$BATS_TEMPDIR")
     cap md5 -o $temp_output $FIXTURE_PATH/files

@@ -101,13 +101,13 @@ EOF
   if [[ "$dry_run" == "true" ]]; then
     cap_run_dry_run
   else
-    sbatch -D "$job_directory" \
+    temp_batch_script=$(mktemp)
+    echo "$slurm_job" > "$temp_batch_script"
+    sbatch -D="$job_directory" \
       --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
-      --output "$log_full_path/$log_file_name.out" \
-      --error "$log_full_path/$log_file_name.err" \
-      <<EOF
-$slurm_job
-EOF
+      --output="$log_full_path/$log_file_name.out" \
+      --error="$log_full_path/$log_file_name.err" \
+      "$temp_batch_script"
     echo
   fi
 }

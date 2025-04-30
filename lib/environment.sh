@@ -57,14 +57,16 @@ CAP_CONDA_PATH=$(realpath "bin/conda")
 # Set all default values
 CAP_CONTAINER_TYPE="docker"
 
+: "${CAP_ETC_RC_PATH:=/etc/caprc}"
 # Load the configuration files.
-if [ -f /etc/caprc ]; then
+if [ -f "$CAP_ETC_RC_PATH" ]; then
   # shellcheck disable=SC1091
-  source /etc/caprc
+  source "$CAP_ETC_RC_PATH"
 fi
-if [ -f ~/.caprc ]; then
+: "${CAP_HOME_RC_PATH:=$HOME/.caprc}"
+if [ -f "$CAP_HOME_RC_PATH" ]; then
   # shellcheck disable=SC1090
-  source ~/.caprc
+  source "$CAP_HOME_RC_PATH"
 fi
 if [ -f "$CAP_PROJECT_PATH/.caprc" ]; then
   # shellcheck disable=SC1091

@@ -3,4 +3,9 @@ setup_suite() {
   # instead of the one installed in the system.
   PATH="$(pwd):$PATH"
   export PATH
+
+  CAP_ETC_RC_PATH="$(mktemp -p "$BATS_TEMPDIR")"
+  export CAP_ETC_RC_PATH
+  CAP_HOME_RC_PATH="$(mktemp -p "$BATS_TEMPDIR")"
+  export CAP_HOME_RC_PATH
 }

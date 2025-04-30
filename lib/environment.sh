@@ -60,7 +60,7 @@ CAP_CONTAINER_TYPE="docker"
 : "${CAP_ETC_RC_PATH:=/etc/caprc}"
 # Load the configuration files.
 if [ -f "$CAP_ETC_RC_PATH" ]; then
-  # shellcheck disable=SC1091
+  # shellcheck disable=SC1090
   source "$CAP_ETC_RC_PATH"
 fi
 : "${CAP_HOME_RC_PATH:=$HOME/.caprc}"

@@ -1,3 +1,7 @@
+## CAPTURE 0.8.1 (April 30, 2025) ##
+
+* Add tests for the `cap run` command.
+
 ## CAPTURE 0.8.0 (March 25, 2025) ##
 :warning: **WARNING** This is a breaking change!
 * Rename bin/docker to bin/container. `CAP_CONTAINER_PATH` now references

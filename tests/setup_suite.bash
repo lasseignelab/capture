@@ -4,6 +4,10 @@ setup_suite() {
   PATH="$(pwd):$PATH"
   export PATH
 
+  # Location of the CAPTURE framework development environment.
+  CAP_DEVELOPMENT_PATH="$(pwd)"
+  export CAP_DEVELOPMENT_PATH
+
   CAP_ETC_RC_PATH="$(mktemp -p "$BATS_TEMPDIR")"
   export CAP_ETC_RC_PATH
   CAP_HOME_RC_PATH="$(mktemp -p "$BATS_TEMPDIR")"

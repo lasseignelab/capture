@@ -71,6 +71,7 @@ CAP_CONDA_PATH=$PROJECTS_PATH/test/bin/conda
 CAP_CONTAINER_PATH=$PROJECTS_PATH/test/bin/container
 CAP_CONTAINER_TYPE=docker
 CAP_DATA_PATH=$PROJECTS_PATH/test/data
+CAP_DEVELOPMENT_PATH=$CAP_DEVELOPMENT_PATH
 CAP_ENV=default
 CAP_ETC_RC_PATH=$CAP_ETC_RC_PATH
 CAP_HOME_RC_PATH=$CAP_HOME_RC_PATH
@@ -89,7 +90,7 @@ Job: job
      5  #SBATCH --cpus-per-task=1
      6  #SBATCH --time=24:00:00
      7  #SBATCH --partition=medium
-     8  source /home/$(whoami)/bin/capture/lib/functions.sh
+     8  source $CAP_DEVELOPMENT_PATH/lib/functions.sh
      9
     10
     11  echo "Hello world!"
@@ -122,6 +123,7 @@ CAP_CONDA_PATH=$PROJECTS_PATH/test/bin/conda
 CAP_CONTAINER_PATH=$PROJECTS_PATH/test/bin/container
 CAP_CONTAINER_TYPE=docker
 CAP_DATA_PATH=$PROJECTS_PATH/test/data
+CAP_DEVELOPMENT_PATH=$CAP_DEVELOPMENT_PATH
 CAP_ENV=test
 CAP_ETC_RC_PATH=$CAP_ETC_RC_PATH
 CAP_HOME_RC_PATH=$CAP_HOME_RC_PATH
@@ -140,7 +142,7 @@ Job: job
      5  #SBATCH --cpus-per-task=1
      6  #SBATCH --time=24:00:00
      7  #SBATCH --partition=medium
-     8  source /home/$(whoami)/bin/capture/lib/functions.sh
+     8  source $CAP_DEVELOPMENT_PATH/lib/functions.sh
      9
     10
     11  echo "Hello world!"

@@ -26,8 +26,8 @@ teardown() {
   sbatch_parameters=(
     -D=src
     --job-name=job-test
-    --output=$PROJECTS_PATH/test/logs/job_20250324_132703_acrumley.out
-    --error=$PROJECTS_PATH/test/logs/job_20250324_132703_acrumley.err
+    --output=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).out
+    --error=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).err
     $temp_script
   )
 
@@ -62,7 +62,7 @@ EOF
   expected_output=$(cat <<EOF
 
 View job output with the following command:
-cat logs/job_20250324_132703_acrumley*
+cat logs/job_20250324_132703_$(whoami)*
 
 
 Environment: default
@@ -89,7 +89,7 @@ Job: job
      5  #SBATCH --cpus-per-task=1
      6  #SBATCH --time=24:00:00
      7  #SBATCH --partition=medium
-     8  source /home/acrumley/bin/capture/lib/functions.sh
+     8  source /home/$(whoami)/bin/capture/lib/functions.sh
      9
     10
     11  echo "Hello world!"
@@ -113,7 +113,7 @@ EOF
   expected_output=$(cat <<EOF
 
 View job output with the following command:
-cat logs/job_20250324_132703_acrumley*
+cat logs/job_20250324_132703_$(whoami)*
 
 
 Environment: test
@@ -140,7 +140,7 @@ Job: job
      5  #SBATCH --cpus-per-task=1
      6  #SBATCH --time=24:00:00
      7  #SBATCH --partition=medium
-     8  source /home/acrumley/bin/capture/lib/functions.sh
+     8  source /home/$(whoami)/bin/capture/lib/functions.sh
      9
     10
     11  echo "Hello world!"

@@ -26,7 +26,7 @@ teardown() {
   sbatch_parameters=(
     -D=src
     --job-name=job-test
-    --output=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).out
+    --output=$PROJECTS_PATH/test/logs/job_20250324_132703_crumley.out
     --error=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).err
     $temp_script
   )

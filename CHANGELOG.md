@@ -1,6 +1,10 @@
-## CAPTURE 0.8.1 (April 30, 2025) ##
+## CAPTURE 0.8.2 (April 30, 2025) ##
 
 * Add tests for the `cap run` command.
+
+## CAPTURE 0.8.1 (April 18, 2025) ##
+
+* Prevent script exist whan a `cap_container` container exists
 
 ## CAPTURE 0.8.0 (March 25, 2025) ##
 :warning: **WARNING** This is a breaking change!

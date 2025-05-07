@@ -1,3 +1,6 @@
+## CAPTURE 0.8.2 (May 7, 2025) ##
+* `cap_container` requires a tag to be provided in the REFERENCE.
+
 ## CAPTURE 0.8.1 (April 18, 2025) ##
 
 * Prevent script exist whan a `cap_container` container exists

@@ -21,7 +21,7 @@ teardown() {
 
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
   cd "$PROJECTS_PATH/test"
-  temp_script="$(mktemp -p "$BATS_TEMPDIR")"
+  temp_script="$(mktemp -p "$BATS_TMPDIR")"
   stub mktemp " : echo '$temp_script'"
   sbatch_parameters=(
     -D=src
@@ -54,7 +54,7 @@ EOF
 @test "cap run: Dry run with default environment" {
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
   cd "$PROJECTS_PATH/test"
-  temp_script="$(mktemp -p "$BATS_TEMPDIR")"
+  temp_script="$(mktemp -p "$BATS_TMPDIR")"
   stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
   run cap run -n src/job.sh
   unstub date
@@ -106,7 +106,7 @@ EOF
 @test "cap run: Dry run with environment option specified" {
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
   cd "$PROJECTS_PATH/test"
-  temp_script="$(mktemp -p "$BATS_TEMPDIR")"
+  temp_script="$(mktemp -p "$BATS_TMPDIR")"
   stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
   run cap run -n -e test src/job.sh
   unstub date

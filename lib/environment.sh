@@ -48,22 +48,27 @@ if [ -f "$CAP_PROJECT_PATH/config/pipeline.sh" ]; then
 fi
 
 # Set all the default paths.
-CAP_CONTAINER_PATH=$(realpath "bin/docker")
 CAP_CONDA_PATH=$(realpath "bin/conda")
+CAP_CONTAINER_PATH=$(realpath "bin/container")
 CAP_DATA_PATH=$(realpath "data")
 CAP_LOGS_PATH=$(realpath "logs")
 CAP_RESULTS_PATH=$(realpath "results")
 CAP_REVIEW_PATH=$(realpath "review")
 CAP_VERIFICATIONS_PATH=(realpath "verifications")
 
+# Set all default values
+CAP_CONTAINER_TYPE="docker"
+
+: "${CAP_ETC_RC_PATH:=/etc/caprc}"
 # Load the configuration files.
-if [ -f /etc/caprc ]; then
-  # shellcheck disable=SC1091
-  source /etc/caprc
-fi
-if [ -f ~/.caprc ]; then
+if [ -f "$CAP_ETC_RC_PATH" ]; then
   # shellcheck disable=SC1090
-  source ~/.caprc
+  source "$CAP_ETC_RC_PATH"
+fi
+: "${CAP_HOME_RC_PATH:=$HOME/.caprc}"
+if [ -f "$CAP_HOME_RC_PATH" ]; then
+  # shellcheck disable=SC1090
+  source "$CAP_HOME_RC_PATH"
 fi
 if [ -f "$CAP_PROJECT_PATH/.caprc" ]; then
   # shellcheck disable=SC1091
@@ -105,6 +110,7 @@ fi
 # Make all the variables visible in the runtime environment
 export CAP_CONDA_PATH
 export CAP_CONTAINER_PATH
+export CAP_CONTAINER_TYPE
 export CAP_DATA_PATH
 export CAP_ENV
 export CAP_LOGS_PATH
@@ -114,4 +120,3 @@ export CAP_RANDOM_SEED
 export CAP_RESULTS_PATH
 export CAP_REVIEW_PATH
 export CAP_VERIFICATIONS_PATH
-

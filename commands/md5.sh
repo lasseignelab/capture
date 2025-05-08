@@ -11,10 +11,11 @@ cap_md5_help() {
   echo
 
   cat <<EOF
-  The "md5" command produces a combined MD5 checksum for all the files
-  specified. It will show a list of all files included to ensure that the
-  result is as expected. The purpose of this command is to determine whether
-  files downloaded or created are complete and accurate.
+  The "md5" command produces an MD5 checksum for each file specified and a
+  combined MD5 checksum for all the files. The purpose of this command is to
+  determine whether files downloaded or created are complete and accurate. If
+  the MD5 checksums from two sets of files match then the files are all the
+  same.
 
   Usage:
     cap md5 [options] FILE...
@@ -42,7 +43,8 @@ cap_md5_help() {
             directories can be easily compared.
 
     -o,--output=FILE
-            Specify an output file name to write the results to.
+            Specify an output file name to write the results to. See examples
+            for the output format.
 
     --select=PATTERN
             Include only files matching the file PATTERN based on the full
@@ -146,7 +148,7 @@ EOF
       {
         if [[ "$dry_run" == "true" ]]; then
           # shellcheck disable=SC2068
-          find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
+          find -H -L ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
         else
           # Compute checksums for all files
           echo -e '\nFiles included:'
@@ -159,7 +161,7 @@ EOF
           echo
         fi
       } > "$temp_output_file"
-      if [[ "$normalize" == "true" ]]; then
+      if [[ "$normalize" == "true" && "$dry_run" == "false" ]]; then
         cap_md5_normalize "$temp_output_file"
       fi
       cat "$temp_output_file" > "${output_file:-/dev/stdout}"
@@ -182,36 +184,42 @@ EOF
 ###############################################################################
 cap_md5_find() {
   # shellcheck disable=SC2068
-  find ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
+  find -H -L ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' -exec md5sum {} + | sort -k2,2
 }
 
 cap_md5_normalize() {
   # Define the file containing the list of file paths
   local file_name
-	file_name="$1"
+  file_name="$1"
   local temp_file
-	temp_file=$(mktemp)
-	grep -E "[a-f0-9]{32} +" "$file_name" | cut -f 3 -d " " > "$temp_file"
+  temp_file=$(mktemp)
+  grep -E "[a-f0-9]{32} +" "$file_name" | cut -f 3 -d " " > "$temp_file"
 
-	# Read the first line as the initial common prefix
-	read -r common_prefix < "$temp_file"
+  # Read the first line as the initial common prefix
+  read -r common_prefix < "$temp_file"
   common_prefix=$(dirname "$common_prefix")/
 
-	# Iterate over each line in the file
-	while read -r line; do
-		# Find the longest common prefix between the current common_prefix and the current line
+  # Iterate over each line in the file
+  while read -r line; do
+    # Find the longest common prefix between the current common_prefix and the current line
     line=$(dirname "$line")/
-		while [[ "${line#"$common_prefix"}" == "$line" ]]; do
-			# Shorten the common_prefix by removing the last character until it matches
-			common_prefix="${common_prefix%?}"
-		done
-	done < "$temp_file"
+    while [[ "${line#"$common_prefix"}" == "$line" ]]; do
+      # Shorten the common_prefix by removing the last character until it matches
+      common_prefix="${common_prefix%?}"
+    done
+  done < "$temp_file"
 
   # Clean up the temp file.
-	rm "$temp_file"
+  rm "$temp_file"
+
+  # Make sure the common prefix ends with a directory
+  common_prefix="${common_prefix%/*}/"
 
   # Normalize the input file by replacing the path prefixes.
   sed -i "s|$common_prefix||" "$file_name"
+
+  # Record the normalized path that was removed.
+  echo "Normalized path: ${common_prefix}" >> "${file_name}"
 }
 
 cap_md5_parse_commandline_parameters() {

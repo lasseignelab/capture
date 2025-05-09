@@ -444,19 +444,23 @@ cap_data_download \
   "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
 ```
 
+The following example will download and unarchive a directory into
+`CAP_DATA_PATH/reference/refdata-gex-GRCm39-2024-A`.
+```
+cap_data_download \
+  --unzip \
+  --subdirectory "reference" \
+  --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
+  "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
+```
+
 ## cap_container
 Downloads the proper docker or singularity container.
 ```
 cap_container [options] REFERENCE
 ```
 - `REFERENCE` The Docker image reference found on DockerHub. The format of the reference
-is <owner>/<repository_name>:[tag]. If a tag is not provided, it will use the latest release
-and append `_latest`. The following example will result in the creating of ollama_latest.sif.
-```
-cap_container \
-  -c singularity \
-  "ollama/ollama"
-```
+is <namespace>/<repository_name>:[tag].
 
 Options
 - `-c singularity`  If specified, cap_container will use `singularity pull` instead of `docker pull`.
@@ -474,16 +478,6 @@ Singularity .sif file - ollama_0.5.8.sif.
 cap_container \
   -c singularity \
   "ollama/ollama:0.5.8"
-```
-
-The following example will download and unarchive a directory into
-`CAP_DATA_PATH/reference/refdata-gex-GRCm39-2024-A`.
-```
-cap_data_download \
-  --unzip \
-  --subdirectory "reference" \
-  --md5sum="37c51137ccaeabd4d151f80dc86ce0b3" \
-  "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCm39-2024-A.tar.gz"
 ```
 
 # Environment helper functions

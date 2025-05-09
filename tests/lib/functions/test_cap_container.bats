@@ -34,7 +34,7 @@ teardown() {
 
   run cap_container -c "singularity" "base/image:tag"
 
-  [ "$status" -eq "1" ]
+  [ "$status" -eq "0" ]
   [ "$output" == "The image_tag.sif is already available" ]
 }
 

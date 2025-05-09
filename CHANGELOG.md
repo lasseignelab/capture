@@ -1,5 +1,10 @@
-## CAPTURE 0.8.2 (May 7, 2025) ##
+
+## CAPTURE 0.8.3 (May 7, 2025) ##
 * `cap_container` requires a tag to be provided in the REFERENCE.
+
+## CAPTURE 0.8.2 (April 30, 2025) ##
+
+* Add tests for the `cap run` command.
 
 ## CAPTURE 0.8.1 (April 18, 2025) ##
 

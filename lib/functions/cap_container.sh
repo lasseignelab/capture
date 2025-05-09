@@ -4,6 +4,18 @@ cap_container() {
   cap_container_parse_commandline_parameters "$@"
 
   sif_file=$cap_container_reference
+
+  # Check that the format of the provided reference is correct
+  if [[ ! "$sif_file" =~ ^[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+:.+ ]]; then
+    echo "Error: REFERENCE must be in the format <namespace>/<repository>:<tag>"
+    exit 1
+  fi
+
+  # Check if tag is 'latest'
+  if [[ "${sif_file##*:}" == "latest" ]]; then
+    echo "Warning: Please provide a specific tag instead of 'latest' to ensure reproducibility."
+  fi
+
   sif_file="${sif_file##*/}"
   sif_file="${sif_file/:/_}.sif"
 

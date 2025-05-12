@@ -37,3 +37,33 @@ teardown() {
   [ "$status" -eq "0" ]
   [ "$output" == "The image_tag.sif is already available" ]
 }
+
+@test "cap_container: Check for tag" {
+  CAP_CONTAINER_TYPE="singularity"
+
+  run cap_container -c "singularity" "base/image"
+
+  [ "$status" -eq "1" ]
+  [ "$output" == "Error: REFERENCE must be in the format <namespace>/<repository>:<tag>" ]
+}
+
+@test "cap_container: Check for latest tag" {
+  CAP_CONTAINER_TYPE="singularity"
+
+  stub singularity "pull docker://base/image:latest : cp ${CONTAINER_FIXTURE_PATH}/image_latest.sif ${CAP_CONTAINER_PATH}/image_latest.sif"
+
+  run cap_container -c "singularity" "base/image:latest"
+
+  unstub singularity
+
+  diff "${CONTAINER_FIXTURE_PATH}/image_latest.sif" "${CAP_CONTAINER_PATH}/image_latest.sif"
+
+  EXPECTED_OUTPUT=$(cat <<EOF
+Warning: Please provide a specific tag instead of 'latest' to ensure reproducibility.
+Pulling Singularity image: base/image:latest
+EOF
+)
+
+  [ "$status" -eq "0" ]
+  [ "$output" == "$EXPECTED_OUTPUT" ]
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 load ../../node_modules/bats-mock/stub
 
-@test "cap new: Dockerfile Bioconductor version" {
+@test "cap new: Dockerfile-template Bioconductor version" {
     # Make curl return a test Docker tags JSON response for Bioconductor.
     stub curl " : echo '$(cat tests/fixtures/bioconductor_tags.json)'"
 
@@ -14,7 +14,7 @@ load ../../node_modules/bats-mock/stub
     unstub curl
 
     # Check that the version was updated.
-    run grep -o "RELEASE_3_20-CAPTURE" $BATS_TMPDIR/test/bin/container/Dockerfile
+    run grep -o "RELEASE_3_20-CAPTURE" $BATS_TMPDIR/test/bin/container/Dockerfile-template
 
     # Clean up the test project.
     rm -rf $BATS_TMPDIR/test

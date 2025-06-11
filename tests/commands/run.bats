@@ -24,7 +24,7 @@ teardown() {
   temp_script="$(mktemp -p "$BATS_TMPDIR")"
   stub mktemp " : echo '$temp_script'"
   sbatch_parameters=(
-    -D=src
+    -D src
     --job-name=job-test
     --output=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).out
     --error=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).err

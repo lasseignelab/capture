@@ -1,3 +1,5 @@
+## CAPTURE 0.8.4 (June 12, 2025) ##
+* Change Dockerfile to Dockerfile-template
 
 ## CAPTURE 0.8.3 (June 12, 2025) ##
 * Fixed the slurmstepd error when running `cap run`

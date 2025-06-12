@@ -103,7 +103,7 @@ EOF
   else
     temp_batch_script=$(mktemp)
     echo "$slurm_job" > "$temp_batch_script"
-    sbatch -D="$job_directory" \
+    sbatch -D "$job_directory" \
       --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
       --output="$log_full_path/$log_file_name.out" \
       --error="$log_full_path/$log_file_name.err" \

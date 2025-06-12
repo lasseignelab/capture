@@ -1,6 +1,6 @@
 
-## CAPTURE 0.8.3 (May 7, 2025) ##
-* `cap_container` requires a tag to be provided in the REFERENCE.
+## CAPTURE 0.8.3 (June 12, 2025) ##
+* Fixed the slurmstepd error when running `cap run`
 
 ## CAPTURE 0.8.2 (April 30, 2025) ##
 

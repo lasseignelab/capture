@@ -118,7 +118,7 @@ cap_md5() {
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 $slurm_args ${md5_files[@]}
+cap md5 $slurm_args "${md5_files[@]}"
 echo "Ran from: $current_path"
 EOF
       sbatch "$temp_batch_script"

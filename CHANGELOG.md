@@ -1,3 +1,6 @@
+## CAPTURE 0.8.5 (October 9, 2025) ##
+* Fix slurm error for files with parentheses in name
+
 ## CAPTURE 0.8.4 (June 12, 2025) ##
 * Change Dockerfile to Dockerfile-template
 

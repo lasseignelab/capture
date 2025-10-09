@@ -113,7 +113,7 @@ teardown() {
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 -o "test/output.txt"  $FIXTURE_PATH/files
+cap md5 -o "test/output.txt"  "$FIXTURE_PATH/files"
 echo "Ran from: $(pwd)"
 EOF
 ) "$temp_script"
@@ -142,7 +142,36 @@ EOF
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 -o "test/output.txt"  $FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin
+cap md5 -o "test/output.txt"  "$FIXTURE_PATH/files/one.bin $FIXTURE_PATH/files/two.bin"
+echo "Ran from: $(pwd)"
+EOF
+) "$temp_script"
+
+    [ "$output" == "sbatch called correctly" ]
+}
+
+@test "cap md5 --slurm batch: Files with parenthesis in their name" {
+
+    temp_script=$(mktemp -p "$BATS_TMPDIR")
+    stub mktemp " : echo '$temp_script'"
+    stub sbatch "$temp_script : echo 'sbatch called correctly'"
+    run cap md5 --slurm batch -o "test/output.txt" $FIXTURE_PATH/error_files/*.csv
+    unstub mktemp
+    unstub sbatch
+
+    diff <(cat <<EOF
+#!/bin/bash
+
+#################################### SLURM ####################################
+#SBATCH --job-name cap-md5
+#SBATCH --output test/output.txt
+#SBATCH --error test/output.txt
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=32G
+#SBATCH --partition=short
+
+cap md5 -o "test/output.txt"  "$FIXTURE_PATH/error_files/test(1).csv"
 echo "Ran from: $(pwd)"
 EOF
 ) "$temp_script"
@@ -171,7 +200,7 @@ EOF
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 --select "*/outs/*" -o "test/output.txt"  $FIXTURE_PATH/files
+cap md5 --select "*/outs/*" -o "test/output.txt"  "$FIXTURE_PATH/files"
 echo "Ran from: $(pwd)"
 EOF
 ) "$temp_script"
@@ -200,7 +229,7 @@ EOF
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 --ignore "*/outs/*" -o "test/output.txt"  $FIXTURE_PATH/files
+cap md5 --ignore "*/outs/*" -o "test/output.txt"  "$FIXTURE_PATH/files"
 echo "Ran from: $(pwd)"
 EOF
 ) "$temp_script"

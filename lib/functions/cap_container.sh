@@ -18,20 +18,20 @@ cap_container() {
 
   sif_file="${sif_file##*/}"
   sif_file="${sif_file/:/_}.sif"
-  sif_lock_dir="$CAP_CONTAINER_PATH/$sif_file.lock"
 
-  # Attempt to acquire the lock. mkdir is an atomic operation.
-  # The first task to execute this on a node will succeed.
-  if mkdir "$sif_lock_dir" 2>/dev/null; then
-    echo "Lock acquired for $sif_file. Pulling image..."
+  # Check if the file exists in CAP_CONTAINER_PATH
+  if [[ -f "$CAP_CONTAINER_PATH/$sif_file" ]]; then
+    echo "The $sif_file is already available"
+  else
+    # Attempt to acquire the lock. mkdir is an atomic operation.
+    # The first task to execute this on a node will succeed.
+    sif_lock_dir="$CAP_CONTAINER_PATH/$sif_file.lock"
+    if mkdir "$sif_lock_dir" 2>/dev/null; then
+      echo "Lock acquired for $sif_file. Pulling image..."
 
-    # Ensure the lock is removed if the script is interrupted
-    trap 'rm -rf "$sif_lock_dir"; echo "Lock released on interrupt."; exit' INT TERM EXIT
+      # Ensure the lock is removed if the script is interrupted
+      trap 'rm -rf "$sif_lock_dir"; echo "Lock released on interrupt."; exit' INT TERM EXIT
 
-    # Check if the file exists in CAP_CONTAINER_PATH
-    if [[ -f "$CAP_CONTAINER_PATH/$sif_file" ]]; then
-      echo "The $sif_file is already available"
-    else
       (
       cd "${CAP_CONTAINER_PATH}" || {
         echo "Error: Unable to CD to $CAP_CONTAINER_PATH"
@@ -53,19 +53,18 @@ cap_container() {
               ;;
           esac
         )
+      # Release the lock by removing the directory
+      rm -rf "$sif_lock_dir"
+      echo "Lock for $sif_file is released."
+      trap - INT TERM EXIT # Clear the trap
+    else
+      # Wait until the lock directory is gone
+      echo "Waiting for lock on container image $sif_file..."
+      while [ -d "$sif_lock_dir" ]; do
+          sleep 2
+      done
+      echo "Lock is released on container image $sif_file. Proceeding."
     fi
-
-    # Release the lock by removing the directory
-    rm -rf "$sif_lock_dir"
-    echo "Lock for $sif_file is released."
-    trap - INT TERM EXIT # Clear the trap
-  else
-    # Wait until the lock directory is gone
-    echo "Waiting for lock on container image $sif_file..."
-    while [ -d "$sif_lock_dir" ]; do
-        sleep 2
-    done
-    echo "Lock is released on container image $sif_file. Proceeding."
   fi
 }
 

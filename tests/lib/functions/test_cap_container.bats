@@ -42,9 +42,7 @@ EOF
   run cap_container -c "singularity" "base/image:tag"
 
   EXPECTED_OUTPUT=$(cat <<EOF
-Lock acquired for image_tag.sif. Pulling image...
 The image_tag.sif is already available
-Lock for image_tag.sif is released.
 EOF
 )
 

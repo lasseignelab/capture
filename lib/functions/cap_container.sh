@@ -18,32 +18,54 @@ cap_container() {
 
   sif_file="${sif_file##*/}"
   sif_file="${sif_file/:/_}.sif"
+  sif_lock_dir="$CAP_CONTAINER_PATH/$sif_file.lock"
 
-  # Check if the file exists in CAP_CONTAINER_PATH
-  if [[ -f "$CAP_CONTAINER_PATH/$sif_file" ]]; then
-    echo "The $sif_file is already available"
-  else
-    (
-    cd "${CAP_CONTAINER_PATH}" || {
-      echo "Error: Unable to CD to $CAP_CONTAINER_PATH"
-          exit 1
-        }
+  # Attempt to acquire the lock. mkdir is an atomic operation.
+  # The first task to execute this on a node will succeed.
+  if mkdir "$sif_lock_dir" 2>/dev/null; then
+    echo "Lock acquired for $sif_file. Pulling image..."
 
-        case "$cap_container_type" in
-          docker)
-            echo "Pulling Docker image: $cap_container_reference"
-            docker pull "$cap_container_reference"
-            ;;
-          singularity)
-            echo "Pulling Singularity image: $cap_container_reference"
-            singularity pull docker://"$cap_container_reference"
-            ;;
-          *)
-            echo "Error: Invalid cap_container_type '$cap_container_type'. Use 'docker' or 'singularity'."
+    # Ensure the lock is removed if the script is interrupted
+    trap 'rm -rf "$sif_lock_dir"; echo "Lock released on interrupt."; exit' INT TERM EXIT
+
+    # Check if the file exists in CAP_CONTAINER_PATH
+    if [[ -f "$CAP_CONTAINER_PATH/$sif_file" ]]; then
+      echo "The $sif_file is already available"
+    else
+      (
+      cd "${CAP_CONTAINER_PATH}" || {
+        echo "Error: Unable to CD to $CAP_CONTAINER_PATH"
             exit 1
-            ;;
-        esac
-      )
+          }
+
+          case "$cap_container_type" in
+            docker)
+              echo "Pulling Docker image: $cap_container_reference"
+              docker pull "$cap_container_reference"
+              ;;
+            singularity)
+              echo "Pulling Singularity image: $cap_container_reference"
+              singularity pull docker://"$cap_container_reference"
+              ;;
+            *)
+              echo "Error: Invalid cap_container_type '$cap_container_type'. Use 'docker' or 'singularity'."
+              exit 1
+              ;;
+          esac
+        )
+    fi
+
+    # Release the lock by removing the directory
+    rm -rf "$sif_lock_dir"
+    echo "Lock for $sif_file is released."
+    trap - INT TERM EXIT # Clear the trap
+  else
+    # Wait until the lock directory is gone
+    echo "Waiting for lock on container image $sif_file..."
+    while [ -d "$sif_lock_dir" ]; do
+        sleep 2
+    done
+    echo "Lock is released on container image $sif_file. Proceeding."
   fi
 }
 

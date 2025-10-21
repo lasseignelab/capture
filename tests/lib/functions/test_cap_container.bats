@@ -23,8 +23,15 @@ teardown() {
 
   diff "${CONTAINER_FIXTURE_PATH}/image_tag.sif" "${CAP_CONTAINER_PATH}/image_tag.sif"
 
+  EXPECTED_OUTPUT=$(cat <<EOF
+Lock acquired for image_tag.sif. Pulling image...
+Pulling Singularity image: base/image:tag
+Lock for image_tag.sif is released.
+EOF
+)
+
   [ "$status" -eq "0" ]
-  [ "$output" == "Pulling Singularity image: base/image:tag" ]
+  [ "$output" == "$EXPECTED_OUTPUT" ]
 }
 
 @test "cap_container: Check for sif file" {
@@ -34,8 +41,13 @@ teardown() {
 
   run cap_container -c "singularity" "base/image:tag"
 
+  EXPECTED_OUTPUT=$(cat <<EOF
+The image_tag.sif is already available
+EOF
+)
+
   [ "$status" -eq "0" ]
-  [ "$output" == "The image_tag.sif is already available" ]
+  [ "$output" == "$EXPECTED_OUTPUT" ]
 }
 
 @test "cap_container: Check for tag" {
@@ -60,10 +72,32 @@ teardown() {
 
   EXPECTED_OUTPUT=$(cat <<EOF
 Warning: Please provide a specific tag instead of 'latest' to ensure reproducibility.
+Lock acquired for image_latest.sif. Pulling image...
 Pulling Singularity image: base/image:latest
+Lock for image_latest.sif is released.
 EOF
 )
 
   [ "$status" -eq "0" ]
   [ "$output" == "$EXPECTED_OUTPUT" ]
 }
+
+@test "cap_container: Wait for lock to clear on array jobs" {
+  mkdir "${CAP_CONTAINER_PATH}/image_tag.sif.lock"
+
+  stub sleep "2 : rmdir ${CAP_CONTAINER_PATH}/image_tag.sif.lock"
+
+  run cap_container -c "singularity" "base/image:tag"
+
+  unstub sleep
+
+  EXPECTED_OUTPUT=$(cat <<EOF
+Waiting for lock on container image image_tag.sif...
+Lock is released on container image image_tag.sif. Proceeding.
+EOF
+)
+
+  [ "$status" -eq "0" ]
+  [ "$output" == "$EXPECTED_OUTPUT" ]
+}
+

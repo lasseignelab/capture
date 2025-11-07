@@ -1,0 +1,3 @@
+#!/bin/bash
+
+singularity exec -B /scratch/local -B "$PWD":/work --pwd /work docker://node:18-bookworm bash -c 'npm test -- "$@"' bash "$@"

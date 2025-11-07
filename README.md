@@ -579,7 +579,7 @@ Verify all files in a directory and its subdirectories.
 ```
 cap_verify_md5 files/*
 ```
-Results in `verifications/verify_example.md5`:
+Results in `verifications/verify_example.out`:
 ```
 b3ac2b8b9998bf504ef708ec837a4cce  one.bin
 8d62064673ecb2a440b8802a2f752e8a  outs/four.bin
@@ -590,7 +590,7 @@ Verify all files in the subdirectory named "outs".
 ```
 cap_verify_md5 --select "*/outs/*" files/*
 ```
-Results in `verifications/verify_example.md5`:
+Results in `verifications/verify_example.out`:
 ```
 8d62064673ecb2a440b8802a2f752e8a  four.bin
 74a08ee2de381ec8e19da52ad36bb5ae  three.bin
@@ -599,7 +599,7 @@ Verify all files not in the subdirectory named "outs".
 ```
 cap_verify_md5 --ignore "*/outs/*" files/*
 ```
-Results in `verifications/verify_example.md5`:
+Results in `verifications/verify_example.out`:
 ```
 b3ac2b8b9998bf504ef708ec837a4cce  one.bin
 009c79f013fe8d4d97c95bf5ceea68ed  two.bin

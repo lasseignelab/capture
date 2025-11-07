@@ -95,7 +95,9 @@ cap_new() {
       cap_new_add_dockerfile_file
       git add .
       git commit -m "Initial commit"
-      git branch -m master main
+      if git show-ref --quiet refs/heads/master; then
+        git branch -m master main
+      fi
       if [[ -n "$owner" ]]; then
         git remote add origin git@"$git_host":"$owner"/"$project_name".git
         git push origin main

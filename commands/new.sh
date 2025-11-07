@@ -115,7 +115,8 @@ cap_new_add_dockerfile_file() {
   # tags. The response is a JSON object containing all the Bioconductor tags.
   latest_release=$(
     curl -s https://hub.docker.com/v2/repositories/bioconductor/bioconductor_docker/tags | \
-      jq -r '.results[].name' | \
+      grep -o '"name":[ ]*"[^"]*"' | \
+      cut -d'"' -f4 | \
       grep -E '^RELEASE_' | \
       sort | \
       tail -n 1

@@ -11,11 +11,13 @@ Table of Contents
   - [cap run](#run)
     - [Runtime environment](#runtime-environment)
   - [cap update](#update)
+  - [cap verify](#verify)
   - [cap version](#version)
 - [Job helper functions](#job-helper-functions)
   - [cap_array_value](#cap_array_value)
   - [cap_data_download](#cap_data_download)
   - [cap_container](#cap_container)
+  - [cap_verify_md5](#cap_verify_md5)
 - [Environment helper functions](#environment-helper-functions)
   - [cap_data_link](#cap_data_link)
 
@@ -53,7 +55,6 @@ CAP_PROJECT_NAME=3xtg-repurposing
 CAP_PROJECT_PATH=/data/user/acrumley/3xtg-repurposing
 CAP_RANDOM_SEED=16600
 CAP_RESULTS_PATH=/data/user/acrumley/3xtg-repurposing/results
-CAP_REVIEW_PATH=/data/user/acrumley/3xtg-repurposing/review
 CAP_VERIFICATIONS_PATH=/data/user/acrumley/3xtg-repurposing/verifications
 ```
 
@@ -139,6 +140,10 @@ Options:
 -o,--output=FILE
         Specify an output file name to write the results to. See examples for
         the output format.
+
+--output-files-only
+        Output only the file names with their md5sum. This facilitates
+        programmatic verification of files.
 
 --normalize
         Normalizes the output file paths so that files in different root
@@ -311,9 +316,6 @@ command.
 random number generation.
 - **CAP_RESULTS_PATH**: Path to where analysis results will be written.
 Defaults to `<project-path>/results`.
-- **CAP_REVIEW_PATH**: Path to where peer review results will be written to
-prevent them from overwriting the author's results.  Defaults to
-`<project-path>/review`.
 - **CAP_VERIFICATIONS_PATH**: Path to where output verification files and the
 md5 result files they produce are written.
 
@@ -371,6 +373,30 @@ Switched to branch 'main'
 Already up-to-date.
 
 CAPTURE updated to version v0.0.1.
+```
+
+## verify
+The `verify` command runs CAPTURE verifications which are shell scripts that
+determine whether outputs are reproducible.  The output of verification scripts
+will be written to the verifications folder with the same name as the script
+and a verification type specific extension.  These files should be committed to
+source control so that reviewers can compare their results.
+
+Environment variable:
+
+CAP_VERIFY_OUTPUT: File name to write verification output.
+
+Definition:
+```
+cap verify [options] FILE...
+
+FILE... One file name.
+```
+Example:
+
+Perform verifications for a step in the pipeline.
+```
+cap verify verifications/01_download.sh
 ```
 
 ## version
@@ -510,6 +536,73 @@ Singularity .sif file - ollama_0.5.8.sif.
 cap_container \
   -c singularity \
   "ollama/ollama:0.5.8"
+```
+
+# Verification helper functions
+Functions to facilitate verifying that pipeline results are reproducible.
+Verification scripts are stored in the `verifications` directory in the
+project root directory.
+
+## cap_verify_md5
+The `cap_verify_md5` function produces an MD5 checksum for each file specified,
+storing the results in an output file to be checked into the repository for
+verifying future reproducibility. The purpose of this command is to determine
+whether files downloaded or created are complete and accurate when reproduced.
+If the MD5 checksums from two sets of files match then the files are all the
+same.
+
+The output file will be given the same name as the verification file with an
+`md5` extension and will be stored in the same directory. When reproducing
+results, use the `git diff` command to confirm that results of a verification
+match the original results.
+```
+cap_verify_md5 [options] FILE...
+```
+- FILE... One or more file and/or directory names or patterns. For directories,
+        all files in the directory and its subdirectories will be included.
+
+Options
+- `--ignore=PATTERN` Exclude files matching the file PATTERN based on the full
+relative path. If the option is specified multiple times, all files matching
+any of the patterns will be EXCLUDED (logical OR). The selector will generally
+have wildcards. Ensure patterns are quoted ("*pattern*") to prevent unintended
+shell expansion.
+- `--select=PATTERN` Include only files matching the file PATTERN based on the
+full relative path. If the option is specified multiple times, all files
+matching any of the patterns will be INCLUDED (logical OR). The selector will
+generally have wildcards. Ensure patterns are quoted ("*pattern*") to prevent
+unintended shell expansion.
+
+Examples for a verification named `verifications/verify_example.sh`:
+
+Verify all files in a directory and its subdirectories.
+```
+cap_verify_md5 files/*
+```
+Results in `verifications/verify_example.md5`:
+```
+b3ac2b8b9998bf504ef708ec837a4cce  one.bin
+8d62064673ecb2a440b8802a2f752e8a  outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  outs/three.bin
+009c79f013fe8d4d97c95bf5ceea68ed  two.bin
+```
+Verify all files in the subdirectory named "outs".
+```
+cap_verify_md5 --select "*/outs/*" files/*
+```
+Results in `verifications/verify_example.md5`:
+```
+8d62064673ecb2a440b8802a2f752e8a  four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  three.bin
+```
+Verify all files not in the subdirectory named "outs".
+```
+cap_verify_md5 --ignore "*/outs/*" files/*
+```
+Results in `verifications/verify_example.md5`:
+```
+b3ac2b8b9998bf504ef708ec837a4cce  one.bin
+009c79f013fe8d4d97c95bf5ceea68ed  two.bin
 ```
 
 # Environment helper functions

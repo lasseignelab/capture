@@ -20,6 +20,7 @@ Table of Contents
   - [cap_verify_md5](#cap_verify_md5)
 - [Environment helper functions](#environment-helper-functions)
   - [cap_data_link](#cap_data_link)
+- [Contributions](#contributions)
 
 # Installation
 ```

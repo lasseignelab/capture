@@ -642,3 +642,29 @@ with the -e/--environment option like in the following example.
 ```
 cap run -e my_lab src/01_download.sh
 ```
+
+# Contributions
+## Tests
+The testing framework is installed by the following command.
+```
+tests/install
+```
+The test suite is executed by the following command.
+```
+tests/run
+```
+To run a specific test or subset of tests using the --filter parameter based
+on the test name. Following is an example of a test.
+```
+@test "cap md5: All files in a folder" {
+  ...
+}
+```
+How to run just the `cap md5` tests:
+```
+tests/run --filter "cap md5:"
+```
+How to run only the one test in the example:
+```
+tests/run --filter "cap md5: All files in a folder"
+```

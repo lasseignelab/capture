@@ -46,6 +46,10 @@ cap_md5_help() {
             Specify an output file name to write the results to. See examples
             for the output format.
 
+    --output-files-only
+            Output only the file names with their md5sum. This facilitates
+            programmatic verification of files.
+
     --select=PATTERN
             Include only files matching the file PATTERN based on the full
             relative path. If the option is specified multiple times, all files
@@ -119,8 +123,12 @@ cap_md5() {
 #SBATCH --partition=short
 
 cap md5 $slurm_args ${md5_files[@]}
+EOF
+      if [[ "$output_files_only" == "false" ]]; then
+        cat <<EOF >> "$temp_batch_script"
 echo "Ran from: $current_path"
 EOF
+      fi
       sbatch "$temp_batch_script"
 
       ;;
@@ -151,14 +159,16 @@ EOF
           find -H -L ${md5_files[@]} "${ignore_filter[@]}" \( "${select_filter[@]}" \) -type f ! -path '*/\.*' | sort
         else
           # Compute checksums for all files
-          echo -e '\nFiles included:'
+          [[ "$output_files_only" == "false" ]] && echo -e '\nFiles included:'
           checksums=$(cap_md5_find)
           echo "$checksums"
 
           # Compute single checksum based on the checksums of all files
-          echo -e '\nCombined MD5 checksum:'
-          echo "$checksums" | cut -d ' ' -f1 | md5sum | cut -d ' ' -f1
-          echo
+          if [[ "$output_files_only" == "false" ]]; then
+            echo -e '\nCombined MD5 checksum:'
+            echo "$checksums" | cut -d ' ' -f1 | md5sum | cut -d ' ' -f1
+            echo
+          fi
         fi
       } > "$temp_output_file"
       if [[ "$normalize" == "true" && "$dry_run" == "false" ]]; then
@@ -219,12 +229,14 @@ cap_md5_normalize() {
   sed -i "s|$common_prefix||" "$file_name"
 
   # Record the normalized path that was removed.
-  echo "Normalized path: ${common_prefix}" >> "${file_name}"
+  if [[ "$output_files_only" == "false" ]]; then
+    echo "Normalized path: ${common_prefix}" >> "${file_name}"
+  fi
 }
 
 cap_md5_parse_commandline_parameters() {
   # Define the named commandline options
-  if ! OPTIONS=$(getopt -o no:s: --long dry-run,ignore:,normalize,output:,select:,slurm: -- "$@"); then
+  if ! OPTIONS=$(getopt -o no:s: --long dry-run,ignore:,normalize,output:,output-files-only,select:,slurm: -- "$@"); then
     echo "Use the 'cap help md5' command for detailed help."
     return 1
   fi
@@ -236,6 +248,7 @@ cap_md5_parse_commandline_parameters() {
   ignore_values=()
   select_values=()
   output_file=""
+  output_files_only=false
   slurm=""
 
   # Save the original args for use with Slurm.
@@ -260,6 +273,10 @@ cap_md5_parse_commandline_parameters() {
         output_file="$2"
         slurm_args+="$1 \"$2\" "
         shift 2 ;;
+      --output-files-only)
+        output_files_only=true
+        slurm_args+="$1 "
+        shift 1 ;;
       --select)
         select_values+=("$2")
         slurm_args+="$1 \"$2\" "

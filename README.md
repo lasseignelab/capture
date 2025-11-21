@@ -579,32 +579,32 @@ Examples for a verification named `verifications/verify_example.sh`:
 
 Verify all files in a directory and its subdirectories.
 ```
-cap_verify_md5 files/*
+cap_verify_md5 "$CAP_DATA_PATH/*"
 ```
 Results in `verifications/verify_example.out`:
 ```
-b3ac2b8b9998bf504ef708ec837a4cce  one.bin
-8d62064673ecb2a440b8802a2f752e8a  outs/four.bin
-74a08ee2de381ec8e19da52ad36bb5ae  outs/three.bin
-009c79f013fe8d4d97c95bf5ceea68ed  two.bin
+b3ac2b8b9998bf504ef708ec837a4cce  data/one.bin
+8d62064673ecb2a440b8802a2f752e8a  data/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  data/outs/three.bin
+009c79f013fe8d4d97c95bf5ceea68ed  data/two.bin
 ```
 Verify all files in the subdirectory named "outs".
 ```
-cap_verify_md5 --select "*/outs/*" files/*
+cap_verify_md5 --select "*/outs/*" "$CAP_DATA_PATH/*"
 ```
 Results in `verifications/verify_example.out`:
 ```
-8d62064673ecb2a440b8802a2f752e8a  four.bin
-74a08ee2de381ec8e19da52ad36bb5ae  three.bin
+8d62064673ecb2a440b8802a2f752e8a  data/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  data/outs/three.bin
 ```
 Verify all files not in the subdirectory named "outs".
 ```
-cap_verify_md5 --ignore "*/outs/*" files/*
+cap_verify_md5 --ignore "*/outs/*" "$CAP_DATA_PATH/*"
 ```
 Results in `verifications/verify_example.out`:
 ```
-b3ac2b8b9998bf504ef708ec837a4cce  one.bin
-009c79f013fe8d4d97c95bf5ceea68ed  two.bin
+b3ac2b8b9998bf504ef708ec837a4cce  data/one.bin
+009c79f013fe8d4d97c95bf5ceea68ed  data/two.bin
 ```
 
 # Environment helper functions

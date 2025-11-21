@@ -53,8 +53,7 @@ CAP_CONTAINER_PATH=$(realpath "bin/container")
 CAP_DATA_PATH=$(realpath "data")
 CAP_LOGS_PATH=$(realpath "logs")
 CAP_RESULTS_PATH=$(realpath "results")
-CAP_REVIEW_PATH=$(realpath "review")
-CAP_VERIFICATIONS_PATH=(realpath "verifications")
+CAP_VERIFICATIONS_PATH=$(realpath "verifications")
 
 # Set all default values
 CAP_CONTAINER_TYPE="docker"
@@ -99,10 +98,6 @@ fi
 if [ ! -d "$CAP_RESULTS_PATH" ]; then
   mkdir -p "$CAP_RESULTS_PATH"
 fi
-if [ ! -d "$CAP_REVIEW_PATH" ]; then
-  mkdir -p "$CAP_REVIEW_PATH"
-  mkdir -p "$CAP_REVIEW_PATH/verifications"
-fi
 if [ ! -d "$CAP_VERIFICATIONS_PATH" ]; then
   mkdir -p "$CAP_VERIFICATIONS_PATH"
 fi
@@ -118,5 +113,4 @@ export CAP_PROJECT_NAME
 export CAP_PROJECT_PATH
 export CAP_RANDOM_SEED
 export CAP_RESULTS_PATH
-export CAP_REVIEW_PATH
 export CAP_VERIFICATIONS_PATH

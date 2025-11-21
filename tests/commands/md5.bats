@@ -23,7 +23,7 @@ teardown() {
 @test "cap md5: --output-files-only all files in a folder" {
     temp_output=$(mktemp -p "$BATS_TMPDIR")
     cap md5 -o $temp_output --output-files-only $FIXTURE_PATH/files
-    run diff $temp_output $FIXTURE_PATH/outputs/all-files-only.out
+    run diff $temp_output $FIXTURE_PATH/outputs/all_files_only.out
 
     echo "$output"
     [ "$status" -eq 0 ]

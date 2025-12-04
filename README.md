@@ -318,8 +318,8 @@ command.
 random number generation.
 - **CAP_RESULTS_PATH**: Path to where analysis results will be written.
 Defaults to `<project-path>/results`.
-- **CAP_VERIFICATIONS_PATH**: Path to where output verification files and the
-md5 result files they produce are written.
+- **CAP_VERIFICATIONS_PATH**: Path to where verification files and the
+result files they produce are written.
 
 Environment variables can be configured with the following configuration files.
 ```
@@ -381,12 +381,12 @@ CAPTURE updated to version v0.0.1.
 The `verify` command runs CAPTURE verifications which are shell scripts that
 determine whether outputs are reproducible.  The output of verification scripts
 will be written to the verifications folder with the same name as the script
-and a verification type specific extension.  These files should be committed to
-source control so that reviewers can compare their results.
+and a ".out" extension.  These files should be committed to source control so
+that reviewers can compare their results.
 
 Environment variable:
 
-CAP_VERIFY_OUTPUT: File name to write verification output.
+CAP_VERIFICATION_OUTPUT_FILE: File name to write custom verification output. Verification helper functions automatically write to this file.
 
 Definition:
 ```
@@ -394,9 +394,22 @@ cap verify [options] FILE...
 
 FILE... One file name.
 ```
+Options:
+
+-n,--dry-run
+        Lists the files that will have verifications performed in order to
+        verify the expected files are included.  This is helpful when
+        the files are large and take a long time to process.
+--slurm=[batch|run]
+        Runs the verify command as a Slurm job. If the value is run then
+        srun is used and the output stays connected to the current
+        terminal session.  If the value is batch then sbatch is used and
+        the output is written to verfications/<verification-name>.out.
+
 Example:
 
-Perform verifications for a step in the pipeline.
+Perform verifications for a step in the pipeline which will produce an
+output file named "verifications/01_download.out".
 ```
 cap verify verifications/01_download.sh
 ```

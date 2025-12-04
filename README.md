@@ -395,7 +395,7 @@ Definition:
 cap verify [options] FILE...
 
 FILE... One file name.
-```
+
 Options:
 
 -n,--dry-run
@@ -407,6 +407,7 @@ Options:
         srun is used and the output stays connected to the current
         terminal session.  If the value is batch then sbatch is used and
         the output is written to verfications/<verification-name>.out.
+```
 
 Example:
 
@@ -584,6 +585,7 @@ relative path. If the option is specified multiple times, all files matching
 any of the patterns will be EXCLUDED (logical OR). The selector will generally
 have wildcards. Ensure patterns are quoted ("*pattern*") to prevent unintended
 shell expansion.
+
 - `--select=PATTERN` Include only files matching the file PATTERN based on the
 full relative path. If the option is specified multiple times, all files
 matching any of the patterns will be INCLUDED (logical OR). The selector will

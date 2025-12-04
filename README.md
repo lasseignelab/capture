@@ -17,7 +17,7 @@ Table of Contents
   - [cap_array_value](#cap_array_value)
   - [cap_data_download](#cap_data_download)
   - [cap_container](#cap_container)
-- [Verification helper functions](verification-helper-functions)
+- [Verification helper functions](#verification-helper-functions)
   - [cap_verify_md5](#cap_verify_md5)
 - [Environment helper functions](#environment-helper-functions)
   - [cap_data_link](#cap_data_link)
@@ -387,7 +387,7 @@ that reviewers can compare their results.
 Environment variable:
 
 CAP_VERIFICATION_OUTPUT_FILE: File name to write custom verification output.
-[Verification helper functions](verification-helper-functions) automatically
+[Verification helper functions](#verification-helper-functions) automatically
 write to this file.
 
 Definition:

@@ -386,7 +386,9 @@ that reviewers can compare their results.
 
 Environment variable:
 
-CAP_VERIFICATION_OUTPUT_FILE: File name to write custom verification output. Verification helper functions automatically write to this file.
+CAP_VERIFICATION_OUTPUT_FILE: File name to write custom verification output.
+[Verification helper functions](verification-helper-functions) automatically
+write to this file.
 
 Definition:
 ```

@@ -1,0 +1,1 @@
+echo "Success: $CAP_VERIFICATION_NAME"

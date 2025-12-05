@@ -40,7 +40,7 @@ cap <command> params...
 ## env
 Displays CAPTURE environment variables.
 
-Definition:
+Usage:
 ```
 cap env
 ```
@@ -63,7 +63,7 @@ CAP_VERIFICATIONS_PATH=/data/user/acrumley/3xtg-repurposing/verifications
 ## help
 Shows help for the cap command line tool.
 
-Definition:
+Usage:
 ```
 cap help [COMMAND]
 ```
@@ -118,7 +118,7 @@ combined MD5 checksum for all the files. The purpose of this command is to
 determine whether files downloaded or created are complete and accurate. If
 the MD5 checksums from two sets of files match then the files are all the same.
 
-Definition:
+Usage:
 ```
 cap md5 [options] FILE...
 
@@ -211,7 +211,7 @@ project-template submodule in the capture repository.  The project
 repository will be created with the origin remote pointed to a Github
 repository owner specified by the Github account and project name parameters.
 
-Definition:
+Usage:
 ```
 cap new [options] PROJECT_NAME
 
@@ -265,7 +265,7 @@ The `cap run` command runs a CAPTURE framework job within the context of a
 reproducible research project.  It will configure the environment based
 on configuration defined by the current user.
 
-Definition:
+Usage:
 ```
 cap run [options] FILE
 
@@ -362,7 +362,7 @@ a lab while also downloading the data when the symlink does not exist. See
 The `cap update` command will upgrade the CAPTURE framework to the latest
 version.
 
-Definition:
+Usage:
 ```
 cap update
 ```
@@ -381,16 +381,16 @@ CAPTURE updated to version v0.0.1.
 The `verify` command runs CAPTURE verifications which are shell scripts that
 determine whether outputs are reproducible.  The output of verification scripts
 will be written to the verifications folder with the same name as the script
-and a ".out" extension.  These files should be committed to source control so
+with a ".out" extension.  These files should be committed to source control so
 that reviewers can compare their results.
 
 Environment variable:
 
-CAP_VERIFICATION_OUTPUT_FILE: File name to write custom verification output.
+CAP_VERIFICATION_OUTPUT_FILE: File name to append custom verification output.
 [Verification helper functions](#verification-helper-functions) automatically
-write to this file.
+append to this file.
 
-Definition:
+Usage:
 ```
 cap verify [options] FILE...
 
@@ -421,7 +421,7 @@ cap verify verifications/01_download.sh
 The `cap version` command will display the currently installed version
 of CAPTURE.
 
-Definition:
+Usage:
 ```
 cap version
 ```
@@ -596,7 +596,7 @@ Examples for a verification named `verifications/verify_example.sh`:
 
 Verify all files in a directory and its subdirectories.
 ```
-cap_verify_md5 "$CAP_DATA_PATH/*"
+cap_verify_md5 "data/*"
 ```
 Results in `verifications/verify_example.out`:
 ```
@@ -607,7 +607,7 @@ b3ac2b8b9998bf504ef708ec837a4cce  data/one.bin
 ```
 Verify all files in the subdirectory named "outs".
 ```
-cap_verify_md5 --select "*/outs/*" "$CAP_DATA_PATH/*"
+cap_verify_md5 --select "*/outs/*" "data/*"
 ```
 Results in `verifications/verify_example.out`:
 ```
@@ -616,7 +616,7 @@ Results in `verifications/verify_example.out`:
 ```
 Verify all files not in the subdirectory named "outs".
 ```
-cap_verify_md5 --ignore "*/outs/*" "$CAP_DATA_PATH/*"
+cap_verify_md5 --ignore "*/outs/*" "data/*"
 ```
 Results in `verifications/verify_example.out`:
 ```

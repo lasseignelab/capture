@@ -3,7 +3,7 @@ load ../../../node_modules/bats-mock/stub
 load ../../../node_modules/bats-support/load
 load ../../../node_modules/bats-assert/load
 
-source "lib/functions/cap_verify_md5.sh"
+source "lib/functions/verify/cap_verify_md5.sh"
 
 setup() {
   MD5_FIXTURE_PATH="tests/fixtures/md5"

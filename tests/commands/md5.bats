@@ -29,6 +29,16 @@ teardown() {
     [ "$status" -eq 0 ]
 }
 
+@test "cap md5: --append all files in a folder" {
+    temp_output=$(mktemp -p "$BATS_TMPDIR")
+    cp $FIXTURE_PATH/outputs/all_files_only.out $temp_output
+    cap md5 -o $temp_output --append --output-files-only $FIXTURE_PATH/files
+    run diff $temp_output $FIXTURE_PATH/outputs/all_files_appended.out
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+
 @test "cap md5: A specific file" {
     temp_output=$(mktemp -p "$BATS_TMPDIR")
     cap md5 -o $temp_output $FIXTURE_PATH/files/one.bin

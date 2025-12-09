@@ -26,6 +26,9 @@ cap_md5_help() {
 
     Options:
 
+    --append
+            Append to the output file if it already exists.
+
     --ignore=PATTERN
             Exclude files matching the file PATTERN based on the full relative
             path. If the option is specified multiple times, all files matching
@@ -174,7 +177,10 @@ EOF
       if [[ "$normalize" == "true" && "$dry_run" == "false" ]]; then
         cap_md5_normalize "$temp_output_file"
       fi
-      cat "$temp_output_file" > "${output_file:-/dev/stdout}"
+      if [[ "$append" == "false" ]]; then
+        > "$output_file"
+      fi
+      cat "$temp_output_file" >> "${output_file:-/dev/stdout}"
       ;;
   esac
 }
@@ -236,13 +242,14 @@ cap_md5_normalize() {
 
 cap_md5_parse_commandline_parameters() {
   # Define the named commandline options
-  if ! OPTIONS=$(getopt -o no:s: --long dry-run,ignore:,normalize,output:,output-files-only,select:,slurm: -- "$@"); then
+  if ! OPTIONS=$(getopt -o no:s: --long append,dry-run,ignore:,normalize,output:,output-files-only,select:,slurm: -- "$@"); then
     echo "Use the 'cap help md5' command for detailed help."
     return 1
   fi
   eval set -- "$OPTIONS"
 
   # Set default values for the named parameters
+  append=false
   dry_run=false
   normalize=false
   ignore_values=()
@@ -257,6 +264,10 @@ cap_md5_parse_commandline_parameters() {
   # Parse the optional named command line options
   while true; do
     case "$1" in
+      --append)
+        append=true
+        slurm_args+="$1 "
+        shift 1 ;;
       -n|--dry-run)
         dry_run=true
         slurm_args+="$1 "

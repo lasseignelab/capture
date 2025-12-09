@@ -109,10 +109,11 @@ setup() {
   [ "$output" == "Success: run" ]
 }
 
-@test "cap verify: perform md5 verification" {
+@test "cap verify: Erase output file before performing md5 verification" {
   mkdir -p "$PROJECTS_PATH/test/verifications"
   cp "$FIXTURE_PATH/verifications/test_cap_verify_md5.sh" "$PROJECTS_PATH/test/verifications"
   cp -r "$MD5_FIXTURE_PATH/files" "$PROJECTS_PATH/test/data"
+  cp "$FIXTURE_PATH/outputs/all_files_only.out" "$PROJECTS_PATH/test/verifications/test_cap_verify_md5.out"
   cd "$PROJECTS_PATH/test"
 
   run cap verify verifications/test_cap_verify_md5.sh

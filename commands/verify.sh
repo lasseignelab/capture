@@ -69,6 +69,8 @@ cap_verify() {
   CAP_VERIFICATION_OUTPUT_FILE="verifications/$CAP_VERIFICATION_NAME.out"
   export CAP_VERIFICATION_OUTPUT_FILE
 
+  # Clear the output file and run the verification.
+  > "$CAP_VERIFICATION_OUTPUT_FILE"
   . "${verification_files/verifications/$CAP_VERIFICATIONS_PATH}"
 
   # Output to the logs folder like the cap run command.

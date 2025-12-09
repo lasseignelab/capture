@@ -127,6 +127,9 @@ FILE... One or more file and/or directory names or patterns. For directories,
 
 Options:
 
+--append
+        Append to the output file if it already exists.
+
 -n,--dry-run
         Lists the files that will have md5sums calculated in order to
         verify the expected files are included.  This is helpful when

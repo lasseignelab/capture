@@ -3,7 +3,7 @@
 cap_verify_md5() {
   cap_verify_md5_parse_commandline_parameters "$@"
 
-  cap_md5_args+=(--output-files-only)
+  cap_md5_args+=(--append --output-files-only)
   if [[ "$CAP_VERIFICATION_DRY_RUN" == "true" ]]; then
     cap_md5_args+=(--dry-run)
   else

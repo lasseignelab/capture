@@ -34,7 +34,7 @@ teardown() {
   [ "$status" -eq 0 ]
 }
 
-@test "cap_verify_md5: Overwrite an existing verification output file" {
+@test "cap_verify_md5: Append to an existing verification output file" {
   CAP_VERIFICATION_OUTPUT_FILE="$CAP_VERIFICATIONS_PATH/verification.out"
   export CAP_VERIFICATION_OUTPUT_FILE
   CAP_VERIFICATION_NAME="verification"
@@ -45,10 +45,10 @@ teardown() {
   export CAP_VERIFICATION_SLURM
 
   # Simulate a file having been previously created.
-  cp "$MD5_FIXTURE_PATH/outputs/one.out" "$CAP_VERIFICATION_OUTPUT_FILE"
-  # Verify that the previous file was overwritten.
+  cp "$MD5_FIXTURE_PATH/outputs/all_files_only.out" "$CAP_VERIFICATION_OUTPUT_FILE"
+  # Verify that the previous file was appended.
   run cap_verify_md5 "$CAP_DATA_PATH/files"
-  diff "$CAP_VERIFICATION_OUTPUT_FILE" "$MD5_FIXTURE_PATH/outputs/all_files_only.out"
+  diff "$CAP_VERIFICATION_OUTPUT_FILE" "$MD5_FIXTURE_PATH/outputs/all_files_appended.out"
 
   [ "$status" -eq 0 ]
 }

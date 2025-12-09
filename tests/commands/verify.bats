@@ -73,40 +73,96 @@ setup() {
   [ "$output" == "Success: true" ]
 }
 
-@test "cap verify: CAP_VERIFIFICATION_SLURM is set to the slurm option" {
+@test "cap verify --dry-run: The output file is not blanked" {
   mkdir -p "$PROJECTS_PATH/test/verifications"
-  cp "$FIXTURE_PATH/verifications/test_slurm.sh" "$PROJECTS_PATH/test/verifications"
+  cp "$FIXTURE_PATH/verifications/test_dry_run.sh" "$PROJECTS_PATH/test/verifications"
   cd "$PROJECTS_PATH/test"
 
-  run cap verify verifications/test_slurm.sh
+  run cap verify --dry-run verifications/test_dry_run.sh
 
-  echo "$output"
   [ "$status" -eq 0 ]
-  [ "$output" == "Success: " ]
+  [ "$output" == "Success: true" ]
+  [[ ! -e "$PROJECTS_PATH/test/verifications/test_dry_run.out" ]]
 }
 
-@test "cap verify --slurm batch: CAP_VERIFIFICATION_SLURM is set to the slurm option" {
+@test "cap verify --slurm batch: Runs verification as a slurm batch" {
   mkdir -p "$PROJECTS_PATH/test/verifications"
-  cp "$FIXTURE_PATH/verifications/test_slurm.sh" "$PROJECTS_PATH/test/verifications"
+  cp "$FIXTURE_PATH/verifications/test_cap_verify_md5.sh" "$PROJECTS_PATH/test/verifications"
   cd "$PROJECTS_PATH/test"
 
-  run cap verify --slurm "batch" verifications/test_slurm.sh
+  temp_script=$(mktemp -p "$BATS_TMPDIR")
+  stub mktemp " : echo '$temp_script'"
+  stub sbatch "$temp_script : echo 'sbatch called correctly'"
+  run cap verify --slurm "batch" verifications/test_cap_verify_md5.sh
+  unstub mktemp
+  unstub sbatch
 
-  echo "$output"
-  [ "$status" -eq 0 ]
-  [ "$output" == "Success: batch" ]
+  diff <(cat <<EOF
+#!/bin/bash
+
+#################################### SLURM ####################################
+#SBATCH --job-name cap-verify
+#SBATCH --output verifications/test_cap_verify_md5.out
+#SBATCH --error verifications/test_cap_verify_md5.out
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=32G
+#SBATCH --partition=short
+
+# Setup the runtime environment for the job.
+source "/work/lib/environment.sh"
+CAP_FUNCTION_GROUP=verify source /work/lib/functions.sh
+. "$PROJECTS_PATH/test/verifications/test_cap_verify_md5.sh"
+EOF
+) "$temp_script"
+
+  [ "$output" == "sbatch called correctly" ]
 }
 
-@test "cap verify --slurm run: CAP_VERIFIFICATION_SLURM is set to the slurm option" {
+@test "cap verify --slurm run: Runs verification as a slurm run" {
   mkdir -p "$PROJECTS_PATH/test/verifications"
-  cp "$FIXTURE_PATH/verifications/test_slurm.sh" "$PROJECTS_PATH/test/verifications"
+  cp "$FIXTURE_PATH/verifications/test_cap_verify_md5.sh" "$PROJECTS_PATH/test/verifications"
   cd "$PROJECTS_PATH/test"
 
-  run cap verify --slurm "run" verifications/test_slurm.sh
+  temp_script=$(mktemp -p "$BATS_TMPDIR")
+  stub mktemp " : echo '$temp_script'"
+  stubbed_parameters=( \
+    --job-name=cap-verify \
+    --ntasks=1 \
+    --cpus-per-task=1 \
+    --mem=32G \
+    --output=verifications/test_cap_verify_md5.out \
+    --input=$temp_script \
+    --export=ALL \
+    bash
+  )
+  stub srun "${stubbed_parameters[*]} : echo 'srun called correctly'"
+  run cap verify --slurm "run" verifications/test_cap_verify_md5.sh
+  unstub mktemp
+  unstub srun
+
+  diff <(cat <<EOF
+# Setup the runtime environment for the job.
+source "/work/lib/environment.sh"
+CAP_FUNCTION_GROUP=verify source /work/lib/functions.sh
+. "$PROJECTS_PATH/test/verifications/test_cap_verify_md5.sh"
+EOF
+) "$temp_script"
+
+  [ "$output" == "srun called correctly" ]
+}
+
+@test "cap verify: Perform md5 verification" {
+  mkdir -p "$PROJECTS_PATH/test/verifications"
+  cp "$FIXTURE_PATH/verifications/test_cap_verify_md5.sh" "$PROJECTS_PATH/test/verifications"
+  cp -r "$MD5_FIXTURE_PATH/files" "$PROJECTS_PATH/test/data"
+  cd "$PROJECTS_PATH/test"
+
+  run cap verify verifications/test_cap_verify_md5.sh
+  diff "$PROJECTS_PATH/test/verifications/test_cap_verify_md5.out" "$FIXTURE_PATH/outputs/all_files_only.out"
 
   echo "$output"
   [ "$status" -eq 0 ]
-  [ "$output" == "Success: run" ]
 }
 
 @test "cap verify: Erase output file before performing md5 verification" {

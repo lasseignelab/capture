@@ -3,6 +3,7 @@
 # Location where the CAPTURE framework was installed.
 cap_install_fullpath=$(command -v cap)
 CAP_INSTALL_PATH=$(dirname "$cap_install_fullpath")
+export CAP_INSTALL_PATH
 
 # Load commands
 for file in "$CAP_INSTALL_PATH"/commands/*.sh; do

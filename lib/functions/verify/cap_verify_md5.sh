@@ -9,9 +9,6 @@ cap_verify_md5() {
   else
     cap_md5_args+=(--output "$CAP_VERIFICATION_OUTPUT_FILE")
   fi
-  if [[ -n "$CAP_VERIFICATION_SLURM" ]]; then
-    cap_md5_args+=(--slurm "$CAP_VERIFICATION_SLURM")
-  fi
 
   cap md5 \
     ${cap_md5_args[@]} \

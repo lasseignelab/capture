@@ -18,6 +18,7 @@ Table of Contents
   - [cap_data_download](#cap_data_download)
   - [cap_container](#cap_container)
 - [Verification helper functions](#verification-helper-functions)
+  - [cap_verify_append](#cap_verify_append)
   - [cap_verify_md5](#cap_verify_md5)
 - [Environment helper functions](#environment-helper-functions)
   - [cap_data_link](#cap_data_link)
@@ -562,7 +563,57 @@ cap_container \
 # Verification helper functions
 Functions to facilitate verifying that pipeline results are reproducible.
 Verification scripts are stored in the `verifications` directory in the
-project root directory.
+project root directory and should be committed to the code repository.
+
+The output file will be given the same name as the verification file with a
+`.out` extension and will be stored in the same directory. The output file
+should also be committed to the code repository. When reproducing results, use
+the `git diff` command to confirm that results of a verification match the
+original results.
+
+## cap_verify_append
+The `cap_verify_append` function appends text to the verification's `.out`
+file.  The purpose of this command is facilitate custom verifications and to
+add comments between groupings of verification output.
+
+```
+cap_verify_append TEXT
+```
+- TEXT Text that will be appended directly to the end of the `.out` file.
+
+Examples for a verification named `verifications/verify_example.sh`:
+
+Verify files with comments.
+```
+cap_verify_append "##### Mouse data #####"
+cap_verify_md5 "data/mouse/*"
+cap_verify_append "##### Human data #####"
+cap_verify_md5 "data/human/*"
+```
+Results in `verifications/verify_example.out`:
+```
+##### Mouse data #####
+b3ac2b8b9998bf504ef708ec837a4cce  data/mouse/one.bin
+8d62064673ecb2a440b8802a2f752e8a  data/mouse/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  data/mouse/outs/three.bin
+009c79f013fe8d4d97c95bf5ceea68ed  data/mouse/two.bin
+##### Human data #####
+b3ac2b8b9998bf504ef708ec837a4cc1  data/human/one.bin
+8d62064673ecb2a440b8802a2f752e82  data/human/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5a5  data/human/outs/three.bin
+009c79f013fe8d4d97c95bf5ceea68e8  data/human/two.bin
+```
+Custom verification from a Python script. The environment variable
+CAP_VERIFICATION_DRY_RUN can be used to add dry run functionality to
+custom verifcation scripts, which will be equal to "true" on a dry run.
+```
+cap_verify_append "$(python3 $CAP_VERIFICATIONS_PATH/verify_example.py)"
+```
+Results in `verifications/verify_example.out`:
+```
+Cell Count: 1000
+Gene Count: 5000
+```
 
 ## cap_verify_md5
 The `cap_verify_md5` function produces an MD5 checksum for each file specified,
@@ -572,10 +623,6 @@ whether files downloaded or created are complete and accurate when reproduced.
 If the MD5 checksums from two sets of files match then the files are all the
 same.
 
-The output file will be given the same name as the verification file with an
-`md5` extension and will be stored in the same directory. When reproducing
-results, use the `git diff` command to confirm that results of a verification
-match the original results.
 ```
 cap_verify_md5 [options] FILE...
 ```

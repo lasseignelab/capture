@@ -161,7 +161,7 @@ EOF
 #SBATCH --mem-per-cpu=32G
 #SBATCH --partition=short
 
-cap md5 -o "test/output.txt" --output-files-only  $FIXTURE_PATH/files
+cap md5 -o "test/output.txt" --output-files-only  "$FIXTURE_PATH/files"
 EOF
 ) "$temp_script"
 

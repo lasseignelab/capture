@@ -25,6 +25,18 @@ setup() {
   [ "$output" == "Success: verifications/test_output_file.out" ]
 }
 
+@test "cap verify: CAP_VERIFIFICATION_OUTPUT_FILE is correct for subdirectories" {
+  mkdir -p "$PROJECTS_PATH/test/verifications/test"
+  cp "$FIXTURE_PATH/verifications/test_output_file.sh" "$PROJECTS_PATH/test/verifications/test"
+  cd "$PROJECTS_PATH/test"
+
+  run cap verify verifications/test/test_output_file.sh
+
+  echo "$output"
+  [ "$status" -eq 0 ]
+  [ "$output" == "Success: verifications/test/test_output_file.out" ]
+}
+
 @test "cap verify: CAP_VERIFIFICATION_NAME is set to the verification name" {
   mkdir -p "$PROJECTS_PATH/test/verifications"
   cp "$FIXTURE_PATH/verifications/test_name.sh" "$PROJECTS_PATH/test/verifications"

@@ -60,11 +60,12 @@ cap_verify() {
   export CAP_VERIFICATION_DRY_RUN
 
   # Setup the output file name environment variable.
-  CAP_VERIFICATION_NAME="${verification_files##*/}" # remove path
+  CAP_VERIFICATION_NAME="${verification_file##*/}" # remove path
   CAP_VERIFICATION_NAME="${CAP_VERIFICATION_NAME%.*}" # remove extension
   export CAP_VERIFICATION_NAME
 
-  CAP_VERIFICATION_OUTPUT_FILE="verifications/$CAP_VERIFICATION_NAME.out"
+  verification_path=$(dirname "$verification_file")
+  CAP_VERIFICATION_OUTPUT_FILE="$verification_path/$CAP_VERIFICATION_NAME.out"
   export CAP_VERIFICATION_OUTPUT_FILE
 
   # Clear the output file so new output can be appended.
@@ -93,7 +94,7 @@ cap_verify() {
 # Setup the runtime environment for the job.
 source "$CAP_INSTALL_PATH/lib/environment.sh"
 CAP_FUNCTION_GROUP=verify source $CAP_INSTALL_PATH/lib/functions.sh
-. "${verification_files/verifications/$CAP_VERIFICATIONS_PATH}"
+. "${verification_file/verifications/$CAP_VERIFICATIONS_PATH}"
 EOF
       sbatch "$temp_batch_script"
 
@@ -106,7 +107,7 @@ EOF
 # Setup the runtime environment for the job.
 source "$CAP_INSTALL_PATH/lib/environment.sh"
 CAP_FUNCTION_GROUP=verify source $CAP_INSTALL_PATH/lib/functions.sh
-. "${verification_files/verifications/$CAP_VERIFICATIONS_PATH}"
+. "${verification_file/verifications/$CAP_VERIFICATIONS_PATH}"
 EOF
 
       srun \
@@ -122,7 +123,7 @@ EOF
     *)
       # Setup the runtime environment for the job.
       CAP_FUNCTION_GROUP=verify source "$CAP_INSTALL_PATH/lib/functions.sh"
-      . "${verification_files/verifications/$CAP_VERIFICATIONS_PATH}"
+      . "${verification_file/verifications/$CAP_VERIFICATIONS_PATH}"
       ;;
   esac
 
@@ -169,5 +170,5 @@ cap_verify_parse_commandline_parameters() {
   fi
 
   # Verification files to verify.
-  verification_files=( "$@" )
+  verification_file=( "$@" )
 }

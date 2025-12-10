@@ -22,7 +22,7 @@ teardown() {
   export CAP_VERIFICATION_OUTPUT_FILE
   CAP_VERIFICATION_NAME="verification"
   export CAP_VERIFICATION_NAME
-  CAP_VERIFICATION_DRY_RUN=""
+  CAP_VERIFICATION_DRY_RUN="false"
   export CAP_VERIFICATION_DRY_RUN
 
   run cap_verify_md5 "$CAP_DATA_PATH/files"
@@ -37,7 +37,7 @@ teardown() {
   export CAP_VERIFICATION_OUTPUT_FILE
   CAP_VERIFICATION_NAME="verification"
   export CAP_VERIFICATION_NAME
-  CAP_VERIFICATION_DRY_RUN=""
+  CAP_VERIFICATION_DRY_RUN="false"
   export CAP_VERIFICATION_DRY_RUN
 
   # Simulate a file having been previously created.
@@ -80,7 +80,7 @@ EOF
   export CAP_VERIFICATION_OUTPUT_FILE
   CAP_VERIFICATION_NAME="verification"
   export CAP_VERIFICATION_NAME
-  CAP_VERIFICATION_DRY_RUN=""
+  CAP_VERIFICATION_DRY_RUN="false"
   export CAP_VERIFICATION_DRY_RUN
 
   run cap_verify_md5 --select "*one.bin" --select "*two.bin" "$CAP_DATA_PATH/files"
@@ -94,7 +94,7 @@ EOF
   export CAP_VERIFICATION_OUTPUT_FILE
   CAP_VERIFICATION_NAME="verification"
   export CAP_VERIFICATION_NAME
-  CAP_VERIFICATION_DRY_RUN=""
+  CAP_VERIFICATION_DRY_RUN="false"
   export CAP_VERIFICATION_DRY_RUN
 
 

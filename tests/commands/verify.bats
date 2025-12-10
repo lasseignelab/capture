@@ -37,7 +37,7 @@ setup() {
   [ "$output" == "Success: test_name" ]
 }
 
-@test "cap verify: CAP_VERIFIFICATION_DRY_RUN is set to blank" {
+@test "cap verify: CAP_VERIFIFICATION_DRY_RUN is set to false" {
   mkdir -p "$PROJECTS_PATH/test/verifications"
   cp "$FIXTURE_PATH/verifications/test_dry_run.sh" "$PROJECTS_PATH/test/verifications"
   cd "$PROJECTS_PATH/test"
@@ -46,7 +46,7 @@ setup() {
 
   echo "$output"
   [ "$status" -eq 0 ]
-  [ "$output" == "Success: " ]
+  [ "$output" == "Success: false" ]
 }
 
 @test "cap verify --dry-run: CAP_VERIFIFICATION_DRY_RUN is set to true" {

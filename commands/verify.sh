@@ -68,7 +68,7 @@ cap_verify() {
   export CAP_VERIFICATION_OUTPUT_FILE
 
   # Clear the output file so new output can be appended.
-  if [[ "$dry_run" == "" ]]; then
+  if [[ "$dry_run" == "false" ]]; then
     > "$CAP_VERIFICATION_OUTPUT_FILE"
   fi
 
@@ -138,7 +138,7 @@ cap_verify_parse_commandline_parameters() {
   eval set -- "$OPTIONS"
 
   # Set default values for the named parameters
-  dry_run=""
+  dry_run=false
   slurm=""
 
   # Parse the optional named command line options

@@ -690,26 +690,31 @@ cap run -e my_lab src/01_download.sh
 
 # Contributions
 ## Tests
+All pull requests must include BATS tests covering the changes.
+
 The testing framework is installed by the following command.
 ```
 tests/install
 ```
-The test suite is executed by the following command.
+The entire test suite is executed by the following command.
 ```
 tests/run
 ```
-To run a specific test or subset of tests using the --filter parameter based
-on the test name. Following is an example of a test.
+The tests can be filtered with the --filter option.  This saves time by
+allowing subsets of the test suite to be ran while coding. The following
+examples of using --filter are based on this hypothetical BATS test.
 ```
 @test "cap md5: All files in a folder" {
   ...
 }
 ```
+### Examples of using --filter
 How to run just the `cap md5` tests:
 ```
-tests/run --filter "cap md5:"
+tests/run --filter "cap md5"
 ```
-How to run only the one test in the example:
+
+How to run just the single hypothetical test:
 ```
 tests/run --filter "cap md5: All files in a folder"
 ```

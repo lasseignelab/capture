@@ -552,9 +552,10 @@ cap_verify_append TEXT
 ```
 - TEXT Text that will be appended directly to the end of the `.out` file.
 
-Examples for a verification named `verifications/verify_example.sh`:
+### Examples for a verification named `verifications/verify_example.sh`:
 
-Verify files with comments.
+1. Verify files with comments.
+
 ```
 cap_verify_append "##### Mouse data #####"
 cap_verify_md5 "data/mouse/*"
@@ -574,9 +575,13 @@ b3ac2b8b9998bf504ef708ec837a4cc1  data/human/one.bin
 74a08ee2de381ec8e19da52ad36bb5a5  data/human/outs/three.bin
 009c79f013fe8d4d97c95bf5ceea68e8  data/human/two.bin
 ```
-Custom verification from a Python script. The environment variable
-CAP_VERIFICATION_DRY_RUN can be used to add dry run functionality to
-custom verifcation scripts, which will be equal to "true" on a dry run.
+
+2. Custom verification from a Python script.
+
+The environment variable CAP_VERIFICATION_DRY_RUN can be used to add dry run
+functionality to custom verifcation scripts, which will be equal to "true" on a
+dry run.
+
 ```
 cap_verify_append "$(python3 $CAP_VERIFICATIONS_PATH/verify_example.py)"
 ```
@@ -613,9 +618,9 @@ matching any of the patterns will be INCLUDED (logical OR). The selector will
 generally have wildcards. Ensure patterns are quoted ("*pattern*") to prevent
 unintended shell expansion.
 
-Examples for a verification named `verifications/verify_example.sh`:
+### Examples for a verification named `verifications/verify_example.sh`:
 
-Verify all files in a directory and its subdirectories.
+1. Verify all files in a directory and its subdirectories.
 ```
 cap_verify_md5 "data/*"
 ```
@@ -626,7 +631,7 @@ b3ac2b8b9998bf504ef708ec837a4cce  data/one.bin
 74a08ee2de381ec8e19da52ad36bb5ae  data/outs/three.bin
 009c79f013fe8d4d97c95bf5ceea68ed  data/two.bin
 ```
-Verify all files in the subdirectory named "outs".
+2. Verify all files in the subdirectory named "outs".
 ```
 cap_verify_md5 --select "*/outs/*" "data/*"
 ```
@@ -635,7 +640,7 @@ Results in `verifications/verify_example.out`:
 8d62064673ecb2a440b8802a2f752e8a  data/outs/four.bin
 74a08ee2de381ec8e19da52ad36bb5ae  data/outs/three.bin
 ```
-Verify all files not in the subdirectory named "outs".
+3. Verify all files not in the subdirectory named "outs".
 ```
 cap_verify_md5 --ignore "*/outs/*" "data/*"
 ```

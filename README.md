@@ -386,13 +386,15 @@ The `verify` command runs CAPTURE verifications which are shell scripts that
 determine whether outputs are reproducible.  The output of verification scripts
 will be written to the verifications folder with the same name as the script
 with a ".out" extension.  These files should be committed to source control so
-that reviewers can compare their results.
+that reviewers can compare their results. See
+[verification helper functions](#verification-helper-functions).
 
-Environment variable:
+Environment variables (useful for custom verifcations):
 
-CAP_VERIFICATION_OUTPUT_FILE: File name to append custom verification output.
-[Verification helper functions](#verification-helper-functions) automatically
-append to this file.
+CAP_VERIFICATION_DRY_RUN: Boolean value ("true", "false") indicating whether
+the current verification is a dry run.
+
+CAP_VERIFICATION_OUTPUT_FILE: File name to append verification output.
 
 Usage:
 ```

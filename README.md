@@ -408,7 +408,7 @@ Options:
         Lists the files that will have verifications performed in order to
         verify the expected files are included.  This is helpful when
         the files are large and take a long time to process.
---slurm=[batch|run]
+-s,--slurm=[batch|run]
         Runs the verify command as a Slurm job with sbatch or srun.
 ```
 

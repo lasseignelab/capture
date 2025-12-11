@@ -15,17 +15,20 @@ cap_verify_help() {
   determine whether outputs are reproducible.  The output of verification
   scripts will be written to the verifications folder with the same name as the
   script with a '.out' extension. These files should be committed to source
-  control so that reviewers can compare their results.
+  control so that reviewers can compare their results. See documentation for
+  verification helper functions.
 
-  Environment variable:
+  Environment variables (useful for custom verifcations):
 
-  CAP_VERIFICATION_OUTPUT_FILE: File name to append custom verification output.
-  Verification helper functions automatically append to this file.
+  CAP_VERIFICATION_DRY_RUN: Boolean value ("true", "false") indicating whether
+  the current verification is a dry run.
+
+  CAP_VERIFICATION_OUTPUT_FILE: File name to append verification output.
 
   Usage:
-    cap verify FILE...
+    cap verify [options] FILE
 
-    FILE... One file name.
+    FILE One file name.
 
     Options:
 
@@ -34,10 +37,7 @@ cap_verify_help() {
             verify the expected files are included.  This is helpful when
             the files are large and take a long time to process.
     --slurm=[batch|run]
-            Runs the verify command as a Slurm job. If the value is run then
-            srun is used and the output stays connected to the current
-            terminal session.  If the value is batch then sbatch is used and
-            the output is written to verfications/<verification-name>.out.
+            Runs the verify command as a Slurm job with sbatch or srun.
 
   Example:
 

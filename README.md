@@ -398,9 +398,9 @@ CAP_VERIFICATION_OUTPUT_FILE: File name to append verification output.
 
 Usage:
 ```
-cap verify [options] FILE...
+cap verify [options] FILE
 
-FILE... One file name.
+FILE One file name.
 
 Options:
 

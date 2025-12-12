@@ -11,8 +11,8 @@ cap_verify_md5() {
   fi
 
   cap md5 \
-    ${cap_md5_args[@]} \
-    $verify_path
+    "${cap_md5_args[@]}" \
+    "$verify_path"
 }
 
 cap_verify_md5_parse_commandline_parameters() {
@@ -30,7 +30,7 @@ cap_verify_md5_parse_commandline_parameters() {
   while true; do
     case "$1" in
       --select|--ignore)
-        cap_md5_args+=($1 "$2")
+        cap_md5_args+=("$1" "$2")
         shift 2 ;;
       --)
         shift

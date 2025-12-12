@@ -70,7 +70,7 @@ cap_verify() {
 
   # Clear the output file so new output can be appended.
   if [[ "$dry_run" == "false" ]]; then
-    > "$CAP_VERIFICATION_OUTPUT_FILE"
+    : > "$CAP_VERIFICATION_OUTPUT_FILE"
   fi
 
   # Run the verification with slurm or in the current session.
@@ -123,6 +123,10 @@ EOF
     *)
       # Setup the runtime environment for the job.
       CAP_FUNCTION_GROUP=verify source "$CAP_INSTALL_PATH/lib/functions.sh"
+
+      # Execute the verification file which will be provided by the user.
+      # Shellcheck cannot lint the file so SC1090 is ignored.
+      # shellcheck disable=SC1090
       . "${verification_file/verifications/$CAP_VERIFICATIONS_PATH}"
       ;;
   esac

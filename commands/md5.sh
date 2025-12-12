@@ -178,7 +178,7 @@ EOF
         cap_md5_normalize "$temp_output_file"
       fi
       if [[ "$append" == "false" ]]; then
-        > "$output_file"
+        : > "$output_file"
       fi
       cat "$temp_output_file" >> "${output_file:-/dev/stdout}"
       ;;

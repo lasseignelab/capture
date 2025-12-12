@@ -122,8 +122,8 @@ setup() {
 #SBATCH --partition=short
 
 # Setup the runtime environment for the job.
-source "/work/lib/environment.sh"
-CAP_FUNCTION_GROUP=verify source /work/lib/functions.sh
+source "$CAP_INSTALL_PATH/lib/environment.sh"
+CAP_FUNCTION_GROUP=verify source $CAP_INSTALL_PATH/lib/functions.sh
 . "$PROJECTS_PATH/test/verifications/test_cap_verify_md5.sh"
 EOF
 ) "$temp_script"
@@ -155,8 +155,8 @@ EOF
 
   diff <(cat <<EOF
 # Setup the runtime environment for the job.
-source "/work/lib/environment.sh"
-CAP_FUNCTION_GROUP=verify source /work/lib/functions.sh
+source "$CAP_INSTALL_PATH/lib/environment.sh"
+CAP_FUNCTION_GROUP=verify source $CAP_INSTALL_PATH/lib/functions.sh
 . "$PROJECTS_PATH/test/verifications/test_cap_verify_md5.sh"
 EOF
 ) "$temp_script"

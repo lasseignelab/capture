@@ -101,6 +101,7 @@ cap_new() {
       if [[ -n "$owner" ]]; then
         git remote add origin git@"$git_host":"$owner"/"$project_name".git
         git push origin main
+        git branch --set-upstream-to=origin/main main
       fi
     fi
 

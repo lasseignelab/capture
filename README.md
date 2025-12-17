@@ -300,7 +300,7 @@ Submitted batch job 29818073
 The runtime environment is configured with the following variables available
 to Slurm scripts.
 - **CAP_CONTAINER_PATH**: Path to where container files such as Docker will be
-maintained.  Defaults to `<project-path>/bin/docker`.
+maintained.  Defaults to `<project-path>/bin/container`.
 - **CAP_DATA_PATH**: Path to where data files will be written.  Defaults to
 `<project-path>/data`.
 - **CAP_ENV**: The name of the current execution environment.  Defaults to
@@ -323,7 +323,8 @@ random number generation.
 - **CAP_RESULTS_PATH**: Path to where analysis results will be written.
 Defaults to `<project-path>/results`.
 - **CAP_VERIFICATIONS_PATH**: Path to where verification files and the
-result files they produce are written.
+result files they produce are written.  Defaults to
+`<project-path>/verifications`.
 
 Environment variables can be configured with the following configuration files.
 ```

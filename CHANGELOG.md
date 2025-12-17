@@ -1,5 +1,6 @@
 ## CAPTURE 0.9.0 (December 12, 2025) ##
 * Add the `cap verify` command
+* Check that environment files exist for cap run -e
 
 ## CAPTURE 0.8.6 (October 21, 2025) ##
 * Fix cap_container failure on Slurm array jobs

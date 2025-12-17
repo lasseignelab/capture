@@ -107,6 +107,8 @@ EOF
 
 @test "cap run: Dry run with environment option specified" {
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cp "$PROJECTS_PATH/test/config/environments/default.sh" \
+     "$PROJECTS_PATH/test/config/environments/test.sh"
   cd "$PROJECTS_PATH/test"
   temp_script="$(mktemp -p "$BATS_TMPDIR")"
   stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
@@ -157,4 +159,13 @@ EOF
   diff -y <(echo "$expected_output") <(echo "$output")
 
   [ "$status" -eq 0 ]
+}
+
+@test "cap run: Invalid environment option specified" {
+  cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test"
+  run cap run -e invalid src/job.sh
+
+  [ "$status" -eq 2 ]
+  [ "$output" == "The invalid.sh environment file does not exist in config/environments." ]
 }

@@ -75,7 +75,7 @@ EOF
   if [ -n "$environment_override" ]; then
     CAP_ENV="$environment_override"
   fi
-
+  cap_check_environment "$CAP_ENV"
 
   # Specify the log file names with their full path. Log file names will
   # begin with <job name>-<date>-<time>-<username>. If the job is an array

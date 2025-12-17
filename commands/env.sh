@@ -13,7 +13,7 @@ cap_env_help() {
   cat <<EOF
   The "env" command displays a list of all the CAPTURE environment variables
   along with their values. File and path values are displayed with full
-  paths.
+  paths. This command must be executed from the project root directory.
 
   Usage:
     cap env
@@ -35,6 +35,8 @@ EOF
 }
 
 cap_env() {
+  cap_root_required "env"
+
   # Load the CAPTURE environment.
   source "$CAP_INSTALL_PATH/lib/environment.sh"
 

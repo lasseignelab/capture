@@ -5,6 +5,9 @@ cap_install_fullpath=$(command -v cap)
 CAP_INSTALL_PATH=$(dirname "$cap_install_fullpath")
 export CAP_INSTALL_PATH
 
+# Load command helper functions
+CAP_FUNCTION_GROUP=commands source $CAP_INSTALL_PATH/lib/functions.sh
+
 # Load commands
 for file in "$CAP_INSTALL_PATH"/commands/*.sh; do
     # shellcheck disable=SC1090

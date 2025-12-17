@@ -15,8 +15,10 @@ cap_verify_help() {
   determine whether outputs are reproducible.  The output of verification
   scripts will be written to the verifications folder with the same name as the
   script with a '.out' extension. These files should be committed to source
-  control so that reviewers can compare their results. See documentation for
-  verification helper functions.
+  control so that reviewers can compare their results. This command must be
+  executed from the project root directory.
+
+  See documentation for verification helper functions.
 
   Environment variables (useful for custom verifcations):
 
@@ -49,6 +51,7 @@ EOF
 }
 
 cap_verify() {
+  cap_root_required "verify"
   cap_verify_parse_commandline_parameters "$@"
 
   # Setup the runtime environment for the job.

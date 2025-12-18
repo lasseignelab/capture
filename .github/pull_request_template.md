@@ -37,6 +37,7 @@ cd ~/bin/capture
 git checkout main
 git pull
 git checkout <branch-name>
+
 ```
 
 ## Test
@@ -46,23 +47,28 @@ Run the automated test suite.
 cd ~/bin/capture
 tests/install
 tests/run
+
 ```
 Test manually in scratch:
 ```
 cd $USER_SCRATCH
 cap new --owner lasseignelab "$USER-testing"
+
 ```
 ```
 cd "$USER-testing"
+
 ```
 ## Cleanup
 * Remove the test directory from scratch:
 ```
 cd "$USER_SCRATCH"
 rm -rf "$USER-testing"
+
 ```
 * Delete the test repo from github.
 * Reset CAPTURE to the released version.
 ```
 cap update
+
 ```

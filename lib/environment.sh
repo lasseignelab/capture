@@ -48,7 +48,7 @@ if [ -f "$CAP_PROJECT_PATH/config/pipeline.sh" ]; then
 fi
 
 # Set all the default paths.
-CAP_CONDA_PATH=$(realpath "bin/conda")
+CAP_ENV_PATH=$(realpath "bin/env")
 CAP_CONTAINER_PATH=$(realpath "bin/container")
 CAP_DATA_PATH=$(realpath "data")
 CAP_LOGS_PATH=$(realpath "logs")
@@ -83,8 +83,8 @@ if [ -f "$CAP_PROJECT_PATH/config/environments/$CAP_ENV.sh" ]; then
 fi
 
 # Make sure all the configured paths exist.
-if [ ! -d "$CAP_CONDA_PATH" ]; then
-  mkdir -p "$CAP_CONDA_PATH"
+if [ ! -d "$CAP_ENV_PATH" ]; then
+  mkdir -p "$CAP_ENV_PATH"
 fi
 if [ ! -d "$CAP_CONTAINER_PATH" ]; then
   mkdir -p "$CAP_CONTAINER_PATH"
@@ -103,7 +103,7 @@ if [ ! -d "$CAP_VERIFICATIONS_PATH" ]; then
 fi
 
 # Make all the variables visible in the runtime environment
-export CAP_CONDA_PATH
+export CAP_ENV_PATH
 export CAP_CONTAINER_PATH
 export CAP_CONTAINER_TYPE
 export CAP_DATA_PATH

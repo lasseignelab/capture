@@ -67,7 +67,7 @@ cat logs/job_20250324_132703_$(whoami)*
 
 Environment: default
 
-CAP_CONDA_PATH=$PROJECTS_PATH/test/bin/conda
+CAP_ENV_PATH=$PROJECTS_PATH/test/bin/env
 CAP_CONTAINER_PATH=$PROJECTS_PATH/test/bin/container
 CAP_CONTAINER_TYPE=docker
 CAP_DATA_PATH=$PROJECTS_PATH/test/data
@@ -121,7 +121,7 @@ cat logs/job_20250324_132703_$(whoami)*
 
 Environment: test
 
-CAP_CONDA_PATH=$PROJECTS_PATH/test/bin/conda
+CAP_ENV_PATH=$PROJECTS_PATH/test/bin/env
 CAP_CONTAINER_PATH=$PROJECTS_PATH/test/bin/container
 CAP_CONTAINER_TYPE=docker
 CAP_DATA_PATH=$PROJECTS_PATH/test/data

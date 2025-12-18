@@ -49,7 +49,7 @@ Example:
 ```
 $ cap env
 
-CAP_CONDA_PATH=/data/user/acrumley/3xtg-repurposing/bin/conda
+CAP_ENV_PATH=/data/user/acrumley/3xtg-repurposing/bin/env
 CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
 CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
 CAP_ENV=default
@@ -309,10 +309,11 @@ matching the environment name will be executed during the CAPTURE configuration
 process, e.g. `config/environments/default.sh`.  This variable will generally
 be set in the `~/.caprc` file.  It is possible to set it as a shell environment
 variable somewhere like `~/.bash_profile`.  Another option is to provide it
-before a command, e.g. `CAP_ENV=mylab cap run foo.sh`.  Finally, some commands
-provide an option for environment such as `cap run --environment=mylab foo.sh`.
-- **CAP_CONDA_PATH**: Path to where conda files will be maintained.  Defaults
-to `<project-path>/bin/conda`.
+before a command, e.g. `CAP_ENVIRONMENT=mylab cap run foo.sh`.  Finally, some
+commands provide an option for environment such as
+`cap run --environment=mylab foo.sh`.
+- **CAP_ENV_PATH**: Path to where conda and other runtime environment files
+will be maintained.  Defaults to `<project-path>/bin/env`.
 - **CAP_LOGS_PATH**: Path to where log files will be written.  Defaults to
 `<project-path>/logs`.
 - **CAP_PROJECT_NAME**: The name of the project given with the `cap new`

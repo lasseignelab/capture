@@ -21,7 +21,7 @@ cap_env_help() {
   Example:
     $ cap env
 
-    CAP_CONDA_PATH=/data/user/acrumley/3xtg-repurposing/bin/conda
+    CAP_ENV_PATH=/data/user/acrumley/3xtg-repurposing/bin/env
     CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
     CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
     CAP_ENV=default

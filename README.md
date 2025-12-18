@@ -52,7 +52,7 @@ $ cap env
 CAP_ENV_PATH=/data/user/acrumley/3xtg-repurposing/bin/env
 CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
 CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
-CAP_ENV=default
+CAP_ENVIRONMENT=default
 CAP_LOGS_PATH=/data/user/acrumley/3xtg-repurposing/logs
 CAP_PROJECT_NAME=3xtg-repurposing
 CAP_PROJECT_PATH=/data/user/acrumley/3xtg-repurposing
@@ -303,8 +303,8 @@ to Slurm scripts.
 maintained.  Defaults to `<project-path>/bin/container`.
 - **CAP_DATA_PATH**: Path to where data files will be written.  Defaults to
 `<project-path>/data`.
-- **CAP_ENV**: The name of the current execution environment.  Defaults to
-the value "default".  A shell script in `config/environments` with a name
+- **CAP_ENVIRONMENT**: The name of the current execution environment.  Defaults
+to the value "default".  A shell script in `config/environments` with a name
 matching the environment name will be executed during the CAPTURE configuration
 process, e.g. `config/environments/default.sh`.  This variable will generally
 be set in the `~/.caprc` file.  It is possible to set it as a shell environment
@@ -354,7 +354,7 @@ are set at this point.
 - **~/.caprc**: Configuration set for a specific user. This is a good place
 to `source` in lab specific configuration.
 - **\<project-path\>/.labrc**: Configuration specific to a project.
-- **\<project-path\>/config/environments/<CAP_ENV>.sh**: Configuration specific
+- **\<project-path\>/config/environments/<CAP_ENVIRONMENT>.sh**: Configuration specific
 to a project and the environment it is being executed in. The `default.sh`
 configuration should only contain reproducible configuration that will work in
 any Slurm environment. Other lab specific environment files can contain non-

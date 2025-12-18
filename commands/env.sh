@@ -24,7 +24,7 @@ cap_env_help() {
     CAP_ENV_PATH=/data/user/acrumley/3xtg-repurposing/bin/env
     CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
     CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
-    CAP_ENV=default
+    CAP_ENVIRONMENT=default
     CAP_LOGS_PATH=/data/user/acrumley/3xtg-repurposing/logs
     CAP_PROJECT_NAME=3xtg-repurposing
     CAP_PROJECT_PATH=/data/user/acrumley/3xtg-repurposing

@@ -24,7 +24,6 @@ teardown() {
 
   run cap run src/job.sh
 
-  echo "DEBUG: $output"
   [ "$status" -eq 0 ]
   [ "$output" == "Hello world!" ]
 }
@@ -108,7 +107,6 @@ EOF
   stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
 
   run cap run --slurm batch src/array_job.sh
-  echo "DEBUG: $output" >&3
 
   unstub mktemp
   unstub sbatch

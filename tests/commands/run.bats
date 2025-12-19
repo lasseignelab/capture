@@ -64,8 +64,8 @@ teardown() {
   sbatch_parameters=(
     -D src
     --job-name=job-test
-    --output=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).out
-    --error=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).err
+    --output=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami)_%j.out
+    --error=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami)_%j.err
     $temp_script
   )
   stub sbatch "${sbatch_parameters[*]} : echo 'Submitted batch job 31787364'"
@@ -81,6 +81,43 @@ teardown() {
 
 View job output with the following command:
 cat logs/job_20250324_132703_$(whoami)*
+
+Submitted batch job 31787364
+EOF
+)"
+  diff -y <(echo "$expected_output") <(echo "$output")
+
+  [ "$status" -eq 0 ]
+}
+
+@test "cap run --slurm batch: Run array job as a slurm batch" {
+
+  cp "$FIXTURE_PATH/array_job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test"
+
+  temp_script="$(mktemp -p "$BATS_TMPDIR")"
+  stub mktemp " : echo '$temp_script'"
+  sbatch_parameters=(
+    -D src
+    --job-name=array_job-test
+    --output=$PROJECTS_PATH/test/logs/array_job_20250324_132703_$(whoami)_%A_%a.out
+    --error=$PROJECTS_PATH/test/logs/array_job_20250324_132703_$(whoami)_%A_%a.err
+    $temp_script
+  )
+  stub sbatch "${sbatch_parameters[*]} : echo 'Submitted batch job 31787364'"
+  stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
+
+  run cap run --slurm batch src/array_job.sh
+  echo "DEBUG: $output" >&3
+
+  unstub mktemp
+  unstub sbatch
+  unstub date
+
+  expected_output="$(cat <<EOF
+
+View job output with the following command:
+cat logs/array_job_20250324_132703_$(whoami)*
 
 Submitted batch job 31787364
 EOF

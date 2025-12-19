@@ -1,5 +1,6 @@
 ## CAPTURE 0.9.0 (December 12, 2025) ##
 * Add the `cap verify` command
+
 :warning: **WARNING** This is a breaking change!
 * Add slurm option to `cap run`
 

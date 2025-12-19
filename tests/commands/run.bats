@@ -17,10 +17,48 @@ teardown() {
   rm -rf "${PROJECTS_PATH}"
 }
 
-@test "cap run: Run script without options" {
+@test "cap run: Run script in terminal" {
 
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
   cd "$PROJECTS_PATH/test"
+
+  run cap run src/job.sh
+
+  echo "DEBUG: $output"
+  [ "$status" -eq 0 ]
+  [ "$output" == "Hello world!" ]
+}
+
+@test "cap run --slurm run: Run script with srun" {
+
+  cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test"
+
+  temp_script="$(mktemp -p "$BATS_TMPDIR")"
+  stub mktemp " : echo '$temp_script'"
+  srun_parameters=(
+    --job-name=job-test
+    --output=/dev/stdout
+    --input=$temp_script
+    --export=ALL
+    bash
+  )
+  stub srun "${srun_parameters[*]} : echo 'srun called correctly'"
+
+  run cap run --slurm run src/job.sh
+
+  unstub mktemp
+  unstub srun
+
+  [ "$status" -eq 0 ]
+  [ "$output" == "srun called correctly" ]
+}
+
+@test "cap run --slurm batch: Run script as a slurm batch" {
+
+  cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test"
+
   temp_script="$(mktemp -p "$BATS_TMPDIR")"
   stub mktemp " : echo '$temp_script'"
   sbatch_parameters=(
@@ -30,10 +68,11 @@ teardown() {
     --error=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).err
     $temp_script
   )
-
   stub sbatch "${sbatch_parameters[*]} : echo 'Submitted batch job 31787364'"
   stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
-  run cap run src/job.sh
+
+  run cap run --slurm batch src/job.sh
+
   unstub mktemp
   unstub sbatch
   unstub date

@@ -85,12 +85,14 @@ EOF
   log_file_name="${job_name%.*}_$(date "+%Y%m%d_%H%M%S")_$current_user"
   # Inform the user how to check job output. The path will be relative
   # unless CAP_LOGS_PATH is outside the project.
-  cat <<EOF
+  if [[ "$dry_run" == "true" || "$slurm" == "batch" ]]; then
+    cat <<EOF
 
 View job output with the following command:
 cat ${log_full_path#"$(pwd)"/}/$log_file_name*
 
 EOF
+  fi
   # Add array values to log file name if it's an array job.
   if grep -q -E "^#SBATCH +--array=" "$job_file"; then
     log_file_name="$log_file_name-%A-%a"
@@ -101,14 +103,30 @@ EOF
   if [[ "$dry_run" == "true" ]]; then
     cap_run_dry_run
   else
+    # Submit to slurm or run immediately
     temp_batch_script=$(mktemp)
     echo "$slurm_job" > "$temp_batch_script"
-    sbatch -D "$job_directory" \
-      --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
-      --output="$log_full_path/$log_file_name.out" \
-      --error="$log_full_path/$log_file_name.err" \
-      "$temp_batch_script"
-    echo
+    case "$slurm" in
+      batch)
+        sbatch -D "$job_directory" \
+          --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
+          --output="$log_full_path/$log_file_name.out" \
+          --error="$log_full_path/$log_file_name.err" \
+          "$temp_batch_script"
+        echo
+        ;;
+      run)
+        srun \
+          --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
+          --output="/dev/stdout" \
+          --input="$temp_batch_script" \
+          --export=ALL \
+          bash
+        ;;
+      *)
+        source "$temp_batch_script"
+        ;;
+    esac
   fi
 }
 
@@ -130,7 +148,7 @@ EOF
 
 cap_run_parse_commandline_parameters() {
   # Define the named commandline options
-  if ! OPTIONS=$(getopt -o ne: --long dry-run,environment: -- "$@"); then
+  if ! OPTIONS=$(getopt -o ne:s: --long dry-run,environment:,slurm: -- "$@"); then
     echo "Use the 'cap help run' command for detailed help."
     exit 1
   fi
@@ -139,6 +157,7 @@ cap_run_parse_commandline_parameters() {
   # Set default values for the named parameters
   dry_run=false
   environment_override=""
+  slurm=""
 
   # Parse the optional named command line options
   while true; do
@@ -149,11 +168,26 @@ cap_run_parse_commandline_parameters() {
       -e|--environment)
         environment_override=$2
         shift 2 ;;
+      -s|--slurm)
+        slurm="$2"
+        shift 2 ;;
       --)
         shift
         break;;
     esac
   done
+
+  # Validate the slurm option value
+  if [[ "$slurm" != "batch" && "$slurm" != "run" && "$slurm" != "" ]]; then
+    echo "Error: invalid value for -s,--slurm option"
+    echo "Use the 'cap help run' command for detailed help."
+    exit 1
+  fi
+
+  # Dry runs do not run as Slurm jobs
+  if [[ "$dry_run" == "true" ]]; then
+    slurm=""
+  fi
 
   # Check that the required job file parameter was provided
   if [ "$#" -ne 1 ]; then

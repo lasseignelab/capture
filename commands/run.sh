@@ -13,7 +13,8 @@ cap_run_help() {
   cat <<EOF
   The "run" command runs a CAPTURE framework job within the context of a
   reproducible research project.  It will configure the environment based
-  on configuration defined by the current user.
+  on configuration defined by the current user. By default, the job runs in
+  the current terminal session.
 
   Usage:
     cap run [options] FILE
@@ -23,17 +24,22 @@ cap_run_help() {
     Options:
 
     -e,--environment
-               Specifies the environment to run jobs in.  Environments allow
-               different setups for a pipeline.  For instance, a pipeline may
-               use internal copies of data during development but download that
-               data when the pipeline is ran in a different environment. A
-               project can provide environment specific configuration by
-               including a file named <environment>.rc in the
-               config/environments directory, e.g. lasseignelab.rc. See
-               CAPTURE runtime environment documentation.
+            Specifies the environment to run jobs in.  Environments allow
+            different setups for a pipeline.  For instance, a pipeline may
+            use internal copies of data during development but download that
+            data when the pipeline is ran in a different environment. A
+            project can provide environment specific configuration by
+            including a file named <environment>.rc in the
+            config/environments directory, e.g. lasseignelab.rc. See
+            CAPTURE runtime environment documentation.
     -n,--dry-run
-               Displays the contents of the job to run along with the context
-               it will run in.
+            Displays the contents of the job to run along with the context
+            it will run in.
+    -s,--slurm=[batch|run]
+            Runs the script as a Slurm job. If the value is run then
+            srun is used and the output stays connected to the current
+            terminal session.  If the value is batch then sbatch is used and
+            the output is written to the log file in the logs directory.
 
   Example:
     $ cap run src/01_download.sh

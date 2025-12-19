@@ -162,7 +162,7 @@ Options:
         generally have wildcards. Ensure patterns are quoted ("*pattern*") to
         prevent unintended shell expansion.
 
---slurm=[batch|run]
+-s,--slurm=[batch|run]
         Runs the md5 command as a Slurm job. If the value is run then
         srun is used and the output stays connected to the current
         terminal session.  If the value is batch then sbatch is used and

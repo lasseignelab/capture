@@ -130,6 +130,7 @@ EOF
           bash
         ;;
       *)
+        # shellcheck disable=SC1090
         source "$temp_batch_script"
         ;;
     esac

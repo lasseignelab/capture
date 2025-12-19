@@ -431,7 +431,7 @@ data directory is specified by `CAP_DATA_PATH` which defaults to
 file will be saved in `CAP_PROJECT_PATH/data/subdirectory`.
 
 If the file or directory already exists in the `data` directory (or subdirectory
-if `--subdirectory` is provided) then it will not be downloaded again. This is 
+if `--subdirectory` is provided) then it will not be downloaded again. This is
 also true when the file or directory has been symlinked into the `data` directory
 by [cap_data_link](#cap_data_link).
 
@@ -463,16 +463,20 @@ cap_container [options] REFERENCE
 is <namespace>/<repository_name>:[tag].
 
 Options
-- `-c singularity`  If specified, cap_container will use `singularity pull` instead of `docker pull`.
+- `-c singularity`  If specified, cap_container will use `singularity pull`
+instead of `docker pull`. If `CAP_CONTAINER_TYPE` is specified in a `caprc` file
+then the -c option is not necessary. `CAP_CONTAINER_TYPE` is the preferred
+method.
 
 `cap_container` first checks whether the Docker image or Singularity .sif file
 already exists in `CAP_CONTAINER_PATH`. If the image is not found, it is downloaded
 from DockerHub. By default, `cap_container` uses Docker, but specifying the
-`-c singularity` option directs it to generate a Singularity .sif file in the
-`CAP_CONTAINER_PATH` directory instead.
+`-c singularity` option or `CAP_CONTAINER_TYPE=singularity` in a `caprc`
+directs it to generate a Singularity .sif file in the `CAP_CONTAINER_PATH`
+directory instead.
 
 The following example checks for the corresponding .sif file in `CAP_CONTAINER_PATH`.
-If the file is not found, it downloads and converts the Docker image into the 
+If the file is not found, it downloads and converts the Docker image into the
 Singularity .sif file - ollama_0.5.8.sif.
 ```
 cap_container \

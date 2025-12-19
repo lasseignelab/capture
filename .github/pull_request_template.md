@@ -14,6 +14,9 @@
 - [ ] No merge conflicts exist. Merge conflicts are indicated by the "This
   branch has conflicts that must be resolved" message in the GitHub pull
   request status box above the "Merge pull request" button.
+- [ ] The README has been updated with documentation changes.
+- [ ] The command script help documentation in the `commands` directory
+  has been updated if necessary.
 - [ ] The CHANGELOG has been updated with the planned version number.
 - [ ] Setup instructions have been provided.
 - [ ] Test instructions have been provided.

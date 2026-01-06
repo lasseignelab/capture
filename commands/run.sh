@@ -71,11 +71,11 @@ EOF
 
   # Setup the runtime environment for the job.
   if [ -n "$environment_override" ]; then
-    CAP_ENV="$environment_override"
+    CAP_ENVIRONMENT="$environment_override"
   fi
   source "$CAP_INSTALL_PATH/lib/environment.sh"
   if [ -n "$environment_override" ]; then
-    CAP_ENV="$environment_override"
+    CAP_ENVIRONMENT="$environment_override"
   fi
 
 
@@ -116,7 +116,7 @@ EOF
 
 cap_run_dry_run() {
   echo
-  echo "Environment: $CAP_ENV"
+  echo "Environment: $CAP_ENVIRONMENT"
   echo
   # Display the framework environment variables.
   env | grep -E "^CAP" | sort

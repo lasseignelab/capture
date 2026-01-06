@@ -133,8 +133,6 @@ EOF
       . "${verification_file/verifications/$CAP_VERIFICATIONS_PATH}"
       ;;
   esac
-
-  # Output to the logs folder like the cap run command.
 }
 
 cap_verify_parse_commandline_parameters() {

@@ -13,7 +13,8 @@ cap_run_help() {
   cat <<EOF
   The "run" command runs a CAPTURE framework job within the context of a
   reproducible research project.  It will configure the environment based
-  on configuration defined by the current user.
+  on configuration defined by the current user. This command must be executed
+  from the project root directory.
 
   Usage:
     cap run [options] FILE
@@ -48,6 +49,7 @@ EOF
 }
 
 cap_run() {
+  cap_root_required "run"
   cap_run_parse_commandline_parameters "$@"
 
   job_directory=$(dirname "$job_file")
@@ -71,11 +73,11 @@ EOF
 
   # Setup the runtime environment for the job.
   if [ -n "$environment_override" ]; then
-    CAP_ENV="$environment_override"
+    CAP_ENVIRONMENT="$environment_override"
   fi
   source "$CAP_INSTALL_PATH/lib/environment.sh"
   if [ -n "$environment_override" ]; then
-    CAP_ENV="$environment_override"
+    CAP_ENVIRONMENT="$environment_override"
   fi
 
 

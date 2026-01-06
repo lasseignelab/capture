@@ -29,14 +29,14 @@
 #    a file named <environment-name>.rc in the config/environments
 #    directory, e.g. default.rc.  The default environment is "default" and
 #    the cap new command automatically generates a default.sh file in the
-#    config/environments folder. The file used is based on the CAP_ENV
+#    config/environments folder. The file used is based on the CAP_ENVIRONMENT
 #    environment variable.  This variable would generally be set in the
 #    ~/.caprc file but could also be an environment variable set in the
 #    user's shell configuration.
 
 # Set the default environment if one doesn't exist.
-if [ -z "$CAP_ENV" ]; then
-  CAP_ENV="default"
+if [ -z "$CAP_ENVIRONMENT" ]; then
+  CAP_ENVIRONMENT="default"
 fi
 
 CAP_PROJECT_PATH=$(realpath ".")
@@ -48,7 +48,7 @@ if [ -f "$CAP_PROJECT_PATH/config/pipeline.sh" ]; then
 fi
 
 # Set all the default paths.
-CAP_CONDA_PATH=$(realpath "bin/conda")
+CAP_ENV_PATH=$(realpath "bin/env")
 CAP_CONTAINER_PATH=$(realpath "bin/container")
 CAP_DATA_PATH=$(realpath "data")
 CAP_LOGS_PATH=$(realpath "logs")
@@ -74,17 +74,17 @@ if [ -f "$CAP_PROJECT_PATH/.caprc" ]; then
   source "$CAP_PROJECT_PATH/.caprc"
 fi
 if [ -n "$environment_override" ]; then
-  CAP_ENV="$environment_override"
+  CAP_ENVIRONMENT="$environment_override"
 fi
-if [ -f "$CAP_PROJECT_PATH/config/environments/$CAP_ENV.sh" ]; then
+if [ -f "$CAP_PROJECT_PATH/config/environments/$CAP_ENVIRONMENT.sh" ]; then
   source "$CAP_INSTALL_PATH/lib/environment_functions.sh"
   # shellcheck disable=SC1090
-  source "$CAP_PROJECT_PATH/config/environments/$CAP_ENV.sh"
+  source "$CAP_PROJECT_PATH/config/environments/$CAP_ENVIRONMENT.sh"
 fi
 
 # Make sure all the configured paths exist.
-if [ ! -d "$CAP_CONDA_PATH" ]; then
-  mkdir -p "$CAP_CONDA_PATH"
+if [ ! -d "$CAP_ENV_PATH" ]; then
+  mkdir -p "$CAP_ENV_PATH"
 fi
 if [ ! -d "$CAP_CONTAINER_PATH" ]; then
   mkdir -p "$CAP_CONTAINER_PATH"
@@ -103,11 +103,11 @@ if [ ! -d "$CAP_VERIFICATIONS_PATH" ]; then
 fi
 
 # Make all the variables visible in the runtime environment
-export CAP_CONDA_PATH
+export CAP_ENV_PATH
 export CAP_CONTAINER_PATH
 export CAP_CONTAINER_TYPE
 export CAP_DATA_PATH
-export CAP_ENV
+export CAP_ENVIRONMENT
 export CAP_LOGS_PATH
 export CAP_PROJECT_NAME
 export CAP_PROJECT_PATH

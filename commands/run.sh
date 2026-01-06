@@ -89,7 +89,7 @@ EOF
   # unless CAP_LOGS_PATH is outside the project.
   cat <<EOF
 
-CAPTURE environment: $CAP_ENV
+CAPTURE environment: $CAP_ENVIRONMENT
 
 View job output with the following command:
 cat ${log_full_path#"$(pwd)"/}/$log_file_name*

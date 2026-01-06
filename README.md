@@ -39,7 +39,8 @@ The `cap` CLI provides commands to help with reproducible research.
 cap <command> params...
 ```
 ## env
-Displays CAPTURE environment variables.
+Displays CAPTURE environment variables. This command must be executed from
+the project root directory.
 
 Usage:
 ```
@@ -267,7 +268,8 @@ Happy researching!!!
 ## run
 The `cap run` command runs a CAPTURE framework job within the context of a
 reproducible research project.  It will configure the environment based
-on configuration defined by the current user.
+on configuration defined by the current user. This command must be executed
+from the project root directory.
 
 Usage:
 ```
@@ -388,8 +390,10 @@ The `verify` command runs CAPTURE verifications which are shell scripts that
 determine whether outputs are reproducible.  The output of verification scripts
 will be written to the verifications folder with the same name as the script
 with a ".out" extension.  These files should be committed to source control so
-that reviewers can compare their results. See
-[verification helper functions](#verification-helper-functions).
+that reviewers can compare their results. This command must be executed from
+the project root directory.
+
+See also [verification helper functions](#verification-helper-functions).
 
 Environment variables (useful for custom verifcations):
 

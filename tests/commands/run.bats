@@ -51,6 +51,16 @@ EOF
   [ "$status" -eq 0 ]
 }
 
+@test "cap run: Command must be executed from the project root directory" {
+
+  cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test/src"
+  run cap run job.sh
+
+  [ "$status" -eq 2 ]
+  [ "$output" == "The run command must be executed from the project root directory." ]
+}
+
 @test "cap run: Dry run with default environment" {
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
   cd "$PROJECTS_PATH/test"

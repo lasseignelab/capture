@@ -476,16 +476,19 @@ cap_data_download [options] URL
 - `URL` The URL of the file to download.
 
 Options:
+- `--file-name` The filename to use when downloading the file. When the URL
+does not end in a proper file name, this option allows a name to be provided.
 - `--md5sum` The md5sum to check against the file being downloaded.
 - `--unzip`  Unzips and/or unarchives downloaded files.
 - `--subdirectory`  Specifies a subdirectory within the data directory where the
 downloaded file will be stored. If the subdirectory does not exist, it will be created.
 
-The file will be downloaded with the same name as specified by the URL.  If the
-`--unzip` option is provided then it will be unarchived into the data directory.  The
-data directory is specified by `CAP_DATA_PATH` which defaults to
-`CAP_PROJECT_PATH/data`. If the `--subdirectory` option is provided, the downloaded
-file will be saved in `CAP_PROJECT_PATH/data/subdirectory`.
+The file will be downloaded to the file name specified by the URL or the
+`--file-name` option.  If the `--unzip` option is provided then it will be
+unarchived into the data directory.  The data directory is specified by
+`CAP_DATA_PATH` which defaults to `CAP_PROJECT_PATH/data`. If the
+`--subdirectory` option is provided, the downloaded file will be saved in
+`CAP_PROJECT_PATH/data/subdirectory`.
 
 If the file or directory already exists in the `data` directory (or subdirectory
 if `--subdirectory` is provided) then it will not be downloaded again. This is

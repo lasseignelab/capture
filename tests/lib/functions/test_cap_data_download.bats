@@ -132,9 +132,9 @@ teardown() {
   stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/file.zip https://some.url/file.zip : cp $DOWNLOAD_FIXTURE_PATH/file.zip $CAP_DATA_PATH/file.zip"
 
   run cap_data_download --unzip "https://some.url/file.zip"
-  
+
   unstub wget
-  
+
   [ "$status" -eq 1 ]
   [ "$output" == "Error: Unsupported file extension 'file.zip'" ]
 }
@@ -173,10 +173,23 @@ echo "$expected"
   stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/subdirectory/file.txt https://some.url/file.txt : cp $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/subdirectory/file.txt"
 
   run cap_data_download --subdirectory "subdirectory" "https://some.url/file.txt"
-  
+
   unstub wget
 
   diff "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/subdirectory/file.txt"
+
+  [ "$status" -eq 0 ]
+  [ "$output" == "" ]
+}
+
+@test "cap_data_download --file-name: download file with a specified name" {
+  stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/filename.txt https://some.url/file.txt : cp $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/filename.txt"
+
+  run cap_data_download --file-name "filename.txt" "https://some.url/file.txt"
+
+  unstub wget
+
+  diff "$DOWNLOAD_FIXTURE_PATH/file.txt" "$CAP_DATA_PATH/filename.txt"
 
   [ "$status" -eq 0 ]
   [ "$output" == "" ]

@@ -1,3 +1,6 @@
+## CAPTURE 1.0.0 (January xx, 2026) ##
+* Change license from MIT to GPLv3
+
 ## CAPTURE 0.8.6 (October 21, 2025) ##
 * Fix cap_container failure on Slurm array jobs
 

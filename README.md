@@ -39,7 +39,8 @@ The `cap` CLI provides commands to help with reproducible research.
 cap <command> params...
 ```
 ## env
-Displays CAPTURE environment variables.
+Displays CAPTURE environment variables. This command must be executed from
+the project root directory.
 
 Usage:
 ```
@@ -49,10 +50,10 @@ Example:
 ```
 $ cap env
 
-CAP_CONDA_PATH=/data/user/acrumley/3xtg-repurposing/bin/conda
+CAP_ENV_PATH=/data/user/acrumley/3xtg-repurposing/bin/env
 CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
 CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
-CAP_ENV=default
+CAP_ENVIRONMENT=default
 CAP_LOGS_PATH=/data/user/acrumley/3xtg-repurposing/logs
 CAP_PROJECT_NAME=3xtg-repurposing
 CAP_PROJECT_PATH=/data/user/acrumley/3xtg-repurposing
@@ -268,7 +269,8 @@ Happy researching!!!
 The `cap run` command runs a CAPTURE framework job within the context of a
 reproducible research project.  It will configure the environment based
 on configuration defined by the current user. By default, the job runs in
-the current terminal session.
+the current terminal session.  This command must be executed from the project
+root directory.
 
 Usage:
 ```
@@ -309,16 +311,17 @@ to Slurm scripts.
 maintained.  Defaults to `<project-path>/bin/container`.
 - **CAP_DATA_PATH**: Path to where data files will be written.  Defaults to
 `<project-path>/data`.
-- **CAP_ENV**: The name of the current execution environment.  Defaults to
-the value "default".  A shell script in `config/environments` with a name
+- **CAP_ENVIRONMENT**: The name of the current execution environment.  Defaults
+to the value "default".  A shell script in `config/environments` with a name
 matching the environment name will be executed during the CAPTURE configuration
 process, e.g. `config/environments/default.sh`.  This variable will generally
 be set in the `~/.caprc` file.  It is possible to set it as a shell environment
 variable somewhere like `~/.bash_profile`.  Another option is to provide it
-before a command, e.g. `CAP_ENV=mylab cap run foo.sh`.  Finally, some commands
-provide an option for environment such as `cap run --environment=mylab foo.sh`.
-- **CAP_CONDA_PATH**: Path to where conda files will be maintained.  Defaults
-to `<project-path>/bin/conda`.
+before a command, e.g. `CAP_ENVIRONMENT=mylab cap run foo.sh`.  Finally, some
+commands provide an option for environment such as
+`cap run --environment=mylab foo.sh`.
+- **CAP_ENV_PATH**: Path to where conda and other runtime environment files
+will be maintained.  Defaults to `<project-path>/bin/env`.
 - **CAP_LOGS_PATH**: Path to where log files will be written.  Defaults to
 `<project-path>/logs`.
 - **CAP_PROJECT_NAME**: The name of the project given with the `cap new`
@@ -359,7 +362,7 @@ are set at this point.
 - **~/.caprc**: Configuration set for a specific user. This is a good place
 to `source` in lab specific configuration.
 - **\<project-path\>/.labrc**: Configuration specific to a project.
-- **\<project-path\>/config/environments/<CAP_ENV>.sh**: Configuration specific
+- **\<project-path\>/config/environments/<CAP_ENVIRONMENT>.sh**: Configuration specific
 to a project and the environment it is being executed in. The `default.sh`
 configuration should only contain reproducible configuration that will work in
 any Slurm environment. Other lab specific environment files can contain non-
@@ -393,8 +396,10 @@ The `verify` command runs CAPTURE verifications which are shell scripts that
 determine whether outputs are reproducible.  The output of verification scripts
 will be written to the verifications folder with the same name as the script
 with a ".out" extension.  These files should be committed to source control so
-that reviewers can compare their results. See
-[verification helper functions](#verification-helper-functions).
+that reviewers can compare their results. This command must be executed from
+the project root directory.
+
+See also [verification helper functions](#verification-helper-functions).
 
 Environment variables (useful for custom verifcations):
 

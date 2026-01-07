@@ -13,6 +13,17 @@ setup() {
   )
 }
 
+@test "cap verify: Command must be executed from the project root directory" {
+  mkdir -p "$PROJECTS_PATH/test/verifications"
+  cp "$FIXTURE_PATH/verifications/test_output_file.sh" "$PROJECTS_PATH/test/verifications"
+  cd "$PROJECTS_PATH/test/verifications"
+
+  run cap verify test_output_file.sh
+
+  [ "$status" -eq 2 ]
+  [ "$output" == "The verify command must be executed from the project root directory." ]
+}
+
 @test "cap verify: CAP_VERIFIFICATION_OUTPUT_FILE is set to the verification file name" {
   mkdir -p "$PROJECTS_PATH/test/verifications"
   cp "$FIXTURE_PATH/verifications/test_output_file.sh" "$PROJECTS_PATH/test/verifications"

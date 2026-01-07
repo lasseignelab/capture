@@ -1,5 +1,8 @@
 ## CAPTURE 0.9.0 (December 12, 2025) ##
 * Add the `cap verify` command
+* Require the env, run, and verify commands to be ran from the project root
+directory.
+* Rename bin/conda to bin/env
 
 :warning: **WARNING** This is a breaking change!
 * Add slurm option to `cap run`

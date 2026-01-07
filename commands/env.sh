@@ -13,7 +13,7 @@ cap_env_help() {
   cat <<EOF
   The "env" command displays a list of all the CAPTURE environment variables
   along with their values. File and path values are displayed with full
-  paths.
+  paths. This command must be executed from the project root directory.
 
   Usage:
     cap env
@@ -21,10 +21,10 @@ cap_env_help() {
   Example:
     $ cap env
 
-    CAP_CONDA_PATH=/data/user/acrumley/3xtg-repurposing/bin/conda
+    CAP_ENV_PATH=/data/user/acrumley/3xtg-repurposing/bin/env
     CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
     CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
-    CAP_ENV=default
+    CAP_ENVIRONMENT=default
     CAP_LOGS_PATH=/data/user/acrumley/3xtg-repurposing/logs
     CAP_PROJECT_NAME=3xtg-repurposing
     CAP_PROJECT_PATH=/data/user/acrumley/3xtg-repurposing
@@ -35,6 +35,8 @@ EOF
 }
 
 cap_env() {
+  cap_root_required "env"
+
   # Load the CAPTURE environment.
   source "$CAP_INSTALL_PATH/lib/environment.sh"
 

@@ -43,6 +43,13 @@ cap_env() {
   cap_root_required "env"
   cap_env_parse_commandline_parameters "$@"
 
+  # Snapshot the incoming environment variables. The cap_env_before
+  # variable is created before the first snapshot so it will be in
+  # the before and after snapshots. Otherwise, it shows up in the
+  # cap_env_diff below.
+  local cap_env_before=""
+  cap_env_before="$(cap_env_snapshot)"
+
   # Load the CAPTURE environment.
   if [ -n "$environment_override" ]; then
     CAP_ENVIRONMENT="$environment_override"
@@ -52,9 +59,21 @@ cap_env() {
     CAP_ENVIRONMENT="$environment_override"
   fi
 
+  # Snapshot after the CAPTURE environment as loaded.
+  cap_env_after="$(cap_env_snapshot)"
+
+  # Determine list of variables created during environment loading.
+  cap_env_diff="$(
+    comm -13 \
+      <(printf '%s\n' "$cap_env_before") \
+      <(printf '%s\n' "$cap_env_after")
+  )"
+
   # Display CAPTURE environment variables.
   echo
-  env | grep -E "^CAP" | sort
+  for v in $cap_env_diff; do
+    printf '%s=%q\n' "$v" "${!v}"
+  done
   echo
 }
 
@@ -80,4 +99,9 @@ cap_env_parse_commandline_parameters() {
         break;;
     esac
   done
+}
+
+# Snapshot current environment variables.
+cap_env_snapshot() {
+  compgen -v | sort
 }

@@ -2,6 +2,7 @@
 
 cap_data_link() {
   # Verify the file/directory parameter has been passed in.
+  local target_path
   target_path="$1"
   if [ -z "$target_path" ]; then
     echo "Error cap_data_link: incorrect number of parameters" >&2
@@ -23,6 +24,7 @@ cap_data_link() {
   if [ ! -d "$CAP_DATA_PATH" ]; then
     mkdir -p "$CAP_DATA_PATH"
   fi
+  local link_path
   link_path="$CAP_DATA_PATH/$(basename "$target_path")"
   if [ ! -e "$link_path" ]; then
     ln -s "$target_path" "$link_path"

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-TEST_VARIABLE=test
+TEST_VARIABLE="test"
 export TEST_VARIABLE

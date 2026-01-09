@@ -4,6 +4,10 @@
 directory.
 * Rename bin/conda to bin/env
 
+:warning: **WARNING** This is a breaking change!
+* Add slurm option to `cap run`
+* Add job id to log file names of non-array jobs
+
 ## CAPTURE 0.8.6 (October 21, 2025) ##
 * Fix cap_container failure on Slurm array jobs
 

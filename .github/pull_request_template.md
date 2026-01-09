@@ -18,6 +18,8 @@
 - [ ] The command script help documentation in the `commands` directory
   has been updated if necessary.
 - [ ] The CHANGELOG has been updated with the planned version number.
+- [ ] The tab completion is up to date for all commands.
+- [ ] The `project-template` submodule reference is up to date.
 - [ ] Setup instructions have been provided.
 - [ ] Test instructions have been provided.
 - [ ] Cleanup instructions have been provided.
@@ -40,6 +42,8 @@ cd ~/bin/capture
 git checkout main
 git pull
 git checkout <branch-name>
+git submodule update --init --recursive
+source cap_completion.sh
 
 ```
 

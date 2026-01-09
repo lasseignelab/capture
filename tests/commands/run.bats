@@ -78,6 +78,8 @@ teardown() {
 
   expected_output="$(cat <<EOF
 
+CAPTURE environment: default
+
 View job output with the following command:
 cat logs/job_20250324_132703_$(whoami)*
 
@@ -145,11 +147,11 @@ EOF
 
   expected_output=$(cat <<EOF
 
+CAPTURE environment: default
+
 View job output with the following command:
 cat logs/job_20250324_132703_$(whoami)*
 
-
-Environment: default
 
 CAP_CONTAINER_PATH=$PROJECTS_PATH/test/bin/container
 CAP_CONTAINER_TYPE=docker
@@ -201,11 +203,11 @@ EOF
 
   expected_output=$(cat <<EOF
 
+CAPTURE environment: test
+
 View job output with the following command:
 cat logs/job_20250324_132703_$(whoami)*
 
-
-Environment: test
 
 CAP_CONTAINER_PATH=$PROJECTS_PATH/test/bin/container
 CAP_CONTAINER_TYPE=docker

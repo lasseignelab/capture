@@ -1,5 +1,6 @@
 ## CAPTURE 0.9.0 (December 17, 2025) ##
 * Add the `cap verify` command
+* Show environment name for `cap run`
 * Check that environment files exist for cap run -e
 * Fix main branch remote tracking
 * Require the env, run, and verify commands to be ran from the project root

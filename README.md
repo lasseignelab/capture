@@ -298,6 +298,8 @@ Example:
 ```
 $ cap run src/01_download.sh
 
+CAPTURE environment: default
+
 View job output with the following command:
 cat logs/01_down_20241118_090854_tcrumley*
 

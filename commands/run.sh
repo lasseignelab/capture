@@ -45,6 +45,8 @@ cap_run_help() {
   Example:
     $ cap run src/01_download.sh
 
+    CAPTURE environment: default
+
     View job output with the following command:
     cat logs/01_down_20241118_090854_tcrumley*
 
@@ -96,6 +98,8 @@ EOF
   if [[ "$dry_run" == "true" || "$slurm" == "batch" ]]; then
     cat <<EOF
 
+CAPTURE environment: $CAP_ENVIRONMENT
+
 View job output with the following command:
 cat ${log_full_path#"$(pwd)"/}/$log_file_name*
 
@@ -142,8 +146,6 @@ EOF
 }
 
 cap_run_dry_run() {
-  echo
-  echo "Environment: $CAP_ENVIRONMENT"
   echo
   # Display the framework environment variables.
   env | grep -E "^CAP" | sort

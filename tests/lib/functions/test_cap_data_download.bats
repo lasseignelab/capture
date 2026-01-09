@@ -182,10 +182,10 @@ echo "$expected"
   [ "$output" == "" ]
 }
 
-@test "cap_data_download --file-name: download file with a specified name" {
+@test "cap_data_download --source-file-name: download file with a specified name" {
   stub wget "-nv --retry-connrefused -O $CAP_DATA_PATH/filename.txt https://some.url/file.txt : cp $DOWNLOAD_FIXTURE_PATH/file.txt $CAP_DATA_PATH/filename.txt"
 
-  run cap_data_download --file-name "filename.txt" "https://some.url/file.txt"
+  run cap_data_download --source-file-name "filename.txt" "https://some.url/file.txt"
 
   unstub wget
 

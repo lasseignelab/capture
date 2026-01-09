@@ -9,8 +9,8 @@ cap_data_download() {
   # to be removed but we will wait until we have a real example
   # before we try to change this.
   local file_name
-  if [ -n "$cap_data_download_file_name" ]; then
-    file_name="$cap_data_download_file_name"
+  if [ -n "$cap_data_download_source_file_name" ]; then
+    file_name="$cap_data_download_source_file_name"
   else
     file_name=$(basename "$cap_data_download_url")
   fi
@@ -78,14 +78,14 @@ cap_data_download() {
 
 cap_data_download_parse_commandline_parameters() {
   # Define the named commandline options
-  if ! OPTIONS=$(getopt -o "" --long file-name:,md5sum:,unzip,subdirectory: -- "$@"); then
+  if ! OPTIONS=$(getopt -o "" --long source-file-name:,md5sum:,unzip,subdirectory: -- "$@"); then
     echo "See CAPTURE help for cap_data_download." >&2
     exit 1
   fi
   eval set -- "$OPTIONS"
 
   # Set default values for the named parameters
-  cap_data_download_file_name=""
+  cap_data_download_source_file_name=""
   cap_data_download_md5sum=""
   cap_data_download_subdirectory=""
   cap_data_download_unzip=false
@@ -93,8 +93,8 @@ cap_data_download_parse_commandline_parameters() {
   # Parse the optional named command line options
   while true; do
     case "$1" in
-      --file-name)
-        cap_data_download_file_name="$2"
+      --source-file-name)
+        cap_data_download_source_file_name="$2"
         shift 2 ;;
       --md5sum)
         cap_data_download_md5sum="$2"

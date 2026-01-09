@@ -13,8 +13,9 @@ cap_run_help() {
   cat <<EOF
   The "run" command runs a CAPTURE framework job within the context of a
   reproducible research project.  It will configure the environment based
-  on configuration defined by the current user. This command must be executed
-  from the project root directory.
+  on configuration defined by the current user. By default, the job runs in
+  the current terminal session.  This command must be executed from the project
+  root directory.
 
   Usage:
     cap run [options] FILE
@@ -24,20 +25,27 @@ cap_run_help() {
     Options:
 
     -e,--environment
-               Specifies the environment to run jobs in.  Environments allow
-               different setups for a pipeline.  For instance, a pipeline may
-               use internal copies of data during development but download that
-               data when the pipeline is ran in a different environment. A
-               project can provide environment specific configuration by
-               including a file named <environment>.rc in the
-               config/environments directory, e.g. lasseignelab.rc. See
-               CAPTURE runtime environment documentation.
+            Specifies the environment to run jobs in.  Environments allow
+            different setups for a pipeline.  For instance, a pipeline may
+            use internal copies of data during development but download that
+            data when the pipeline is ran in a different environment. A
+            project can provide environment specific configuration by
+            including a file named <environment>.rc in the
+            config/environments directory, e.g. lasseignelab.rc. See
+            CAPTURE runtime environment documentation.
     -n,--dry-run
-               Displays the contents of the job to run along with the context
-               it will run in.
+            Displays the contents of the job to run along with the context
+            it will run in.
+    -s,--slurm=[batch|run]
+            Runs the script as a Slurm job. If the value is run then
+            srun is used and the output stays connected to the current
+            terminal session.  If the value is batch then sbatch is used and
+            the output is written to the log file in the logs directory.
 
   Example:
     $ cap run src/01_download.sh
+
+    CAPTURE environment: default
 
     View job output with the following command:
     cat logs/01_down_20241118_090854_tcrumley*
@@ -77,7 +85,7 @@ EOF
   if [ -n "$environment_override" ]; then
     CAP_ENVIRONMENT="$environment_override"
   fi
-
+  cap_check_environment "$CAP_ENVIRONMENT"
 
   # Specify the log file names with their full path. Log file names will
   # begin with <job name>-<date>-<time>-<username>. If the job is an array
@@ -87,15 +95,21 @@ EOF
   log_file_name="${job_name%.*}_$(date "+%Y%m%d_%H%M%S")_$current_user"
   # Inform the user how to check job output. The path will be relative
   # unless CAP_LOGS_PATH is outside the project.
-  cat <<EOF
+  if [[ "$dry_run" == "true" || "$slurm" == "batch" ]]; then
+    cat <<EOF
+
+CAPTURE environment: $CAP_ENVIRONMENT
 
 View job output with the following command:
 cat ${log_full_path#"$(pwd)"/}/$log_file_name*
 
 EOF
+  fi
   # Add array values to log file name if it's an array job.
   if grep -q -E "^#SBATCH +--array=" "$job_file"; then
-    log_file_name="$log_file_name-%A-%a"
+    log_file_name="$log_file_name"_%A_%a
+  else
+    log_file_name="$log_file_name"_%j
   fi
 
   # If it is a dry run then just display the environment variables and job
@@ -103,20 +117,35 @@ EOF
   if [[ "$dry_run" == "true" ]]; then
     cap_run_dry_run
   else
+    # Submit to slurm or run immediately
     temp_batch_script=$(mktemp)
     echo "$slurm_job" > "$temp_batch_script"
-    sbatch -D "$job_directory" \
-      --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
-      --output="$log_full_path/$log_file_name.out" \
-      --error="$log_full_path/$log_file_name.err" \
-      "$temp_batch_script"
-    echo
+    case "$slurm" in
+      batch)
+        sbatch -D "$job_directory" \
+          --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
+          --output="$log_full_path/$log_file_name.out" \
+          --error="$log_full_path/$log_file_name.err" \
+          "$temp_batch_script"
+        echo
+        ;;
+      run)
+        srun \
+          --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
+          --output="/dev/stdout" \
+          --input="$temp_batch_script" \
+          --export=ALL \
+          bash
+        ;;
+      *)
+        # shellcheck disable=SC1090
+        source "$temp_batch_script"
+        ;;
+    esac
   fi
 }
 
 cap_run_dry_run() {
-  echo
-  echo "Environment: $CAP_ENVIRONMENT"
   echo
   # Display the framework environment variables.
   env | grep -E "^CAP" | sort
@@ -132,7 +161,7 @@ EOF
 
 cap_run_parse_commandline_parameters() {
   # Define the named commandline options
-  if ! OPTIONS=$(getopt -o ne: --long dry-run,environment: -- "$@"); then
+  if ! OPTIONS=$(getopt -o ne:s: --long dry-run,environment:,slurm: -- "$@"); then
     echo "Use the 'cap help run' command for detailed help."
     exit 1
   fi
@@ -141,6 +170,7 @@ cap_run_parse_commandline_parameters() {
   # Set default values for the named parameters
   dry_run=false
   environment_override=""
+  slurm=""
 
   # Parse the optional named command line options
   while true; do
@@ -151,11 +181,26 @@ cap_run_parse_commandline_parameters() {
       -e|--environment)
         environment_override=$2
         shift 2 ;;
+      -s|--slurm)
+        slurm="$2"
+        shift 2 ;;
       --)
         shift
         break;;
     esac
   done
+
+  # Validate the slurm option value
+  if [[ "$slurm" != "batch" && "$slurm" != "run" && "$slurm" != "" ]]; then
+    echo "Error: invalid value for -s,--slurm option"
+    echo "Use the 'cap help run' command for detailed help."
+    exit 1
+  fi
+
+  # Dry runs do not run as Slurm jobs
+  if [[ "$dry_run" == "true" ]]; then
+    slurm=""
+  fi
 
   # Check that the required job file parameter was provided
   if [ "$#" -ne 1 ]; then

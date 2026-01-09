@@ -1,5 +1,6 @@
-## CAPTURE 0.9.0 (December 12, 2025) ##
+## CAPTURE 0.9.0 (December 17, 2025) ##
 * Add the `cap verify` command
+* Fix main branch remote tracking
 * Require the env, run, and verify commands to be ran from the project root
 directory.
 * Rename bin/conda to bin/env

@@ -116,6 +116,8 @@ EOF
 
   expected_output="$(cat <<EOF
 
+CAPTURE environment: default
+
 View job output with the following command:
 cat logs/array_job_20250324_132703_$(whoami)*
 

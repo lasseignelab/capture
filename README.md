@@ -45,6 +45,11 @@ the project root directory.
 Usage:
 ```
 cap env
+
+Options:
+
+-e,--environment
+           Specifies the environment to show variables for.
 ```
 Example:
 ```

@@ -17,23 +17,61 @@ teardown() {
   rm -rf "${PROJECTS_PATH}"
 }
 
-@test "cap run: Run script without options" {
+@test "cap run: Run script in terminal" {
 
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
   cd "$PROJECTS_PATH/test"
+
+  run cap run src/job.sh
+
+  [ "$status" -eq 0 ]
+  [ "$output" == "Hello world!" ]
+}
+
+@test "cap run --slurm run: Run script with srun" {
+
+  cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test"
+
+  temp_script="$(mktemp -p "$BATS_TMPDIR")"
+  stub mktemp " : echo '$temp_script'"
+  srun_parameters=(
+    --job-name=job-test
+    --output=/dev/stdout
+    --input=$temp_script
+    --export=ALL
+    bash
+  )
+  stub srun "${srun_parameters[*]} : echo 'srun called correctly'"
+
+  run cap run --slurm run src/job.sh
+
+  unstub mktemp
+  unstub srun
+
+  [ "$status" -eq 0 ]
+  [ "$output" == "srun called correctly" ]
+}
+
+@test "cap run --slurm batch: Run script as a slurm batch" {
+
+  cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test"
+
   temp_script="$(mktemp -p "$BATS_TMPDIR")"
   stub mktemp " : echo '$temp_script'"
   sbatch_parameters=(
     -D src
     --job-name=job-test
-    --output=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).out
-    --error=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami).err
+    --output=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami)_%j.out
+    --error=$PROJECTS_PATH/test/logs/job_20250324_132703_$(whoami)_%j.err
     $temp_script
   )
-
   stub sbatch "${sbatch_parameters[*]} : echo 'Submitted batch job 31787364'"
   stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
-  run cap run src/job.sh
+
+  run cap run --slurm batch src/job.sh
+
   unstub mktemp
   unstub sbatch
   unstub date
@@ -44,6 +82,42 @@ CAPTURE environment: default
 
 View job output with the following command:
 cat logs/job_20250324_132703_$(whoami)*
+
+Submitted batch job 31787364
+EOF
+)"
+  diff -y <(echo "$expected_output") <(echo "$output")
+
+  [ "$status" -eq 0 ]
+}
+
+@test "cap run --slurm batch: Run array job as a slurm batch" {
+
+  cp "$FIXTURE_PATH/array_job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test"
+
+  temp_script="$(mktemp -p "$BATS_TMPDIR")"
+  stub mktemp " : echo '$temp_script'"
+  sbatch_parameters=(
+    -D src
+    --job-name=array_job-test
+    --output=$PROJECTS_PATH/test/logs/array_job_20250324_132703_$(whoami)_%A_%a.out
+    --error=$PROJECTS_PATH/test/logs/array_job_20250324_132703_$(whoami)_%A_%a.err
+    $temp_script
+  )
+  stub sbatch "${sbatch_parameters[*]} : echo 'Submitted batch job 31787364'"
+  stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
+
+  run cap run --slurm batch src/array_job.sh
+
+  unstub mktemp
+  unstub sbatch
+  unstub date
+
+  expected_output="$(cat <<EOF
+
+View job output with the following command:
+cat logs/array_job_20250324_132703_$(whoami)*
 
 Submitted batch job 31787364
 EOF
@@ -119,6 +193,8 @@ EOF
 
 @test "cap run: Dry run with environment option specified" {
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cp "$PROJECTS_PATH/test/config/environments/default.sh" \
+     "$PROJECTS_PATH/test/config/environments/test.sh"
   cd "$PROJECTS_PATH/test"
   temp_script="$(mktemp -p "$BATS_TMPDIR")"
   stub date "+%Y%m%d_%H%M%S : echo '20250324_132703'"
@@ -169,4 +245,13 @@ EOF
   diff -y <(echo "$expected_output") <(echo "$output")
 
   [ "$status" -eq 0 ]
+}
+
+@test "cap run: Invalid environment option specified" {
+  cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test"
+  run cap run -e invalid src/job.sh
+
+  [ "$status" -eq 2 ]
+  [ "$output" == "The invalid.sh environment file does not exist in config/environments." ]
 }

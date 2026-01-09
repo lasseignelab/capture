@@ -51,6 +51,16 @@ EOF
   [ "$status" -eq 0 ]
 }
 
+@test "cap run: Command must be executed from the project root directory" {
+
+  cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
+  cd "$PROJECTS_PATH/test/src"
+  run cap run job.sh
+
+  [ "$status" -eq 2 ]
+  [ "$output" == "The run command must be executed from the project root directory." ]
+}
+
 @test "cap run: Dry run with default environment" {
   cp "$FIXTURE_PATH/job.sh" "$PROJECTS_PATH/test/src"
   cd "$PROJECTS_PATH/test"
@@ -67,19 +77,21 @@ cat logs/job_20250324_132703_$(whoami)*
 
 Environment: default
 
-CAP_CONDA_PATH=$PROJECTS_PATH/test/bin/conda
 CAP_CONTAINER_PATH=$PROJECTS_PATH/test/bin/container
 CAP_CONTAINER_TYPE=docker
 CAP_DATA_PATH=$PROJECTS_PATH/test/data
 CAP_DEVELOPMENT_PATH=$CAP_DEVELOPMENT_PATH
-CAP_ENV=default
+CAP_ENVIRONMENT=default
+CAP_ENV_PATH=$PROJECTS_PATH/test/bin/env
 CAP_ETC_RC_PATH=$CAP_ETC_RC_PATH
 CAP_HOME_RC_PATH=$CAP_HOME_RC_PATH
+CAP_INSTALL_PATH=$CAP_INSTALL_PATH
 CAP_LOGS_PATH=$PROJECTS_PATH/test/logs
 CAP_PROJECT_NAME=test
 CAP_PROJECT_PATH=$PROJECTS_PATH/test
 CAP_RANDOM_SEED=$RANDOM_SEED
 CAP_RESULTS_PATH=$PROJECTS_PATH/test/results
+CAP_VERIFICATIONS_PATH=$PROJECTS_PATH/test/verifications
 
 Job: job
 
@@ -119,19 +131,21 @@ cat logs/job_20250324_132703_$(whoami)*
 
 Environment: test
 
-CAP_CONDA_PATH=$PROJECTS_PATH/test/bin/conda
 CAP_CONTAINER_PATH=$PROJECTS_PATH/test/bin/container
 CAP_CONTAINER_TYPE=docker
 CAP_DATA_PATH=$PROJECTS_PATH/test/data
 CAP_DEVELOPMENT_PATH=$CAP_DEVELOPMENT_PATH
-CAP_ENV=test
+CAP_ENVIRONMENT=test
+CAP_ENV_PATH=$PROJECTS_PATH/test/bin/env
 CAP_ETC_RC_PATH=$CAP_ETC_RC_PATH
 CAP_HOME_RC_PATH=$CAP_HOME_RC_PATH
+CAP_INSTALL_PATH=$CAP_INSTALL_PATH
 CAP_LOGS_PATH=$PROJECTS_PATH/test/logs
 CAP_PROJECT_NAME=test
 CAP_PROJECT_PATH=$PROJECTS_PATH/test
 CAP_RANDOM_SEED=$RANDOM_SEED
 CAP_RESULTS_PATH=$PROJECTS_PATH/test/results
+CAP_VERIFICATIONS_PATH=$PROJECTS_PATH/test/verifications
 
 Job: job
 

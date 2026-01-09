@@ -4,6 +4,11 @@ setup_suite() {
   PATH="$(pwd):$PATH"
   export PATH
 
+  # Make sure the capture install path is pointing to the development
+  # environment.
+  CAP_INSTALL_PATH="$(pwd)"
+  export CAP_INSTALL_PATH
+
   # Location of the CAPTURE framework development environment.
   CAP_DEVELOPMENT_PATH="$(pwd)"
   export CAP_DEVELOPMENT_PATH

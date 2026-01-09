@@ -20,6 +20,25 @@ teardown() {
     [ "$status" -eq 0 ]
 }
 
+@test "cap md5: --output-files-only all files in a folder" {
+    temp_output=$(mktemp -p "$BATS_TMPDIR")
+    cap md5 -o $temp_output --output-files-only $FIXTURE_PATH/files
+    run diff $temp_output $FIXTURE_PATH/outputs/all_files_only.out
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+
+@test "cap md5: --append all files in a folder" {
+    temp_output=$(mktemp -p "$BATS_TMPDIR")
+    cp $FIXTURE_PATH/outputs/all_files_only.out $temp_output
+    cap md5 -o $temp_output --append --output-files-only $FIXTURE_PATH/files
+    run diff $temp_output $FIXTURE_PATH/outputs/all_files_appended.out
+
+    echo "$output"
+    [ "$status" -eq 0 ]
+}
+
 @test "cap md5: A specific file" {
     temp_output=$(mktemp -p "$BATS_TMPDIR")
     cap md5 -o $temp_output $FIXTURE_PATH/files/one.bin
@@ -115,6 +134,34 @@ teardown() {
 
 cap md5 -o "test/output.txt"  "$FIXTURE_PATH/files"
 echo "Ran from: $(pwd)"
+EOF
+) "$temp_script"
+
+    [ "$output" == "sbatch called correctly" ]
+}
+
+@test "cap md5 --slurm batch: --output-files-only All files in a folder" {
+
+    temp_script=$(mktemp -p "$BATS_TMPDIR")
+    stub mktemp " : echo '$temp_script'"
+    stub sbatch "$temp_script : echo 'sbatch called correctly'"
+    run cap md5 --slurm batch -o "test/output.txt" --output-files-only $FIXTURE_PATH/files
+    unstub mktemp
+    unstub sbatch
+
+    diff <(cat <<EOF
+#!/bin/bash
+
+#################################### SLURM ####################################
+#SBATCH --job-name cap-md5
+#SBATCH --output test/output.txt
+#SBATCH --error test/output.txt
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=32G
+#SBATCH --partition=short
+
+cap md5 -o "test/output.txt" --output-files-only  "$FIXTURE_PATH/files"
 EOF
 ) "$temp_script"
 

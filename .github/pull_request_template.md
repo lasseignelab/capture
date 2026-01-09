@@ -40,6 +40,8 @@ cd ~/bin/capture
 git checkout main
 git pull
 git checkout <branch-name>
+git submodule update --init --recursive
+source cap_completion.sh
 
 ```
 

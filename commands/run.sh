@@ -103,7 +103,9 @@ EOF
   fi
   # Add array values to log file name if it's an array job.
   if grep -q -E "^#SBATCH +--array=" "$job_file"; then
-    log_file_name="$log_file_name-%A-%a"
+    log_file_name="$log_file_name"_%A_%a
+  else
+    log_file_name="$log_file_name"_%j
   fi
 
   # If it is a dry run then just display the environment variables and job

@@ -1,9 +1,18 @@
-## CAPTURE 0.9.0 (December 12, 2025) ##
+## CAPTURE 1.0.0 (January xx, 2026) ##
+* Change license from MIT to GPLv3
 * Add the `cap verify` command
-* Require the env, run, and verify commands to be ran from the project root
-directory.
+* Show environment name for `cap run`
+* Check that environment files exist for cap run -e
+* Fix main branch remote tracking
+* Require the env, run, and verify commands to be ran from the project root directory.
 * Rename bin/conda to bin/env
 * Add --source-file-name option to cap_data_download
+* Add -e,--environment options to `cap env` command
+* `cap env` shows all variables created in the CAPTURE environment setup
+
+:warning: **WARNING** This is a breaking change!
+* Add slurm option to `cap run`
+* Add job id to log file names of non-array jobs
 
 ## CAPTURE 0.8.6 (October 21, 2025) ##
 * Fix cap_container failure on Slurm array jobs

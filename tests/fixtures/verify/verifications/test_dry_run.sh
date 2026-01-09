@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "Success: $CAP_VERIFICATION_DRY_RUN"

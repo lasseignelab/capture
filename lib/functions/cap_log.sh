@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cap_log() {
-  echo "CAPTURE $(date +'%Y-%m-%d %H:%M')${1:+ "$@"}"
+  echo "CAPTURE [BASH] [$(date +'%Y-%m-%d %H:%M')]${1:+ - "$@"}"
 }

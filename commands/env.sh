@@ -58,6 +58,7 @@ cap_env() {
   if [ -n "$environment_override" ]; then
     CAP_ENVIRONMENT="$environment_override"
   fi
+  cap_check_environment "$CAP_ENVIRONMENT"
 
   # Snapshot after the CAPTURE environment as loaded.
   cap_env_after="$(cap_env_snapshot)"

@@ -41,6 +41,7 @@ EOF
 
 @test "cap env -e: Show lasseignelab environment variables" {
   cd "$PROJECTS_PATH/test"
+  touch "$PROJECTS_PATH/test/config/environments/lasseignelab.sh"
 
   run cap env -e lasseignelab
 
@@ -68,6 +69,7 @@ EOF
 
 @test "cap env --environment: Show lasseignelab environment variables" {
   cd "$PROJECTS_PATH/test"
+  touch "$PROJECTS_PATH/test/config/environments/lasseignelab.sh"
 
   run cap env --environment lasseignelab
 
@@ -91,6 +93,21 @@ EOF
   diff -y <(echo "$expected_output") <(echo "$output")
 
   [ "$status" -eq 0 ]
+}
+
+@test "cap env -e: Check for missing environment configuration file" {
+  cd "$PROJECTS_PATH/test"
+
+  run cap env -e lasseignelab
+
+  expected_output=$(cat <<EOF
+The lasseignelab.sh environment file does not exist in config/environments.
+EOF
+)
+
+  diff -y <(echo "$expected_output") <(echo "$output")
+
+  [ "$status" -eq 2 ]
 }
 
 @test "cap env: Command must be executed from the project root directory" {

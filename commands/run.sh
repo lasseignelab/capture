@@ -86,6 +86,9 @@ EOF
     CAP_ENVIRONMENT="$environment_override"
   fi
   cap_check_environment "$CAP_ENVIRONMENT"
+  echo
+  echo "CAPTURE environment: $CAP_ENVIRONMENT"
+  echo
 
   # Specify the log file names with their full path. Log file names will
   # begin with <job name>-<date>-<time>-<username>. If the job is an array
@@ -97,9 +100,6 @@ EOF
   # unless CAP_LOGS_PATH is outside the project.
   if [[ "$dry_run" == "true" || "$slurm" == "batch" ]]; then
     cat <<EOF
-
-CAPTURE environment: $CAP_ENVIRONMENT
-
 View job output with the following command:
 cat ${log_full_path#"$(pwd)"/}/$log_file_name*
 

@@ -6,6 +6,7 @@
 * Fix main branch remote tracking
 * Require the env, run, and verify commands to be ran from the project root directory.
 * Rename bin/conda to bin/env
+* Add --source-file-name option to cap_data_download
 * Add -e,--environment options to `cap env` command
 * `cap env` shows all variables created in the CAPTURE environment setup
 

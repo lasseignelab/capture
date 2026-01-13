@@ -12,8 +12,8 @@
 * Add job id to log file names of non-array jobs
 
 :warning: **WARNING** This is a breaking change!
-* Add slurm option to `cap run`. The default is no longer Slurm sbatch
-  but to run in the current terminal session.
+* Add slurm option to `cap run`. The default has changed from running the script
+  with Slurm sbatch to running it in the current terminal session.
 
 ## CAPTURE 0.8.6 (October 21, 2025) ##
 * Fix cap_container failure on Slurm array jobs

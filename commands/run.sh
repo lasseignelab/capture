@@ -69,36 +69,67 @@ cap_run() {
   slurm_code=$(grep -v -E "(^#\!)|(#SBATCH)" "$job_file")
 
   # Put job back together with the framework function included.
-  slurm_job_run=$(cat <<EOF
-$slurm_shebang
-$slurm_header
-source $CAP_INSTALL_PATH/lib/functions.sh
-cap_log "Current Dir:  $PWD/"
-cap_log "Job File:     $(basename ${job_file})"
+#   slurm_job_run=$(cat <<EOF
+# $slurm_shebang
+# $slurm_header
+# source $CAP_INSTALL_PATH/lib/functions.sh
+# cap_log "Current Dir:  $PWD/"
+# cap_log "Job File:     $(basename ${job_file})"
+# cap_log "-----------Beginning Job-----------"
+# $slurm_code
+# cap_log "-----------Job Complete------------"
+# EOF
+# )
+  # 1. Initialize an empty variable
+  cap_log_block=""
+
+  # 2. Only populate it if slurm equals "batch"
+  if [[ "$slurm" == "batch" ]]; then
+    cap_log_block=$(cat <<EOF
+cap_log "Current Dir:      $PWD/"
+cap_log "Job File:         $(basename "${job_file}")"
+cap_log "Current User:     \${SLURM_JOB_USER}"
+cap_log "Job ID:           \${SLURM_JOB_ID}"
+cap_log "Slurm Host:       \${SLURM_SUBMIT_HOST}"
+cap_log "Allocated Nodes: \$SLURM_JOB_NODELIST"
+cap_log "CPUs per Node:    \$SLURM_CPUS_ON_NODE"
 cap_log "-----------Beginning Job-----------"
-$slurm_code
-cap_log "-----------Job Complete------------"
 EOF
 )
+fi
+
+  # 3. Inject the block into your main template
   slurm_job_batch=$(cat <<EOF
 $slurm_shebang
 $slurm_header
 source $CAP_INSTALL_PATH/lib/functions.sh
-cap_log "Current Dir:     $PWD/"
-cap_log "Job File:        $(basename ${job_file})"
-cap_log "Current User:    \${SLURM_JOB_USER}"
-cap_log "Job ID:          \${SLURM_JOB_ID}"
-cap_log "Slurm Host:      \${SLURM_SUBMIT_HOST}"
-cap_log "Allocated Nodes: \$SLURM_JOB_NODELIST"
-cap_log "CPUs per Node:   \$SLURM_CPUS_ON_NODE"
-cap_log "-----------Beginning Job-----------"
+$cap_log_block
 $slurm_code
-cap_log "-----------Job Complete------------"
-cap_log "Efficieny Report:"
-sleep 30
-seff \$SLURM_JOB_ID
+${cap_log_block:+cap_log "-----------Job Complete------------"}
+${cap_log_block:+cap_log "Efficieny Report:"}
+${cap_log_block:+sleep 30}
+${cap_log_block:+seff \$SLURM_JOB_ID}
 EOF
 )
+#   slurm_job_batch=$(cat <<EOF
+# $slurm_shebang
+# $slurm_header
+# source $CAP_INSTALL_PATH/lib/functions.sh
+# cap_log "Current Dir:     $PWD/"
+# cap_log "Job File:        $(basename ${job_file})"
+# cap_log "Current User:    \${SLURM_JOB_USER}"
+# cap_log "Job ID:          \${SLURM_JOB_ID}"
+# cap_log "Slurm Host:      \${SLURM_SUBMIT_HOST}"
+# cap_log "Allocated Nodes: \$SLURM_JOB_NODELIST"
+# cap_log "CPUs per Node:   \$SLURM_CPUS_ON_NODE"
+# cap_log "-----------Beginning Job-----------"
+# $slurm_code
+# cap_log "-----------Job Complete------------"
+# cap_log "Efficieny Report:"
+# sleep 30
+# seff \$SLURM_JOB_ID
+# EOF
+# )
 
   # Setup the runtime environment for the job.
   if [ -n "$environment_override" ]; then
@@ -142,9 +173,9 @@ EOF
   else
     # Submit to slurm or run immediately
     temp_batch_script=$(mktemp)
-    temp_run_script=$(mktemp)
+    # temp_run_script=$(mktemp)
     echo "$slurm_job_batch" > "$temp_batch_script"
-    echo "$slurm_job_run" > "$temp_run_script"
+    # echo "$slurm_job_run" > "$temp_run_script"
     case "$slurm" in
       batch)
         sbatch -D "$job_directory" \
@@ -158,13 +189,13 @@ EOF
         srun \
           --job-name="${job_name%.*}-$CAP_PROJECT_NAME" \
           --output="/dev/stdout" \
-          --input="$temp_run_script" \
+          --input="$temp_batch_script" \
           --export=ALL \
           bash
         ;;
       *)
         # shellcheck disable=SC1090
-        source "$temp_run_script"
+        source "$temp_batch_script"
         ;;
     esac
   fi
@@ -179,7 +210,7 @@ cap_run_dry_run() {
   echo
   # Display job code with line numbers.
   cat -n <<EOF
-$slurm_job_run
+$slurm_job_batch
 EOF
   echo
 }

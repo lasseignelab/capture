@@ -9,7 +9,7 @@ source "lib/functions/cap_log.sh"
   run cap_log "System Check"
 
   [ "$status" -eq 0 ]
-  [ "$output" == "CAPTURE 2026-01-09 15:00 System Check" ]
+  [ "$output" == "CAPTURE [BASH] [2026-01-09 15:00] - System Check" ]
 
   unset -f date
 }
@@ -21,20 +21,21 @@ source "lib/functions/cap_log.sh"
   run cap_log System Check
 
   [ "$status" -eq 0 ]
-  [ "$output" == "CAPTURE 2026-01-09 15:00 System Check" ]
+  [ "$output" == "CAPTURE [BASH] [2026-01-09 15:00] - System Check" ]
 
   unset -f date
 }
 
 @test "cap_log outputs with variables" {
   date() { echo "2026-01-09 15:00"; }
-  var="Variable test"
   export -f date
+
+  var="Variable test"
 
   run cap_log $var
 
   [ "$status" -eq 0 ]
-  [ "$output" == "CAPTURE 2026-01-09 15:00 Variable test" ]
+  [ "$output" == "CAPTURE [BASH] [2026-01-09 15:00] - Variable test" ]
 
   unset -f date
 }
@@ -46,7 +47,7 @@ source "lib/functions/cap_log.sh"
   run cap_log
 
   [ "$status" -eq 0 ]
-  [ "$output" == "CAPTURE 2026-01-09 15:00" ]
+  [ "$output" == "CAPTURE [BASH] [2026-01-09 15:00]" ]
 
   unset -f date
 }

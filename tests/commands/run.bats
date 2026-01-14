@@ -183,13 +183,15 @@ Job: job
      8  source $CAP_DEVELOPMENT_PATH/lib/functions.sh
      9
     10
-    11  echo "Hello world!"
+    11
+    12  echo "Hello world!"
 EOF
 )
-  output=$(echo "$output" | expand | sed 's/[[:space:]]\+$//')
+  # Clean the expected output the same way
+  expected_cleaned=$(echo "$expected_output" | expand | sed 's/[[:space:]]\+$//')
+  actual_cleaned=$(echo "$output" | expand | sed 's/[[:space:]]\+$//')
 
-  diff -y <(echo "$expected_output") <(echo "$output")
-
+  diff -y <(echo "$expected_cleaned") <(echo "$actual_cleaned")
   [ "$status" -eq 0 ]
 }
 
@@ -239,7 +241,8 @@ Job: job
      8  source $CAP_DEVELOPMENT_PATH/lib/functions.sh
      9
     10
-    11  echo "Hello world!"
+    11
+    12  echo "Hello world!"
 EOF
 )
   output=$(echo "$output" | expand | sed 's/[[:space:]]\+$//')

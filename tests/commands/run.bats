@@ -24,8 +24,16 @@ teardown() {
 
   run cap run src/job.sh
 
+  expected_output="$(cat <<EOF
+
+CAPTURE environment: default
+
+Hello world!
+EOF
+)"
+  diff -y <(echo "$expected_output") <(echo "$output")
+
   [ "$status" -eq 0 ]
-  [ "$output" == "Hello world!" ]
 }
 
 @test "cap run --slurm run: Run script with srun" {
@@ -49,8 +57,16 @@ teardown() {
   unstub mktemp
   unstub srun
 
+  expected_output="$(cat <<EOF
+
+CAPTURE environment: default
+
+srun called correctly
+EOF
+)"
+  diff -y <(echo "$expected_output") <(echo "$output")
+
   [ "$status" -eq 0 ]
-  [ "$output" == "srun called correctly" ]
 }
 
 @test "cap run --slurm batch: Run script as a slurm batch" {

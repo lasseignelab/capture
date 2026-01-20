@@ -11,13 +11,18 @@ Table of Contents
   - [cap run](#run)
     - [Runtime environment](#runtime-environment)
   - [cap update](#update)
+  - [cap verify](#verify)
   - [cap version](#version)
 - [Job helper functions](#job-helper-functions)
   - [cap_array_value](#cap_array_value)
   - [cap_data_download](#cap_data_download)
   - [cap_container](#cap_container)
+- [Verification helper functions](#verification-helper-functions)
+  - [cap_verify_append](#cap_verify_append)
+  - [cap_verify_md5](#cap_verify_md5)
 - [Environment helper functions](#environment-helper-functions)
   - [cap_data_link](#cap_data_link)
+- [Contributions](#contributions)
 
 # Installation
 ```
@@ -34,31 +39,38 @@ The `cap` CLI provides commands to help with reproducible research.
 cap <command> params...
 ```
 ## env
-Displays CAPTURE environment variables.
+Displays CAPTURE environment variables. This command must be executed from
+the project root directory.
 
-Definition:
+Usage:
 ```
 cap env
+
+Options:
+
+-e,--environment
+           Specifies the environment to show variables for.
 ```
 Example:
 ```
 $ cap env
 
-CAP_CONDA_PATH=/data/user/acrumley/3xtg-repurposing/bin/conda
+CAP_ENV_PATH=/data/user/acrumley/3xtg-repurposing/bin/env
 CAP_CONTAINER_PATH=/data/user/acrumley/3xtg-repurposing/bin/container
 CAP_DATA_PATH=/data/user/acrumley/3xtg-repurposing/data
-CAP_ENV=default
+CAP_ENVIRONMENT=default
 CAP_LOGS_PATH=/data/user/acrumley/3xtg-repurposing/logs
 CAP_PROJECT_NAME=3xtg-repurposing
 CAP_PROJECT_PATH=/data/user/acrumley/3xtg-repurposing
 CAP_RANDOM_SEED=16600
 CAP_RESULTS_PATH=/data/user/acrumley/3xtg-repurposing/results
+CAP_VERIFICATIONS_PATH=/data/user/acrumley/3xtg-repurposing/verifications
 ```
 
 ## help
 Shows help for the cap command line tool.
 
-Definition:
+Usage:
 ```
 cap help [COMMAND]
 ```
@@ -113,7 +125,7 @@ combined MD5 checksum for all the files. The purpose of this command is to
 determine whether files downloaded or created are complete and accurate. If
 the MD5 checksums from two sets of files match then the files are all the same.
 
-Definition:
+Usage:
 ```
 cap md5 [options] FILE...
 
@@ -121,6 +133,9 @@ FILE... One or more file and/or directory names or patterns. For directories,
         all files in the directory and its subdirectories will be included.
 
 Options:
+
+--append
+        Append to the output file if it already exists.
 
 -n,--dry-run
         Lists the files that will have md5sums calculated in order to
@@ -138,6 +153,10 @@ Options:
         Specify an output file name to write the results to. See examples for
         the output format.
 
+--output-files-only
+        Output only the file names with their md5sum. This facilitates
+        programmatic verification of files.
+
 --normalize
         Normalizes the output file paths so that files in different root
         directories can be easily compared.
@@ -149,7 +168,7 @@ Options:
         generally have wildcards. Ensure patterns are quoted ("*pattern*") to
         prevent unintended shell expansion.
 
---slurm=[batch|run]
+-s,--slurm=[batch|run]
         Runs the md5 command as a Slurm job. If the value is run then
         srun is used and the output stays connected to the current
         terminal session.  If the value is batch then sbatch is used and
@@ -202,7 +221,7 @@ project-template submodule in the capture repository.  The project
 repository will be created with the origin remote pointed to a Github
 repository owner specified by the Github account and project name parameters.
 
-Definition:
+Usage:
 ```
 cap new [options] PROJECT_NAME
 
@@ -254,9 +273,11 @@ Happy researching!!!
 ## run
 The `cap run` command runs a CAPTURE framework job within the context of a
 reproducible research project.  It will configure the environment based
-on configuration defined by the current user.
+on configuration defined by the current user. By default, the job runs in
+the current terminal session.  This command must be executed from the project
+root directory.
 
-Definition:
+Usage:
 ```
 cap run [options] FILE
 
@@ -265,17 +286,24 @@ FILE  File name of the job to run.
 Options:
 
 -e,--environment
-           Specifies the environment to run jobs in.  Environments allow
-           different setups for a pipeline.  For instance, a pipeline may
-           use internal copies of data during development but download that
-           data when the pipeline is ran in a different environment.
+        Specifies the environment to run jobs in.  Environments allow
+        different setups for a pipeline.  For instance, a pipeline may
+        use internal copies of data during development but download that
+        data when the pipeline is ran in a different environment.
 -n,--dry-run
-           Displays the contents of the job to run along with the context
-           it will run in.
+        Displays the contents of the job to run along with the context
+        it will run in.
+-s,--slurm=[batch|run]
+        Runs the script as a Slurm job. If the value is run then
+        srun is used and the output stays connected to the current
+        terminal session.  If the value is batch then sbatch is used and
+        the output is written to the log file in the logs directory.
 ```
 Example:
 ```
 $ cap run src/01_download.sh
+
+CAPTURE environment: default
 
 View job output with the following command:
 cat logs/01_down_20241118_090854_tcrumley*
@@ -286,29 +314,33 @@ Submitted batch job 29818073
 
 The runtime environment is configured with the following variables available
 to Slurm scripts.
-- **CAP_PROJECT_NAME**: The name of the project given with the `cap new`
-command.
-- **CAP_ENV**: The name of the current execution environment.  Defaults to
-the value "default".  A shell script in `config/environments` with a name
+- **CAP_CONTAINER_PATH**: Path to where container files such as Docker will be
+maintained.  Defaults to `<project-path>/bin/container`.
+- **CAP_DATA_PATH**: Path to where data files will be written.  Defaults to
+`<project-path>/data`.
+- **CAP_ENVIRONMENT**: The name of the current execution environment.  Defaults
+to the value "default".  A shell script in `config/environments` with a name
 matching the environment name will be executed during the CAPTURE configuration
 process, e.g. `config/environments/default.sh`.  This variable will generally
 be set in the `~/.caprc` file.  It is possible to set it as a shell environment
 variable somewhere like `~/.bash_profile`.  Another option is to provide it
-before a command, e.g. `CAP_ENV=mylab cap run foo.sh`.  Finally, some commands
-provide an option for environment such as `cap run --environment=mylab foo.sh`.
-- **CAP_PROJECT_PATH**: Path to the root directory of the project.
+before a command, e.g. `CAP_ENVIRONMENT=mylab cap run foo.sh`.  Finally, some
+commands provide an option for environment such as
+`cap run --environment=mylab foo.sh`.
+- **CAP_ENV_PATH**: Path to where conda and other runtime environment files
+will be maintained.  Defaults to `<project-path>/bin/env`.
 - **CAP_LOGS_PATH**: Path to where log files will be written.  Defaults to
 `<project-path>/logs`.
-- **CAP_DATA_PATH**: Path to where data files will be written.  Defaults to
-`<project-path>/data`.
-- **CAP_RESULTS_PATH**: Path to where analysis results will be written.
-Defaults to `<project-path>/results`.
-- **CAP_CONTAINER_PATH**: Path to where container files such as Docker will be
-maintained.  Defaults to `<project-path>/bin/container`.
-- **CAP_CONDA_PATH**: Path to where conda files will be maintained.  Defaults
-to `<project-path>/bin/conda`.
+- **CAP_PROJECT_NAME**: The name of the project given with the `cap new`
+command.
+- **CAP_PROJECT_PATH**: Path to the root directory of the project.
 - **CAP_RANDOM_SEED**: A randomly generated seed to facilitate reproducible
 random number generation.
+- **CAP_RESULTS_PATH**: Path to where analysis results will be written.
+Defaults to `<project-path>/results`.
+- **CAP_VERIFICATIONS_PATH**: Path to where verification files and the
+result files they produce are written.  Defaults to
+`<project-path>/verifications`.
 
 Environment variables can be configured with the following configuration files.
 ```
@@ -337,7 +369,7 @@ are set at this point.
 - **~/.caprc**: Configuration set for a specific user. This is a good place
 to `source` in lab specific configuration.
 - **\<project-path\>/.labrc**: Configuration specific to a project.
-- **\<project-path\>/config/environments/<CAP_ENV>.sh**: Configuration specific
+- **\<project-path\>/config/environments/<CAP_ENVIRONMENT>.sh**: Configuration specific
 to a project and the environment it is being executed in. The `default.sh`
 configuration should only contain reproducible configuration that will work in
 any Slurm environment. Other lab specific environment files can contain non-
@@ -351,7 +383,7 @@ a lab while also downloading the data when the symlink does not exist. See
 The `cap update` command will upgrade the CAPTURE framework to the latest
 version.
 
-Definition:
+Usage:
 ```
 cap update
 ```
@@ -366,11 +398,52 @@ Already up-to-date.
 CAPTURE updated to version v0.0.1.
 ```
 
+## verify
+The `verify` command runs CAPTURE verifications which are shell scripts that
+determine whether outputs are reproducible.  The output of verification scripts
+will be written to the verifications folder with the same name as the script
+with a ".out" extension.  These files should be committed to source control so
+that reviewers can compare their results. This command must be executed from
+the project root directory.
+
+See also [verification helper functions](#verification-helper-functions).
+
+Environment variables (useful for custom verifcations):
+
+CAP_VERIFICATION_DRY_RUN: Boolean value ("true", "false") indicating whether
+the current verification is a dry run.
+
+CAP_VERIFICATION_OUTPUT_FILE: File name to append verification output.
+
+Usage:
+```
+cap verify [options] FILE
+
+FILE One file name.
+
+Options:
+
+-n,--dry-run
+        Lists the files that will have verifications performed in order to
+        verify the expected files are included.  This is helpful when
+        the files are large and take a long time to process.
+-s,--slurm=[batch|run]
+        Runs the verify command as a Slurm job with sbatch or srun.
+```
+
+Example:
+
+Perform verifications for a step in the pipeline which will produce an
+output file named `verifications/01_download.out`.
+```
+cap verify verifications/01_download.sh
+```
+
 ## version
 The `cap version` command will display the currently installed version
 of CAPTURE.
 
-Definition:
+Usage:
 ```
 cap version
 ```
@@ -381,9 +454,6 @@ $ cap version
 v0.0.3
 
 ```
-# Verification helper functions
-## cap_md5_verify
-Verifies that data generated by a script is reproduced.
 
 # Job helper functions
 ## cap_array_value
@@ -418,20 +488,25 @@ cap_data_download [options] URL
 ```
 - `URL` The URL of the file to download.
 
-Options
+Options:
+- `--source-file-name` The name of the file being downloaded. When the source
+file URL does not end in a proper file name, this option allows a name to be
+provided. Final downloaded file and/or directory names may be different if
+the `--unzip` option is used.
 - `--md5sum` The md5sum to check against the file being downloaded.
 - `--unzip`  Unzips and/or unarchives downloaded files.
 - `--subdirectory`  Specifies a subdirectory within the data directory where the
 downloaded file will be stored. If the subdirectory does not exist, it will be created.
 
-The file will be downloaded with the same name as specified by the URL.  If the
-`--unzip` option is provided then it will be unarchived into the data directory.  The
-data directory is specified by `CAP_DATA_PATH` which defaults to
-`CAP_PROJECT_PATH/data`. If the `--subdirectory` option is provided, the downloaded
-file will be saved in `CAP_PROJECT_PATH/data/subdirectory`.
+The file will be downloaded to the file name specified by the URL or the
+`--source-file-name` option.  If the `--unzip` option is provided then it will
+be unarchived into the data directory and possibly have a different final name.
+The data directory is specified by `CAP_DATA_PATH` which defaults to
+`CAP_PROJECT_PATH/data`. If the `--subdirectory` option is provided, the
+downloaded file will be saved in `CAP_PROJECT_PATH/data/subdirectory`.
 
 If the file or directory already exists in the `data` directory (or subdirectory
-if `--subdirectory` is provided) then it will not be downloaded again. This is 
+if `--subdirectory` is provided) then it will not be downloaded again. This is
 also true when the file or directory has been symlinked into the `data` directory
 by [cap_data_link](#cap_data_link).
 
@@ -463,21 +538,144 @@ cap_container [options] REFERENCE
 is <namespace>/<repository_name>:[tag].
 
 Options
-- `-c singularity`  If specified, cap_container will use `singularity pull` instead of `docker pull`.
+- `-c singularity`  If specified, cap_container will use `singularity pull`
+instead of `docker pull`. If `CAP_CONTAINER_TYPE` is specified in a `caprc` file
+then the -c option is not necessary. `CAP_CONTAINER_TYPE` is the preferred
+method.
 
 `cap_container` first checks whether the Docker image or Singularity .sif file
 already exists in `CAP_CONTAINER_PATH`. If the image is not found, it is downloaded
 from DockerHub. By default, `cap_container` uses Docker, but specifying the
-`-c singularity` option directs it to generate a Singularity .sif file in the
-`CAP_CONTAINER_PATH` directory instead.
+`-c singularity` option or `CAP_CONTAINER_TYPE=singularity` in a `caprc`
+directs it to generate a Singularity .sif file in the `CAP_CONTAINER_PATH`
+directory instead.
 
 The following example checks for the corresponding .sif file in `CAP_CONTAINER_PATH`.
-If the file is not found, it downloads and converts the Docker image into the 
+If the file is not found, it downloads and converts the Docker image into the
 Singularity .sif file - ollama_0.5.8.sif.
 ```
 cap_container \
   -c singularity \
   "ollama/ollama:0.5.8"
+```
+
+# Verification helper functions
+Functions to facilitate verifying that pipeline results are reproducible.
+Verification scripts are stored in the `verifications` directory in the
+project root directory and should be committed to the code repository.
+
+The output file will be given the same name as the verification file with a
+`.out` extension and will be stored in the same directory. The output file
+should also be committed to the code repository. When reproducing results, use
+the `git diff` command to confirm that results of a verification match the
+original results.
+
+## cap_verify_append
+The `cap_verify_append` function appends text to the verification's `.out`
+file.  The purpose of this command is facilitate custom verifications and to
+add comments between groupings of verification output.
+
+```
+cap_verify_append TEXT
+```
+- TEXT Text that will be appended directly to the end of the `.out` file.
+
+### Examples for a verification named `verifications/verify_example.sh`:
+
+1. Verify files with comments.
+
+```
+cap_verify_append "##### Mouse data #####"
+cap_verify_md5 "data/mouse/*"
+cap_verify_append "##### Human data #####"
+cap_verify_md5 "data/human/*"
+```
+Results in `verifications/verify_example.out`:
+```
+##### Mouse data #####
+b3ac2b8b9998bf504ef708ec837a4cce  data/mouse/one.bin
+8d62064673ecb2a440b8802a2f752e8a  data/mouse/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  data/mouse/outs/three.bin
+009c79f013fe8d4d97c95bf5ceea68ed  data/mouse/two.bin
+##### Human data #####
+b3ac2b8b9998bf504ef708ec837a4cc1  data/human/one.bin
+8d62064673ecb2a440b8802a2f752e82  data/human/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5a5  data/human/outs/three.bin
+009c79f013fe8d4d97c95bf5ceea68e8  data/human/two.bin
+```
+
+2. Custom verification from a Python script.
+
+The environment variable CAP_VERIFICATION_DRY_RUN can be used to add dry run
+functionality to custom verifcation scripts, which will be equal to "true" on a
+dry run.
+
+```
+cap_verify_append "$(python3 $CAP_VERIFICATIONS_PATH/verify_example.py)"
+```
+Results in `verifications/verify_example.out`:
+```
+Cell Count: 1000
+Gene Count: 5000
+```
+
+## cap_verify_md5
+The `cap_verify_md5` function produces an MD5 checksum for each file specified,
+storing the results in an output file to be checked into the repository for
+verifying future reproducibility. The purpose of this command is to determine
+whether files downloaded or created are complete and accurate when reproduced.
+If the MD5 checksums from two sets of files match then the files are all the
+same.
+
+```
+cap_verify_md5 [options] FILE...
+```
+- FILE... One or more file and/or directory names or patterns. For directories,
+        all files in the directory and its subdirectories will be included.
+
+Options
+- `--ignore=PATTERN` Exclude files matching the file PATTERN based on the full
+relative path. If the option is specified multiple times, all files matching
+any of the patterns will be EXCLUDED (logical OR). The selector will generally
+have wildcards. Ensure patterns are quoted ("*pattern*") to prevent unintended
+shell expansion.
+
+- `--select=PATTERN` Include only files matching the file PATTERN based on the
+full relative path. If the option is specified multiple times, all files
+matching any of the patterns will be INCLUDED (logical OR). The selector will
+generally have wildcards. Ensure patterns are quoted ("*pattern*") to prevent
+unintended shell expansion.
+
+### Examples for a verification named `verifications/verify_example.sh`:
+
+1. Verify all files in a directory and its subdirectories.
+```
+cap_verify_md5 "data/*"
+```
+Results in `verifications/verify_example.out`:
+```
+b3ac2b8b9998bf504ef708ec837a4cce  data/one.bin
+8d62064673ecb2a440b8802a2f752e8a  data/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  data/outs/three.bin
+009c79f013fe8d4d97c95bf5ceea68ed  data/two.bin
+```
+2. Verify all files in the subdirectory named "outs".
+```
+cap_verify_md5 --select "*/outs/*" "data/*"
+```
+Results in `verifications/verify_example.out`:
+```
+8d62064673ecb2a440b8802a2f752e8a  data/outs/four.bin
+74a08ee2de381ec8e19da52ad36bb5ae  data/outs/three.bin
+```
+3. Verify all files not in the subdirectory named "outs".
+```
+cap_verify_md5 --ignore "*/outs/*" "data/*"
+```
+Results in `verifications/verify_example.out`:
+```
+b3ac2b8b9998bf504ef708ec837a4cce  data/one.bin
+009c79f013fe8d4d97c95bf5ceea68ed  data/two.bin
 ```
 
 # Environment helper functions
@@ -516,4 +714,35 @@ To use the `my_lab` environment when running a job, use the `cap run` command
 with the -e/--environment option like in the following example.
 ```
 cap run -e my_lab src/01_download.sh
+```
+
+# Contributions
+## Tests
+All pull requests must include BATS tests covering the changes.
+
+The testing framework is installed by the following command.
+```
+tests/install
+```
+The entire test suite is executed by the following command.
+```
+tests/run
+```
+The tests can be filtered with the --filter option.  This saves time by
+allowing subsets of the test suite to be ran while coding. The following
+examples of using --filter are based on this hypothetical BATS test.
+```
+@test "cap md5: All files in a folder" {
+  ...
+}
+```
+### Examples of using --filter
+How to run just the `cap md5` tests:
+```
+tests/run --filter "cap md5"
+```
+
+How to run just the single hypothetical test:
+```
+tests/run --filter "cap md5: All files in a folder"
 ```

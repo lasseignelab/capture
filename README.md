@@ -57,6 +57,8 @@ CAPTURE helps you build computational science projects that are consistent, repr
 # Quick Start
 Get up and running with CAPTURE in minutes.
 
+Complete the following steps in an HPC terminal session.
+
 ## 1. Install CAPTURE
 ```
 curl -sSL https://raw.githubusercontent.com/lasseignelab/capture/refs/heads/main/install.sh | bash
@@ -302,16 +304,16 @@ Options:
 ```
 Example:
 ```
-$ cap new lasseignelab PKD_Research
+$ cap new -o lasseignelab pkd-research
 
-Create an empty repository for 'PKD_Research' on GitHub by using the
+Create an empty repository for 'pkd-research' on GitHub by using the
 following link and settings:
 
   https://github.com/organizations/lasseignelab/repositories/new
 
   * No template
   * Owner: lasseignelab
-  * Repository name: PKD_Research
+  * Repository name: pkd-research
   * Private
   * No README file
   * No .gitignore
@@ -320,7 +322,7 @@ following link and settings:
 Where you able to create a repository (y/N)? y
 
 
-Cloning into 'PKD_Research'...
+Cloning into 'pkd-research'...
 done.
 
 ...

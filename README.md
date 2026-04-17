@@ -73,7 +73,7 @@ Full CAPTURE documentaion can be found [here](DOCUMENTATION.md).
 
 We welcome contributions from both new and experienced developers.
 
-Whether you're fixing a bug, improving documentation, or proposing a new feature, CAPTURE is designed to support reproducible, high-quality computational workflows—and contributions should follow the same principles.
+Whether you're fixing a bug, improving documentation, or proposing a new feature, CAPTURE is designed to support reproducible, high-quality computational workflows—and contributions should follow the same principles. Contributions that improve reproducibility, validation, and portability are especially valuable.
 
 ### Getting started
 

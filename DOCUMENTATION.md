@@ -3,9 +3,9 @@
 
 Beginning a computational science project can feel daunting—there are countless decisions about structure, tooling, and reproducibility. Even experienced developers struggle to build projects that remain consistent, scalable, and FAIR over time.
 
-High-throughput biomedical technologies (e.g., sequencing, imaging, electronic health records) have driven an enormous increase in biological data volume, creating significant challenges for researchers.
+High-throughput biomedical technologies (e.g., sequencing, imaging, electronic health records) have driven an enormous increase in biological data volume, creating significant challenges for researchers. As such, researchers need skills in data science, effective software development processes, and resource scaling across HPC clusters and cloud platforms.
 
-A lack of relevant training and experience can lengthen analysis timelines, impede research progress, and lead to inconsistencies. These issues worsen the current "reproducibility crisis" in biological science, hindering clinical adoption of research discoveries.  As such, researchers need skills in data science, effective software development processes, and resource scaling across HPC clusters and cloud platforms.
+A lack of relevant training and experience can lengthen analysis timelines, impede research progress, and lead to inconsistencies. These issues worsen the current "reproducibility crisis" in biological science, hindering clinical adoption of research discoveries.
 
 CAPTURE (Custom Analysis Pipelines Tailored for Universal Reproducibility and Efficiency) is a software development framework and command line interface (CLI) that provides opinionated conventions and tooling, helping teams build reproducible, high-quality computational workflows from the start. CAPTURE includes conventions for project structure (e.g., directory structure), job execution, verified results, version control (e.g., Git and GitHub), and standardized environments. These conventions improve computational workflows, promote best practices, facilitate internal code review, address the reproducibility crisis, and help projects meet Findable, Accessible, Interoperable, and Reusable (FAIR) principles.
 

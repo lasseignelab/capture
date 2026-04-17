@@ -3,7 +3,7 @@
 
 Starting a computational science project means navigating countless decisions about structure, tooling, and reproducibility—and even experienced developers struggle to get it right.
 
-CAPTURE (Custom Analysis Pipelines Tailored for Universal Reproducibility and Efficiency) is a framework and command line interface (CLI) that standardizes these decisions through strong conventions for project structure, execution, and validation, enabling teams to build scalable, reproducible, and FAIR workflows from the start.
+CAPTURE (Custom Analysis Pipelines Tailored for Universal Reproducibility and Efficiency) is a framework and command line interface (CLI) that standardizes these decisions through strong conventions for project structure, execution, and validation, enabling teams to build scalable, reproducible, and FAIR workflows from the start to finish.
 
 ## Why CAPTURE?
 

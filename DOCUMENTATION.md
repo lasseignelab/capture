@@ -34,42 +34,7 @@ CAPTURE (Custom Analysis Pipelines Tailored for Universal Reproducibility and Ef
 - [Contributions](#contributions)
 
 # Quick Start
-Get up and running with CAPTURE in minutes.
-
-Complete the following steps in an HPC terminal session.
-
-## 1. Install CAPTURE
-```
-curl -sSL https://raw.githubusercontent.com/lasseignelab/capture/refs/heads/main/install.sh | bash
-source ~/.bash_profile
-
-```
-
-## 2. Initialize a new project
-```
-cap new my-project
-cd my-project
-
-```
-This creates a standardized project structure for data, code, results, and configuration.
-
-## 3. Run an example workflow
-```
-cap run src/example.sh
-head data/*
-
-```
-CAPTURE will execute the workflow using its built-in conventions for job execution, logging, and output organization.
-
-## 4. Verify results
-```
-cap verify verifications/example.sh
-git diff verfications/example.out
-
-```
-Outputs are checked for consistency and reproducibility. The example results reproduced if there is no difference in `verifications/example.out`.
-
-Congratulations!! You now have a fully structured, reproducible computational project.
+Get up and running with CAPTURE in minutes by completing the README quick start guide found [here](README.md#quick-start).
 
 # Upgrade
 Update to the current version

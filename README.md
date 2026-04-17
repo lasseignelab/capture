@@ -31,9 +31,7 @@ CAPTURE helps you build computational science projects that are consistent, repr
   Produce outputs that are Findable, Accessible, Interoperable, and Reusable.
 
 ## Quick Start
-Get up and running with CAPTURE in minutes.
-
-Complete the following steps in an HPC terminal session.
+Get up and running with CAPTURE in minutes by completing the following steps in an HPC terminal session.
 
 ## 1. Install CAPTURE
 ```

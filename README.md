@@ -69,17 +69,51 @@ Congratulations!! You now have a fully structured, reproducible computational pr
 ## Documentation
 Full CAPTURE documentaion can be found [here](DOCUMENTATION.md).
 
-## Contributions
+## Contributing
+
+We welcome contributions from both new and experienced developers.
+
+Whether you're fixing a bug, improving documentation, or proposing a new feature, CAPTURE is designed to support reproducible, high-quality computational workflows—and contributions should follow the same principles.
+
+### Getting started
+
+1. Fork the repository and create a new branch
+2. Make your changes with clear, focused commits
+3. Add or update tests and documentation as needed
+4. Submit a pull request with a clear description of your changes
+
+### Development guidelines
+
+- Follow CAPTURE conventions for project structure and naming
+- Write reproducible, testable code
+- Prefer simple, transparent solutions over complex abstractions
+- Ensure scripts and workflows run consistently across environments (local, HPC, cloud)
+
+### Reporting issues
+
+If you encounter a bug or have a feature request, please open an issue and include:
+
+- A clear description of the problem
+- Steps to reproduce (if applicable)
+- Relevant logs or error messages
+- Your environment (OS, HPC, container, etc.)
+
+### Code of conduct
+
+Be respectful and constructive. We aim to foster an inclusive and collaborative community.
+
 ### Tests
 All pull requests must include BATS tests covering the changes.
 
 The testing framework is installed by the following command.
 ```
 tests/install
+
 ```
 The entire test suite is executed by the following command.
 ```
 tests/run
+
 ```
 The tests can be filtered with the --filter option.  This saves time by
 allowing subsets of the test suite to be ran while coding. The following
@@ -88,14 +122,27 @@ examples of using --filter are based on this hypothetical BATS test.
 @test "cap md5: All files in a folder" {
   ...
 }
+
 ```
 #### Examples of using --filter
 How to run just the `cap md5` tests:
 ```
 tests/run --filter "cap md5"
+
 ```
 
 How to run just the single hypothetical test:
 ```
 tests/run --filter "cap md5: All files in a folder"
+
 ```
+
+---
+
+## Contributors
+
+Thanks to everyone who has contributed to CAPTURE:
+
+- Tonie Crumley
+- TC Howton
+- Lasseigne Lab contributors

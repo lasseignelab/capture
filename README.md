@@ -9,25 +9,25 @@ CAPTURE (Custom Analysis Pipelines Tailored for Universal Reproducibility and Ef
 
 CAPTURE helps you build computational science projects that are consistent, reproducible, and scalable—without reinventing the wheel each time.
 
-- **Standardized project structure**
+- **Standardized project structure**:
   Organize data, code, and results using consistent, predictable conventions.
 
-- **Reproducible execution**
-  Run analyses in controlled, versioned environments across local, HPC, and cloud systems.
+- **Reproducible execution**:
+  Run analyses in controlled, versioned environments across HPC systems.
 
-- **Built-in validation and verification**
+- **Built-in validation and verification**:
   Ensure outputs are correct and reproducible with automated checks.
 
-- **Seamless HPC integration**
+- **Seamless HPC integration**:
   Scale workflows across SLURM clusters without rewriting pipelines.
 
-- **Integrated version control workflows**
+- **Integrated version control workflows**:
   Leverage Git and GitHub best practices for collaboration and traceability.
 
-- **Convention over configuration**
+- **Convention over configuration**:
   Reduce decision fatigue by adopting opinionated defaults that promote best practices.
 
-- **FAIR-ready by design**
+- **FAIR-ready by design**:
   Produce outputs that are Findable, Accessible, Interoperable, and Reusable.
 
 # Table of Contents
@@ -81,9 +81,9 @@ CAPTURE will execute the workflow using its built-in conventions for job executi
 cap verify verifications/example.sh
 git diff verfications/example.out
 ```
-Outputs are checked for consistency and reproducibility. The results reproduced if there is no difference in `verifications/example.out`.
+Outputs are checked for consistency and reproducibility. The example results reproduced if there is no difference in `verifications/example.out`.
 
-Congratulations!! You new have a fully structured, reproducible computational project.
+Congratulations!! You now have a fully structured, reproducible computational project.
 
 # Upgrade
 Update to the current version

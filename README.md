@@ -63,18 +63,21 @@ Complete the following steps in an HPC terminal session.
 ```
 curl -sSL https://raw.githubusercontent.com/lasseignelab/capture/refs/heads/main/install.sh | bash
 source ~/.bash_profile
+
 ```
 
 ## 2. Initialize a new project
 ```
 cap new my-project
 cd my-project
+
 ```
 This creates a standardized project structure for data, code, results, and configuration.
 
 ## 3. Run an example workflow
 ```
 cap run src/example.sh
+
 ```
 CAPTURE will execute the workflow using its built-in conventions for job execution, logging, and output organization.
 
@@ -82,6 +85,7 @@ CAPTURE will execute the workflow using its built-in conventions for job executi
 ```
 cap verify verifications/example.sh
 git diff verfications/example.out
+
 ```
 Outputs are checked for consistency and reproducibility. The example results reproduced if there is no difference in `verifications/example.out`.
 

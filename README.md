@@ -62,12 +62,12 @@ cap verify verifications/example.sh
 git diff verfications/example.out
 
 ```
-Outputs are checked for consistency and reproducibility. The example results reproduced if there is no difference in `verifications/example.out`.
+Outputs are checked for consistency and reproducibility. If there is no difference in `verifications/example.out`, the example results were fully reproduced.
 
 Congratulations!! You now have a fully structured, reproducible computational project.
 
 ## Documentation
-Full CAPTURE documentaion can be found [here](DOCUMENTATION.md).
+Comprehensive CAPTURE documentation can be found [here](DOCUMENTATION.md).
 
 ## Contributing
 

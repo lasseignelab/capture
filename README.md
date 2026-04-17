@@ -19,7 +19,7 @@ CAPTURE helps you build computational science projects that are consistent, repr
   Ensure outputs are correct and reproducible with automated checks.
 
 - **Seamless HPC integration**:
-  Scale workflows across SLURM clusters without rewriting pipelines.
+  Scale workflows across HPC clusters without rewriting pipelines.
 
 - **Integrated version control workflows**:
   Leverage Git and GitHub best practices for collaboration and traceability.

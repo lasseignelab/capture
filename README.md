@@ -59,7 +59,7 @@ CAPTURE will execute the workflow using its built-in conventions for job executi
 ### 4. Verify results
 ```
 cap verify verifications/example.sh
-git diff verifications/example.out
+git diff --quiet verifications/example.out && echo "Verification succeeded" || git diff
 
 ```
 Outputs are checked for consistency and reproducibility. If there is no difference in `verifications/example.out`, the example results were fully reproduced.

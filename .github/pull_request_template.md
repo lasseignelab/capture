@@ -21,6 +21,7 @@
 - [ ] Setup instructions have been provided.
 - [ ] Test instructions have been provided.
 - [ ] Cleanup instructions have been provided.
+- [ ] Setup, test, and cleanup instructions have been tested in a clean scratch environment.
 - [ ] At least two reviewers have been requested to review this pull request.
 
 ## Self/Peer Review Checklist ([Coding Guidelines](https://docs.google.com/document/d/1h1hxQGrqnQqo1pAxrrtX1OtjHddRTqtgsgDFSXOQpzk/edit?usp=sharing))

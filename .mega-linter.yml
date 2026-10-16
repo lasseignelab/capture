@@ -25,6 +25,15 @@ ENABLE:
 
 SHOW_ELAPSED_TIME: true
 
+# Run linters serially instead of in parallel.
+# The v9.6.0 custom-flavor image is built on Python 3.14, whose default
+# multiprocessing start method is no longer "fork". MegaLinter's parallel path
+# calls multiprocessing_logging.install_mp_handler(), which asserts the "fork"
+# start method and crashes ("This module only works with the 'fork' start
+# method."). Serial execution skips that code path. Safe here given the small
+# codebase; revisit once MegaLinter ships a Python 3.14-compatible fix.
+PARALLEL: false
+
 FILEIO_REPORTER: false
 
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass

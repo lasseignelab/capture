@@ -1,3 +1,6 @@
+## CAPTURE 1.0.2 (November 3, 2026) ##
+* Add AI Agent configuration to project template
+
 ## CAPTURE 1.0.0 (January 16, 2026) ##
 * Change license from MIT to GPLv3
 * Add the `cap verify` command

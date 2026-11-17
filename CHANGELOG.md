@@ -1,3 +1,6 @@
+## CAPTURE 1.0.1 (October 15, 2026) ##
+* Change the Megalinter container to a custom bioinformatics flavor
+
 ## CAPTURE 1.0.0 (January 16, 2026) ##
 * Change license from MIT to GPLv3
 * Add the `cap verify` command
